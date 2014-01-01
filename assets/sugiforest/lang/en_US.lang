@@ -1,0 +1,10 @@
+﻿# Localization file : en_US
+
+sugiforest.version.message=A new %s version is available
+
+tile.woodSugi.name=Sugi Wood
+tile.leavesSugi.name=Sugi Leaves
+tile.saplingSugi.name=Sugi Sapling
+tile.planksSugi.name=Sugi Wood Planks
+tile.woodSlabSugi.name=Sugi Wood Slab
+tile.stairsWoodSugi.name=Sugi Wood Stairs

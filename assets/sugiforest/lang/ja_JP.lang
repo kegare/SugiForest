@@ -1,0 +1,10 @@
+﻿# Localization file : ja_JP
+
+sugiforest.version.message=%s の新しいバージョンが利用可能です
+
+tile.woodSugi.name=杉の原木
+tile.leavesSugi.name=杉の葉
+tile.saplingSugi.name=杉の苗木
+tile.planksSugi.name=杉の木材
+tile.woodSlabSugi.name=杉の木材ハーフブロック
+tile.stairsWoodSugi.name=杉の木の階段
