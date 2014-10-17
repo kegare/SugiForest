@@ -1,58 +1,70 @@
-package kegare.sugiforest.block;
+/*
+ * SugiForest
+ *
+ * Copyright (c) 2014 kegare
+ * https://github.com/kegare
+ *
+ * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
+ */
 
-import com.google.common.collect.Lists;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import kegare.sugiforest.core.Config;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockLeavesBase;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.common.IShearable;
+package com.kegare.sugiforest.block;
 
 import java.util.ArrayList;
 import java.util.Random;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockLeavesBase;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
+import net.minecraftforge.common.IShearable;
+
+import com.google.common.collect.Lists;
+
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public class BlockLeavesSugi extends BlockLeavesBase implements IShearable
 {
-	private Icon[] leavesIcon = new Icon[2];
+	private IIcon[] leavesIcon = new IIcon[2];
 
 	private int[] adjacentTreeBlocks;
 
-	public BlockLeavesSugi(int blockID, String name)
+	public BlockLeavesSugi(String name)
 	{
-		super(blockID, Material.leaves, true);
-		this.setUnlocalizedName(name);
-		this.setTextureName("sugiforest:leaves_sugi");
+		super(Material.leaves, true);
+		this.setBlockName(name);
+		this.setBlockTextureName("sugiforest:sugi_leaves");
 		this.setHardness(0.2F);
 		this.setLightOpacity(1);
-		this.setStepSound(soundGrassFootstep);
+		this.setStepSound(soundTypeGrass);
 		this.setTickRandomly(true);
 		this.setCreativeTab(CreativeTabs.tabDecorations);
-		Block.setBurnProperties(blockID, 30, 60);
+		this.setHarvestLevel("axe", 0);
 	}
 
-	@Override
 	@SideOnly(Side.CLIENT)
+	@Override
 	public int getBlockColor()
 	{
 		return 6726755;
 	}
 
-	@Override
 	@SideOnly(Side.CLIENT)
+	@Override
 	public int getRenderColor(int metadata)
 	{
 		return getBlockColor();
 	}
 
-	@Override
 	@SideOnly(Side.CLIENT)
+	@Override
 	public int colorMultiplier(IBlockAccess world, int x, int y, int z)
 	{
 		int r = 0;
@@ -63,7 +75,7 @@ public class BlockLeavesSugi extends BlockLeavesBase implements IShearable
 		{
 			for (int j = -1; j <= 1; ++j)
 			{
-				int color = world.getBiomeGenForCoords(x + i, z + j).getBiomeFoliageColor();
+				int color = world.getBiomeGenForCoords(x + i, z + j).getBiomeFoliageColor(x, y, z);
 				r += (color & 16711680) >> 16;
 				g += (color & 65280) >> 8;
 				b += color & 255;
@@ -73,28 +85,23 @@ public class BlockLeavesSugi extends BlockLeavesBase implements IShearable
 		return (r / 9 & 255) << 16 | (g / 9 & 255) << 8 | b / 9 & 255;
 	}
 
-	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister iconRegister)
+	@Override
+	public void registerBlockIcons(IIconRegister iconRegister)
 	{
 		leavesIcon[0] = iconRegister.registerIcon(getTextureName());
 		leavesIcon[1] = iconRegister.registerIcon(getTextureName() + "_opacity");
 	}
 
-	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int metadata)
+	@Override
+	public IIcon getIcon(int side, int metadata)
 	{
-		if (Config.leavesSugiGraphicsLevel >= 0 && Config.leavesSugiGraphicsLevel < 2)
-		{
-			return leavesIcon[Config.leavesSugiGraphicsLevel];
-		}
-
-		return leaves.graphicsLevel ? leavesIcon[0] : leavesIcon[1];
+		return FMLClientHandler.instance().getClient().gameSettings.fancyGraphics ? leavesIcon[0] : leavesIcon[1];
 	}
 
 	@Override
-	public void breakBlock(World world, int x, int y, int z, int blockID, int metadata)
+	public void breakBlock(World world, int x, int y, int z, Block block, int metadata)
 	{
 		if (world.checkChunksExist(x - 2, y - 2, z - 2, x + 2, y + 2, z + 2))
 		{
@@ -104,12 +111,7 @@ public class BlockLeavesSugi extends BlockLeavesBase implements IShearable
 				{
 					for (int k = -1; k <= 1; k++)
 					{
-						int block = world.getBlockId(x + i, y + j, z + k);
-
-						if (blocksList[block] != null)
-						{
-							blocksList[block].beginLeavesDecay(world, x + i, y + j, z + k);
-						}
+						world.getBlock(x + i, y + j, z + k).beginLeavesDecay(world, x + i, y + j, z + k);
 					}
 				}
 			}
@@ -138,7 +140,7 @@ public class BlockLeavesSugi extends BlockLeavesBase implements IShearable
 
 				int var6;
 
-				if (world.checkChunksExist( x - var2, y - var2, z - var2, x + var2, y + var2, z + var2))
+				if (world.checkChunksExist(x - var2, y - var2, z - var2, x + var2, y + var2, z + var2))
 				{
 					int var7;
 					int var8;
@@ -150,8 +152,7 @@ public class BlockLeavesSugi extends BlockLeavesBase implements IShearable
 						{
 							for (var8 = -var1; var8 <= var1; ++var8)
 							{
-								var9 = world.getBlockId(x + var6, y + var7, z + var8);
-								Block block = blocksList[var9];
+								Block block = world.getBlock(x + var6, y + var7, z + var8);
 
 								if (block != null && block.canSustainLeaves(world, x + var6, y + var7, z + var8))
 								{
@@ -199,9 +200,9 @@ public class BlockLeavesSugi extends BlockLeavesBase implements IShearable
 											adjacentTreeBlocks[(var7 + var5) * var4 + (var8 + var5 + 1) * var3 + var9 + var5] = var6;
 										}
 
-										if (adjacentTreeBlocks[(var7 + var5) * var4 + (var8 + var5) * var3 + (var9 + var5 - 1)] == -2)
+										if (adjacentTreeBlocks[(var7 + var5) * var4 + (var8 + var5) * var3 + var9 + var5 - 1] == -2)
 										{
-											adjacentTreeBlocks[(var7 + var5) * var4 + (var8 + var5) * var3 + (var9 + var5 - 1)] = var6;
+											adjacentTreeBlocks[(var7 + var5) * var4 + (var8 + var5) * var3 + var9 + var5 - 1] = var6;
 										}
 
 										if (adjacentTreeBlocks[(var7 + var5) * var4 + (var8 + var5) * var3 + var9 + var5 + 1] == -2)
@@ -231,15 +232,15 @@ public class BlockLeavesSugi extends BlockLeavesBase implements IShearable
 		}
 	}
 
-	@Override
 	@SideOnly(Side.CLIENT)
+	@Override
 	public void randomDisplayTick(World world, int x, int y, int z, Random random)
 	{
-		if (world.canLightningStrikeAt(x, y + 1, z) && !world.doesBlockHaveSolidTopSurface(x, y - 1, z) && random.nextInt(15) == 1)
+		if (world.canLightningStrikeAt(x, y + 1, z) && !World.doesBlockHaveSolidTopSurface(world, x, y - 1, z) && random.nextInt(15) == 1)
 		{
-			double ptX = (double)((float)x + random.nextFloat());
-			double ptY = (double)y - 0.05D;
-			double ptZ = (double)((float)z + random.nextFloat());
+			double ptX = x + random.nextFloat();
+			double ptY = y - 0.05D;
+			double ptZ = z + random.nextFloat();
 
 			world.spawnParticle("dripWater", ptX, ptY, ptZ, 0.0D, 0.0D, 0.0D);
 		}
@@ -252,9 +253,16 @@ public class BlockLeavesSugi extends BlockLeavesBase implements IShearable
 	}
 
 	@Override
-	public int idDropped(int metadata, Random random, int fortune)
+	public Item getItemDropped(int metadata, Random random, int fortune)
 	{
-		return SugiBlock.saplingSugi.or(sapling).blockID;
+		return Item.getItemFromBlock(SugiBlocks.sugi_sapling);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public Item getItem(World world, int x, int y, int z)
+	{
+		return Item.getItemFromBlock(SugiBlocks.sugi_sapling);
 	}
 
 	@Override
@@ -264,20 +272,14 @@ public class BlockLeavesSugi extends BlockLeavesBase implements IShearable
 	}
 
 	@Override
-	public boolean isLeaves(World world, int x, int y, int z)
+	public boolean isShearable(ItemStack itemstack, IBlockAccess world, int x, int y, int z)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean isShearable(ItemStack itemstack, World world, int x, int y, int z)
+	public ArrayList<ItemStack> onSheared(ItemStack itemstack, IBlockAccess world, int x, int y, int z, int fortune)
 	{
-		return true;
-	}
-
-	@Override
-	public ArrayList<ItemStack> onSheared(ItemStack itemstack, World world, int x, int y, int z, int fortune)
-	{
-		return Lists.newArrayList(new ItemStack(blockID, 1, world.getBlockMetadata(x, y, z)));
+		return Lists.newArrayList(new ItemStack(this));
 	}
 }

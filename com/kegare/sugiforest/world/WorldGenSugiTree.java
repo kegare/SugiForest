@@ -1,16 +1,28 @@
-package kegare.sugiforest.world;
+/*
+ * SugiForest
+ *
+ * Copyright (c) 2014 kegare
+ * https://github.com/kegare
+ *
+ * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
+ */
 
-import kegare.sugiforest.block.SugiBlock;
+package com.kegare.sugiforest.world;
+
+import java.util.Random;
+
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenJungle;
 import net.minecraft.world.biome.BiomeGenSwamp;
-import net.minecraft.world.gen.feature.WorldGenerator;
+import net.minecraft.world.gen.feature.WorldGenAbstractTree;
+import net.minecraftforge.common.util.ForgeDirection;
 
-import java.util.Random;
+import com.kegare.sugiforest.block.SugiBlocks;
 
-public class WorldGenSugiTree extends WorldGenerator
+public class WorldGenSugiTree extends WorldGenAbstractTree
 {
 	private final boolean doBlockNotify;
 
@@ -38,16 +50,15 @@ public class WorldGenSugiTree extends WorldGenerator
 		{
 			if (Y >= 0 && Y < 256)
 			{
-				int checkedRange = Y == y ? 0 : (Y >= y + 1 + treeHeight - 2 ? 2 : 1);
+				int checkedRange = Y == y ? 0 : Y >= y + 1 + treeHeight - 2 ? 2 : 1;
 
 				for (int X = x - checkedRange; X <= x + checkedRange; ++X)
 				{
 					for (int Z = z - checkedRange; Z <= z + checkedRange; ++Z)
 					{
-						int blockId = world.getBlockId(X, Y, Z);
-						Block block = Block.blocksList[blockId];
+						Block block = world.getBlock(X, Y, Z);
 
-						if (blockId != 0 && block != null && !block.isLeaves(world, X, Y, Z))
+						if (!block.isAir(world, X, Y, Z) && !block.isLeaves(world, X, Y, Z) && !block.isReplaceable(world, X, Y, Z))
 						{
 							return false;
 						}
@@ -67,12 +78,11 @@ public class WorldGenSugiTree extends WorldGenerator
 	{
 		for (int woodHeight = 0; woodHeight < treeHeight; ++woodHeight)
 		{
-			int blockId = world.getBlockId(x, y + woodHeight, z);
-			Block block = Block.blocksList[blockId];
+			Block block = world.getBlock(x, y + woodHeight, z);
 
-			if (blockId == 0 || block == null || block.isLeaves(world, x, y + woodHeight, z))
+			if (isReplaceable(world, x, y, z))
 			{
-				setBlock(world, x, y + woodHeight, z, SugiBlock.woodSugi.or(Block.wood).blockID);
+				func_150515_a(world, x, y + woodHeight, z, SugiBlocks.sugi_log);
 
 				if (!doBlockNotify)
 				{
@@ -82,22 +92,22 @@ public class WorldGenSugiTree extends WorldGenerator
 						{
 							if (random.nextInt(3) > 0 && world.isAirBlock(x - 1, y + woodHeight, z))
 							{
-								setBlockAndMetadata(world, x - 1, y + woodHeight, z, Block.vine.blockID, 8);
+								setBlockAndNotifyAdequately(world, x - 1, y + woodHeight, z, Blocks.vine, 8);
 							}
 
 							if (random.nextInt(3) > 0 && world.isAirBlock(x + 1, y + woodHeight, z))
 							{
-								setBlockAndMetadata(world, x + 1, y + woodHeight, z, Block.vine.blockID, 2);
+								setBlockAndNotifyAdequately(world, x + 1, y + woodHeight, z, Blocks.vine, 2);
 							}
 
 							if (random.nextInt(3) > 0 && world.isAirBlock(x, y + woodHeight, z - 1))
 							{
-								setBlockAndMetadata(world, x, y + woodHeight, z - 1, Block.vine.blockID, 1);
+								setBlockAndNotifyAdequately(world, x, y + woodHeight, z - 1, Blocks.vine, 1);
 							}
 
 							if (random.nextInt(3) > 0 && world.isAirBlock(x, y + woodHeight, z + 1))
 							{
-								setBlockAndMetadata(world, x, y + woodHeight, z + 1, Block.vine.blockID, 4);
+								setBlockAndNotifyAdequately(world, x, y + woodHeight, z + 1, Blocks.vine, 4);
 							}
 						}
 					}
@@ -109,13 +119,14 @@ public class WorldGenSugiTree extends WorldGenerator
 						{
 							for (int Z = z - 2; count < 3 && Z <= z + 2; ++Z)
 							{
-								blockId = world.getBlockId(X, y - 1, Z);
+								block = world.getBlock(X, y - 1, Z);
 
-								if (world.isAirBlock(X, y, Z) && (blockId == Block.grass.blockID || blockId == Block.dirt.blockID))
+								if (block.canSustainPlant(world, X, y - 1, Z, ForgeDirection.UP, Blocks.brown_mushroom))
 								{
-									block = random.nextInt(30) == 0 ? Block.mushroomRed : Block.mushroomBrown;
+									block = random.nextInt(30) == 0 ? Blocks.red_mushroom : Blocks.brown_mushroom;
+									block.onPlantGrow(world, X, y - 1, Z, X, y, Z);
 
-									if (block.canBlockStay(world, X, y, Z) && random.nextInt(6) == 0 && world.setBlock(X, y, Z, block.blockID, 0, 2))
+									if (random.nextInt(6) == 0 && world.getBlock(X, y, Z) == block)
 									{
 										++count;
 									}
@@ -146,11 +157,10 @@ public class WorldGenSugiTree extends WorldGenerator
 			{
 				for (int Z = z - leaveRange; Z <= z + leaveRange; ++Z)
 				{
-					Block block = Block.blocksList[world.getBlockId(X, Y, Z)];
-
-					if ((Math.abs(X - x) != leaveRange || Math.abs(Z - z) != leaveRange || (random.nextInt(2) != 0 && leaveNum != 0)) && (block == null || block.canBeReplacedByLeaves(world, X, Y, Z)) && random.nextInt(12) != 0)
+					if ((Math.abs(X - x) != leaveRange || Math.abs(Z - z) != leaveRange || random.nextInt(2) != 0 && leaveNum != 0) &&
+						(world.isAirBlock(X, Y, Z) || world.getBlock(X, Y, Z).canBeReplacedByLeaves(world, X, Y, Z)) && random.nextInt(12) != 0)
 					{
-						setBlock(world, X, Y, Z, SugiBlock.leavesSugi.or(Block.leaves).blockID);
+						func_150515_a(world, X, Y, Z, SugiBlocks.sugi_leaves);
 					}
 				}
 			}
@@ -175,26 +185,24 @@ public class WorldGenSugiTree extends WorldGenerator
 			{
 				for (int Z = z - vineRange; Z <= z + vineRange; ++Z)
 				{
-					Block block = Block.blocksList[world.getBlockId(X, Y, Z)];
-
-					if (block != null && block.isLeaves(world, X, Y, Z))
+					if (world.getBlock(X, Y, Z).isLeaves(world, X, Y, Z))
 					{
-						if (random.nextInt(4) == 0 && world.getBlockId(X - 1, Y, Z) == 0)
+						if (random.nextInt(4) == 0 && world.isAirBlock(X - 1, Y, Z))
 						{
 							growVines(world, X - 1, Y, Z, 8);
 						}
 
-						if (random.nextInt(4) == 0 && world.getBlockId(X + 1, Y, Z) == 0)
+						if (random.nextInt(4) == 0 && world.isAirBlock(X + 1, Y, Z))
 						{
 							growVines(world, X + 1, Y, Z, 2);
 						}
 
-						if (random.nextInt(4) == 0 && world.getBlockId(X, Y, Z - 1) == 0)
+						if (random.nextInt(4) == 0 && world.isAirBlock(X, Y, Z - 1))
 						{
 							growVines(world, X, Y, Z - 1, 1);
 						}
 
-						if (random.nextInt(4) == 0 && world.getBlockId(X, Y, Z + 1) == 0)
+						if (random.nextInt(4) == 0 && world.isAirBlock(X, Y, Z + 1))
 						{
 							growVines(world, X, Y, Z + 1, 4);
 						}
@@ -206,7 +214,7 @@ public class WorldGenSugiTree extends WorldGenerator
 
 	private void growVines(World world, int x, int y, int z, int metadata)
 	{
-		setBlockAndMetadata(world, x, y, z, Block.vine.blockID, metadata);
+		setBlockAndNotifyAdequately(world, x, y, z, Blocks.vine, metadata);
 
 		byte count = 4;
 
@@ -214,12 +222,12 @@ public class WorldGenSugiTree extends WorldGenerator
 		{
 			--y;
 
-			if (world.getBlockId(x, y, z) != 0 || count <= 0)
+			if (!world.isAirBlock(x, y, z) || count <= 0)
 			{
 				return;
 			}
 
-			setBlockAndMetadata(world, x, y, z, Block.vine.blockID, metadata);
+			setBlockAndNotifyAdequately(world, x, y, z, Blocks.vine, metadata);
 
 			--count;
 		}
@@ -240,7 +248,7 @@ public class WorldGenSugiTree extends WorldGenerator
 		{
 			shiftTreeHeight(random.nextInt(3));
 		}
-		else if (biome.getFloatTemperature() >= 1.0F)
+		else if (biome.getFloatTemperature(x, y, z) >= 1.0F)
 		{
 			shiftTreeHeight(-(random.nextInt(2) + 3));
 		}
@@ -249,11 +257,12 @@ public class WorldGenSugiTree extends WorldGenerator
 
 		if (treeHeight != 0 && y > 0 && y + treeHeight + 1 <= 256 && isGeneratableTree(world, x, y, z))
 		{
-			int blockId = world.getBlockId(x, y - 1, z);
+			Block block = world.getBlock(x, y - 1, z);
 
-			if ((blockId == Block.grass.blockID || blockId == Block.dirt.blockID) && y < 256 - treeHeight - 1)
+			if (block.canSustainPlant(world, x, y - 1, z, ForgeDirection.UP, SugiBlocks.sugi_sapling) && y < 256 - treeHeight - 1)
 			{
-				setBlock(world, x, y - 1, z, Block.dirt.blockID);
+				block.onPlantGrow(world, x, y - 1, z, x, y, x);
+
 				setLeaves(world, random, x, y, z, biome);
 				setTree(world, random, x, y, z, biome);
 
