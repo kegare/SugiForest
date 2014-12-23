@@ -9,21 +9,18 @@
 
 package com.kegare.sugiforest.core;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraftforge.common.BiomeManager.BiomeType;
 
 import com.kegare.sugiforest.block.SugiBlocks;
 import com.kegare.sugiforest.handler.SugiEventHooks;
 import com.kegare.sugiforest.handler.SugiFuelHandler;
 import com.kegare.sugiforest.handler.SugiWorldGenerator;
+import com.kegare.sugiforest.item.SugiItems;
 import com.kegare.sugiforest.util.Version;
 import com.kegare.sugiforest.world.BiomeGenSugiForest;
 
@@ -43,12 +40,15 @@ import cpw.mods.fml.common.registry.GameRegistry;
 @Mod
 (
 	modid = SugiForest.MODID,
-	acceptedMinecraftVersions = "[1.7.10,)"
+	acceptedMinecraftVersions = "[1.7.10,)",
+	guiFactory = SugiForest.MOD_PACKAGE + ".client.config.SugiGuiFactory"
 )
 public class SugiForest
 {
 	public static final String
-	MODID = "kegare.sugiforest";
+	MODID = "kegare.sugiforest",
+	MOD_PACKAGE = "com.kegare.sugiforest",
+	CONFIG_LANG = "sugiforest.config.";
 
 	@Metadata(MODID)
 	public static ModMetadata metadata;
@@ -84,8 +84,7 @@ public class SugiForest
 		Config.syncConfig();
 
 		SugiBlocks.registerBlocks();
-
-		registerRecipes();
+		SugiItems.registerItems();
 
 		GameRegistry.registerFuelHandler(new SugiFuelHandler());
 		GameRegistry.registerWorldGenerator(new SugiWorldGenerator(), 10);
@@ -94,11 +93,13 @@ public class SugiForest
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
+		FMLCommonHandler.instance().bus().register(new SugiEventHooks());
+
 		if (Config.biomeSugiForest > 0)
 		{
 			sugiForest = new BiomeGenSugiForest(Config.biomeSugiForest, true);
 
-			BiomeManager.warmBiomes.add(new BiomeEntry(sugiForest, Config.sugiForestGenWeight));
+			BiomeManager.addBiome(BiomeType.WARM, new BiomeEntry(sugiForest, Config.sugiForestGenWeight));
 			BiomeManager.addSpawnBiome(sugiForest);
 			BiomeManager.addStrongholdBiome(sugiForest);
 
@@ -106,6 +107,8 @@ public class SugiForest
 
 			BiomeDictionary.registerBiomeType(sugiForest, Type.FOREST, Type.HILLS);
 		}
+
+		SugiBlocks.registerRecipes();
 	}
 
 	@EventHandler
@@ -115,34 +118,5 @@ public class SugiForest
 		{
 			event.getServer().logInfo("A new SugiForest version is available : " + Version.getLatest());
 		}
-
-		FMLCommonHandler.instance().bus().register(new SugiEventHooks());
-	}
-
-	protected static void registerRecipes()
-	{
-		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.noteblock, "###", "#X#", "###", '#', "planksSugi", 'X', Items.redstone));
-		GameRegistry.addRecipe(new ShapedOreRecipe(Items.bed, "###", "XXX", '#', Blocks.wool, 'X', "planksSugi"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.piston, "###", "XYX", "XZX", '#', "planksSugi", 'X', "cobblestone", 'Y', Items.redstone, 'Z', Items.iron_ingot));
-		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.bookshelf, "###", "XXX", "###", '#', "planksSugi", 'X', Items.book));
-		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.chest, "###", "# #", "###", '#', "planksSugi"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.crafting_table, "##", "##", '#', "planksSugi"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(Items.wooden_door, "##", "##", "##", '#', "planksSugi"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.wooden_pressure_plate, "##", '#', "planksSugi"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.jukebox, "###", "#X#", "###", '#', "planksSugi", 'X', Items.diamond));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.trapdoor, 2), "###", "###", '#', "planksSugi"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.fence_gate, "#X#", "#X#", '#', "stickWood", 'X', "planksSugi"));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(Blocks.wooden_button, "planksSugi"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.tripwire_hook, 2), "#", "X", "Y", '#', Items.iron_ingot, 'X', "stickWood", 'Y', "planksSugi"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.daylight_detector, "###", "XXX", "YYY", '#', Blocks.glass, 'X', Items.quartz, 'Y', "woodSlabSugi"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.stick, 4), "#", "#", '#', "planksSugi"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.bowl, 4), "# #", " # ", '#', "planksSugi"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.sign, 3), "###", "###", " X ", '#', "planksSugi", 'X', "stickWood"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(Items.boat, "# #", "###", '#', "planksSugi"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(Items.wooden_sword, "#", "#", "X", '#', "planksSugi", 'X', "stickWood"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(Items.wooden_pickaxe, "###", " X ", " X ", '#', "planksSugi", 'X', "stickWood"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(Items.wooden_axe, "##", "#X", " X", '#', "planksSugi", 'X', "stickWood"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(Items.wooden_shovel, "#", "X", "X", '#', "planksSugi", 'X', "stickWood"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(Items.wooden_hoe, "##", " X", " X", '#', "planksSugi", 'X', "stickWood"));
 	}
 }

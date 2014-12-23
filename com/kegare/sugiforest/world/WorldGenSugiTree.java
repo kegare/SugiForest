@@ -82,7 +82,7 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 
 			if (isReplaceable(world, x, y, z))
 			{
-				func_150515_a(world, x, y + woodHeight, z, SugiBlocks.sugi_log);
+				setBlockAndNotifyAdequately(world, x, y + woodHeight, z, SugiBlocks.sugi_log, random.nextInt(40) == 0 ? 1 : 0);
 
 				if (!doBlockNotify)
 				{

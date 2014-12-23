@@ -39,6 +39,7 @@ public class SugiBlocks
 
 			FurnaceRecipes.smelting().func_151393_a(sugi_log, new ItemStack(Items.coal, 1, 1), 0.15F);
 
+			OreDictionary.registerOre("logWood", new ItemStack(sugi_log, 1, OreDictionary.WILDCARD_VALUE));
 			OreDictionary.registerOre("woodSugi", sugi_log);
 
 			Blocks.fire.setFireInfo(sugi_log, 5, 5);
@@ -48,6 +49,7 @@ public class SugiBlocks
 		{
 			GameRegistry.registerBlock(sugi_leaves, "sugi_leaves");
 
+			OreDictionary.registerOre("treeLeaves", new ItemStack(sugi_leaves, 1, OreDictionary.WILDCARD_VALUE));
 			OreDictionary.registerOre("leavesSugi", sugi_leaves);
 
 			Blocks.fire.setFireInfo(sugi_leaves, 30, 60);
@@ -56,8 +58,8 @@ public class SugiBlocks
 		if (Config.saplingSugi)
 		{
 			GameRegistry.registerBlock(sugi_sapling, "sugi_sapling");
-			GameRegistry.addShapelessRecipe(new ItemStack(Items.stick), new ItemStack(sugi_sapling));
 
+			OreDictionary.registerOre("treeSapling", new ItemStack(sugi_sapling, 1, OreDictionary.WILDCARD_VALUE));
 			OreDictionary.registerOre("saplingSugi", sugi_sapling);
 
 			Blocks.fire.setFireInfo(sugi_sapling, 20, 60);
@@ -66,8 +68,8 @@ public class SugiBlocks
 		if (Config.planksSugi)
 		{
 			GameRegistry.registerBlock(sugi_planks, "sugi_planks");
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(sugi_planks, 4), "woodSugi"));
 
+			OreDictionary.registerOre("plankWood", new ItemStack(sugi_planks, 1, OreDictionary.WILDCARD_VALUE));
 			OreDictionary.registerOre("planksSugi", sugi_planks);
 
 			Blocks.fire.setFireInfo(sugi_planks, 5, 20);
@@ -76,8 +78,8 @@ public class SugiBlocks
 		if (Config.woodSlabSugi)
 		{
 			GameRegistry.registerBlock(sugi_slab, ItemWoodSlabSugi.class, "sugi_slab");
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(sugi_slab, 6), "###", '#', "planksSugi"));
 
+			OreDictionary.registerOre("slabWood", new ItemStack(sugi_slab, 1, OreDictionary.WILDCARD_VALUE));
 			OreDictionary.registerOre("woodSlabSugi", sugi_slab);
 
 			Blocks.fire.setFireInfo(sugi_slab, 5, 20);
@@ -86,11 +88,37 @@ public class SugiBlocks
 		if (Config.stairsWoodSugi)
 		{
 			GameRegistry.registerBlock(sugi_stairs, "sugi_stairs");
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(sugi_stairs, 4), "  #", " ##", "###", '#', "planksSugi"));
 
+			OreDictionary.registerOre("stairWood", sugi_slab);
 			OreDictionary.registerOre("stairsWoodSugi", sugi_stairs);
 
 			Blocks.fire.setFireInfo(sugi_stairs, 5, 20);
+		}
+	}
+
+	public static void registerRecipes()
+	{
+		if (Config.saplingSugi)
+		{
+			GameRegistry.addShapelessRecipe(new ItemStack(Items.stick), new ItemStack(sugi_sapling));
+		}
+
+		if (Config.planksSugi)
+		{
+			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(sugi_planks, 4), "woodSugi"));
+			GameRegistry.addShapelessRecipe(new ItemStack(sugi_planks, 4), sugi_log);
+		}
+
+		if (Config.woodSlabSugi)
+		{
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(sugi_slab, 6), "###", '#', "planksSugi"));
+			GameRegistry.addRecipe(new ItemStack(sugi_slab, 6), "###", '#', sugi_planks);
+		}
+
+		if (Config.stairsWoodSugi)
+		{
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(sugi_stairs, 4), "  #", " ##", "###", '#', "planksSugi"));
+			GameRegistry.addRecipe(new ItemStack(sugi_stairs, 4), "  #", " ##", "###", '#', sugi_planks);
 		}
 	}
 }

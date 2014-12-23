@@ -10,7 +10,6 @@
 package com.kegare.sugiforest.handler;
 
 import net.minecraft.event.ClickEvent;
-import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
@@ -20,6 +19,8 @@ import com.kegare.sugiforest.core.SugiForest;
 import com.kegare.sugiforest.util.Version;
 import com.kegare.sugiforest.util.Version.Status;
 
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -27,6 +28,16 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class SugiEventHooks
 {
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void onConfigChanged(OnConfigChangedEvent event)
+	{
+		if (event.modID.equals(SugiForest.MODID))
+		{
+			Config.syncConfig();
+		}
+	}
+
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onClientConnected(ClientConnectedToServerEvent event)
@@ -41,7 +52,7 @@ public class SugiEventHooks
 			component.appendText(" : " + EnumChatFormatting.YELLOW + Version.getLatest());
 			component.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, SugiForest.metadata.url));
 
-			event.handler.handleChat(new S02PacketChat(component));
+			FMLClientHandler.instance().getClient().ingameGUI.getChatGUI().printChatMessage(component);
 		}
 	}
 }

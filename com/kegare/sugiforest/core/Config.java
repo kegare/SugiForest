@@ -12,6 +12,7 @@ package com.kegare.sugiforest.core;
 import java.io.File;
 import java.util.List;
 
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -37,6 +38,8 @@ public class Config
 	public static boolean woodSlabSugi;
 	public static boolean stairsWoodSugi;
 
+	public static boolean mystSap;
+
 	public static int biomeSugiForest;
 	public static int sugiForestGenWeight;
 
@@ -44,7 +47,7 @@ public class Config
 	{
 		if (config == null)
 		{
-			File file = new File(Loader.instance().getConfigDir(), "sugiforest.cfg");
+			File file = new File(Loader.instance().getConfigDir(), "SugiForest.cfg");
 			config = new Configuration(file, true);
 
 			try
@@ -66,20 +69,20 @@ public class Config
 			}
 		}
 
-		String category = "general";
+		String category = Configuration.CATEGORY_GENERAL;
 		Property prop;
 		List<String> propOrder = Lists.newArrayList();
 
 		prop = config.get(category, "versionNotify", true);
-		prop.comment = "Whether or not to notify when a new SugiForest version is available.";
+		prop.setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
+		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		prop.comment += " [default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		versionNotify = prop.getBoolean(versionNotify);
 		prop = config.get(category, "sugiOnHills", 10);
-		prop.comment = "Specify the generation rate of sugi trees on hills.";
-		prop.comment += Configuration.NEW_LINE;
-		prop.comment += "If specify 0, sugi trees will be not generated in there.";
-		prop.comment += Configuration.NEW_LINE;
-		prop.comment += "NOTE: If multiplayer, server-side only.";
+		prop.setMinValue(0).setMaxValue(300).setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
+		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		prop.comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		sugiOnHills = prop.getInt(sugiOnHills);
 
@@ -89,29 +92,54 @@ public class Config
 		category = "blocks";
 
 		prop = config.get(category, "woodSugi", true);
-		prop.comment = "Whether or not to add Sugi Wood.";
+		prop.setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
+		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		prop.comment += " [default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		woodSugi = prop.getBoolean(woodSugi);
 		prop = config.get(category, "leavesSugi", true);
-		prop.comment = "Whether or not to add Sugi Leaves.";
+		prop.setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
+		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		prop.comment += " [default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		leavesSugi = prop.getBoolean(leavesSugi);
 		prop = config.get(category, "saplingSugi", true);
-		prop.comment = "Whether or not to add Sugi Sapling.";
+		prop.setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
+		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		prop.comment += " [default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		saplingSugi = prop.getBoolean(saplingSugi);
 		prop = config.get(category, "planksSugi", true);
-		prop.comment = "Whether or not to add Sugi Wood Planks.";
+		prop.setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
+		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		prop.comment += " [default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		planksSugi = prop.getBoolean(planksSugi);
 		prop = config.get(category, "woodSlabSugi", true);
-		prop.comment = "Whether or not to add Sugi Wood Slab.";
+		prop.setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
+		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		prop.comment += " [default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		woodSlabSugi = prop.getBoolean(woodSlabSugi);
 		prop = config.get(category, "stairsWoodSugi", true);
-		prop.comment = "Whether or not to add Sugi Wood Stairs.";
+		prop.setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
+		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		prop.comment += " [default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		stairsWoodSugi = prop.getBoolean(stairsWoodSugi);
+
+		config.addCustomCategoryComment(category, "If multiplayer, values must match on client-side and server-side.");
+		config.setCategoryRequiresMcRestart(category, true);
+		config.setCategoryPropertyOrder(category, propOrder);
+
+		category = "items";
+
+		prop = config.get(category, "mystSap", true);
+		prop.setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
+		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		prop.comment += " [default: " + prop.getDefault() + "]";
+		propOrder.add(prop.getName());
+		mystSap = prop.getBoolean(mystSap);
 
 		config.addCustomCategoryComment(category, "If multiplayer, values must match on client-side and server-side.");
 		config.setCategoryRequiresMcRestart(category, true);
@@ -120,18 +148,15 @@ public class Config
 		category = "biomes";
 
 		prop = config.get(category, "Sugi Forest", 65);
-		prop.setMinValue(0).setMaxValue(BiomeGenBase.getBiomeGenArray().length);
-		prop.comment = "Specify the biome ID for Sugi Forest.";
-		prop.comment += Configuration.NEW_LINE;
-		prop.comment += "NOTE: If multiplayer, values must match on client-side and server-side.";
-		prop.comment += Configuration.NEW_LINE;
-		prop.comment += "If specify 0 for ID, it will be disabled.";
+		prop.setMinValue(0).setMaxValue(BiomeGenBase.getBiomeGenArray().length).setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
+		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		prop.comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		biomeSugiForest = prop.getInt(biomeSugiForest);
 		prop = config.get(category, "sugiForestGenWeight", 15);
-		prop.comment = "Specify the generation weight for Sugi Forest.";
-		prop.comment += Configuration.NEW_LINE;
-		prop.comment += "NOTE: If multiplayer, server-side only.";
+		prop.setMinValue(0).setMaxValue(100).setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
+		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		prop.comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		sugiForestGenWeight = prop.getInt(sugiForestGenWeight);
 
