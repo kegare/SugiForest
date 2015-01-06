@@ -59,7 +59,7 @@ public class Version extends RecursiveAction
 		CURRENT = Optional.of(Strings.nullToEmpty(SugiForest.metadata.version));
 		LATEST = Optional.fromNullable(CURRENT.orNull());
 
-		ModContainer mod = SugiForest.getModContainer();
+		ModContainer mod = SugiUtils.getModContainer();
 		File file = mod == null ? null : mod.getSource();
 
 		if (file != null && file.exists())

@@ -34,3 +34,8 @@ sugiforest.config.biomes.Sugi Forest=Sugi Forest
 sugiforest.config.biomes.Sugi Forest.tooltip=Specify the biome ID for Sugi Forest.
 sugiforest.config.biomes.sugiForestGenWeight=Sugi Forest Generation Weight
 sugiforest.config.biomes.sugiForestGenWeight.tooltip=Specify the generation weight for Sugi Forest.
+sugiforest.config.dimension.Sugi Forest=Sugi Forest
+sugiforest.config.dimension.Sugi Forest.tooltip=Specify the dimension ID for Sugi Forest.
+
+bedrocklayer.config.sugiforest=Sugi Forest
+bedrocklayer.config.sugiforest.tooltip=Whether or not to flatten uneven bedrock layers of Sugi Forest.

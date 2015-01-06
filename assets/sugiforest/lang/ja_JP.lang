@@ -34,3 +34,8 @@ sugiforest.config.biomes.Sugi Forest=Sugi Forest
 sugiforest.config.biomes.Sugi Forest.tooltip=Sugi ForestのバイオームIDを指定します。
 sugiforest.config.biomes.sugiForestGenWeight=Sugi Forestの生成量
 sugiforest.config.biomes.sugiForestGenWeight.tooltip=Sugi Forestバイオームの生成量を指定します。
+sugiforest.config.dimension.Sugi Forest=Sugi Forest
+sugiforest.config.dimension.Sugi Forest.tooltip=Sugi ForestのディメンションIDを指定します。
+
+bedrocklayer.config.sugiforest=Sugi Forest
+bedrocklayer.config.sugiforest.tooltip=Sugi Forestの岩盤層を平坦にします。

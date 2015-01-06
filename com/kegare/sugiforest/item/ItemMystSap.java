@@ -12,13 +12,20 @@ package com.kegare.sugiforest.item;
 import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemSoup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
+
+import com.kegare.sugiforest.core.Config;
+import com.kegare.sugiforest.core.SugiForest;
+import com.kegare.sugiforest.util.SugiUtils;
 
 public class ItemMystSap extends ItemSoup
 {
@@ -34,6 +41,18 @@ public class ItemMystSap extends ItemSoup
 	protected void onFoodEaten(ItemStack itemstack, World world, EntityPlayer player)
 	{
 		player.extinguish();
+
+		if (player instanceof EntityPlayerMP)
+		{
+			int x = MathHelper.floor_double(player.posX);
+			int z = MathHelper.floor_double(player.posZ);
+			BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
+
+			if (biome == SugiForest.sugiForest && Config.dimensionSugiForest != 0)
+			{
+				SugiUtils.respawnPlayer((EntityPlayerMP)player, player.dimension == Config.dimensionSugiForest ? 0 : Config.dimensionSugiForest);
+			}
+		}
 
 		if (!world.isRemote)
 		{
@@ -58,6 +77,19 @@ public class ItemMystSap extends ItemSoup
 
 		player.getFoodStats().addStats((20 - player.getFoodStats().getFoodLevel()) / 2, 0.5F);
 		player.heal((player.getMaxHealth() - player.getHealth()) * 0.5F);
+	}
+
+	@Override
+	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer player)
+	{
+		if (player instanceof EntityPlayerMP && player.capabilities.isCreativeMode)
+		{
+			SugiUtils.respawnPlayer((EntityPlayerMP)player, player.dimension == Config.dimensionSugiForest ? 0 : Config.dimensionSugiForest);
+
+			return itemstack;
+		}
+
+		return super.onItemRightClick(itemstack, world, player);
 	}
 
 	@Override

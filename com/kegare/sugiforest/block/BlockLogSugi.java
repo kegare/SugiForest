@@ -33,7 +33,6 @@ public class BlockLogSugi extends BlockLog
 		this.setBlockName(name);
 		this.setBlockTextureName("sugiforest:sugi_log");
 		this.setHarvestLevel("axe", 0);
-		this.setTickRandomly(true);
 	}
 
 	@Override

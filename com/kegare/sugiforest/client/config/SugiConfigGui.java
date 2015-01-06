@@ -41,6 +41,7 @@ public class SugiConfigGui extends GuiConfig
 		list.addAll(new ConfigElement(Config.config.getCategory("blocks")).getChildElements());
 		list.addAll(new ConfigElement(Config.config.getCategory("items")).getChildElements());
 		list.addAll(new ConfigElement(Config.config.getCategory("biomes")).getChildElements());
+		list.addAll(new ConfigElement(Config.config.getCategory("dimension")).getChildElements());
 
 		return list;
 	}

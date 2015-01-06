@@ -42,6 +42,7 @@ public class Config
 
 	public static int biomeSugiForest;
 	public static int sugiForestGenWeight;
+	public static int dimensionSugiForest;
 
 	public static void syncConfig()
 	{
@@ -86,42 +87,42 @@ public class Config
 		propOrder.add(prop.getName());
 		sugiOnHills = prop.getInt(sugiOnHills);
 
-		config.setCategoryRequiresMcRestart(category, true);
 		config.setCategoryPropertyOrder(category, propOrder);
 
 		category = "blocks";
+		propOrder = Lists.newArrayList();
 
-		prop = config.get(category, "woodSugi", true);
+		prop = config.get(category, "woodSugi", true).setRequiresMcRestart(true);
 		prop.setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
 		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
 		prop.comment += " [default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		woodSugi = prop.getBoolean(woodSugi);
-		prop = config.get(category, "leavesSugi", true);
+		prop = config.get(category, "leavesSugi", true).setRequiresMcRestart(true);
 		prop.setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
 		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
 		prop.comment += " [default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		leavesSugi = prop.getBoolean(leavesSugi);
-		prop = config.get(category, "saplingSugi", true);
+		prop = config.get(category, "saplingSugi", true).setRequiresMcRestart(true);
 		prop.setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
 		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
 		prop.comment += " [default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		saplingSugi = prop.getBoolean(saplingSugi);
-		prop = config.get(category, "planksSugi", true);
+		prop = config.get(category, "planksSugi", true).setRequiresMcRestart(true);
 		prop.setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
 		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
 		prop.comment += " [default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		planksSugi = prop.getBoolean(planksSugi);
-		prop = config.get(category, "woodSlabSugi", true);
+		prop = config.get(category, "woodSlabSugi", true).setRequiresMcRestart(true);
 		prop.setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
 		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
 		prop.comment += " [default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		woodSlabSugi = prop.getBoolean(woodSlabSugi);
-		prop = config.get(category, "stairsWoodSugi", true);
+		prop = config.get(category, "stairsWoodSugi", true).setRequiresMcRestart(true);
 		prop.setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
 		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
 		prop.comment += " [default: " + prop.getDefault() + "]";
@@ -133,8 +134,9 @@ public class Config
 		config.setCategoryPropertyOrder(category, propOrder);
 
 		category = "items";
+		propOrder = Lists.newArrayList();
 
-		prop = config.get(category, "mystSap", true);
+		prop = config.get(category, "mystSap", true).setRequiresMcRestart(true);
 		prop.setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
 		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
 		prop.comment += " [default: " + prop.getDefault() + "]";
@@ -146,14 +148,15 @@ public class Config
 		config.setCategoryPropertyOrder(category, propOrder);
 
 		category = "biomes";
+		propOrder = Lists.newArrayList();
 
-		prop = config.get(category, "Sugi Forest", 65);
+		prop = config.get(category, "Sugi Forest", 65).setRequiresMcRestart(true);
 		prop.setMinValue(0).setMaxValue(BiomeGenBase.getBiomeGenArray().length).setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
 		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
 		prop.comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		biomeSugiForest = prop.getInt(biomeSugiForest);
-		prop = config.get(category, "sugiForestGenWeight", 15);
+		prop = config.get(category, "sugiForestGenWeight", 15).setRequiresMcRestart(true);
 		prop.setMinValue(0).setMaxValue(100).setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
 		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
 		prop.comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
@@ -161,6 +164,18 @@ public class Config
 		sugiForestGenWeight = prop.getInt(sugiForestGenWeight);
 
 		config.setCategoryRequiresMcRestart(category, true);
+		config.setCategoryPropertyOrder(category, propOrder);
+
+		category = "dimension";
+		propOrder = Lists.newArrayList();
+
+		prop = config.get(category, "Sugi Forest", -7).setRequiresMcRestart(true);
+		prop.setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
+		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		prop.comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
+		propOrder.add(prop.getName());
+		dimensionSugiForest = prop.getInt(dimensionSugiForest);
+
 		config.setCategoryPropertyOrder(category, propOrder);
 
 		if (config.hasChanged())

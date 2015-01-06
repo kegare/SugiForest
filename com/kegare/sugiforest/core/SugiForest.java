@@ -15,24 +15,31 @@ import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.BiomeManager.BiomeType;
+import net.minecraftforge.common.DimensionManager;
+
+import org.apache.logging.log4j.Level;
 
 import com.kegare.sugiforest.block.SugiBlocks;
 import com.kegare.sugiforest.handler.SugiEventHooks;
 import com.kegare.sugiforest.handler.SugiFuelHandler;
 import com.kegare.sugiforest.handler.SugiWorldGenerator;
 import com.kegare.sugiforest.item.SugiItems;
+import com.kegare.sugiforest.plugin.bedrocklayer.BedrockLayerPlugin;
+import com.kegare.sugiforest.plugin.mceconomy.MCEconomyPlugin;
+import com.kegare.sugiforest.plugin.thaumcraft.ThaumcraftPlugin;
 import com.kegare.sugiforest.util.Version;
 import com.kegare.sugiforest.world.BiomeGenSugiForest;
+import com.kegare.sugiforest.world.WorldProviderSugiForest;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Metadata;
-import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -54,23 +61,6 @@ public class SugiForest
 	public static ModMetadata metadata;
 
 	public static BiomeGenBase sugiForest = new BiomeGenSugiForest(65, false);
-
-	public static ModContainer getModContainer()
-	{
-		ModContainer mod = Loader.instance().getIndexedModList().get(MODID);
-
-		if (mod == null)
-		{
-			mod = Loader.instance().activeModContainer();
-
-			if (mod == null || mod.getModId() != MODID)
-			{
-				return null;
-			}
-		}
-
-		return mod;
-	}
 
 	@EventHandler
 	public void construct(FMLConstructionEvent event)
@@ -106,9 +96,57 @@ public class SugiForest
 			BiomeGenBase.explorationBiomesList.add(sugiForest);
 
 			BiomeDictionary.registerBiomeType(sugiForest, Type.FOREST, Type.HILLS);
+
+			if (Config.dimensionSugiForest != 0)
+			{
+				int id = Config.dimensionSugiForest;
+
+				DimensionManager.registerProviderType(id, WorldProviderSugiForest.class, true);
+				DimensionManager.registerDimension(id, id);
+			}
 		}
 
 		SugiBlocks.registerRecipes();
+	}
+
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent event)
+	{
+		try
+		{
+			if (BedrockLayerPlugin.enabled())
+			{
+				BedrockLayerPlugin.invoke();
+			}
+		}
+		catch (Throwable e)
+		{
+			FMLLog.log(Level.WARN, e, "Failed to trying invoke plugin: BedrockLayerPlugin");
+		}
+
+		try
+		{
+			if (MCEconomyPlugin.enabled())
+			{
+				MCEconomyPlugin.invoke();
+			}
+		}
+		catch (Throwable e)
+		{
+			FMLLog.log(Level.WARN, e, "Failed to trying invoke plugin: MCEconomyPlugin");
+		}
+
+		try
+		{
+			if (ThaumcraftPlugin.enabled())
+			{
+				ThaumcraftPlugin.invoke();
+			}
+		}
+		catch (Throwable e)
+		{
+			FMLLog.log(Level.WARN, e, "Failed to trying invoke plugin: ThaumcraftPlugin");
+		}
 	}
 
 	@EventHandler
