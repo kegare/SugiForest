@@ -18,6 +18,8 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import com.kegare.sugiforest.core.Config;
+import com.kegare.sugiforest.entity.TileEntityChestSugi;
+import com.kegare.sugiforest.item.ItemChestSugi;
 import com.kegare.sugiforest.item.ItemWoodSlabSugi;
 
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -30,6 +32,7 @@ public class SugiBlocks
 	public static final BlockWoodSugi sugi_planks = new BlockWoodSugi("planksSugi");
 	public static final BlockWoodSlabSugi sugi_slab = new BlockWoodSlabSugi("woodSlabSugi");
 	public static final BlockStairsSugi sugi_stairs = new BlockStairsSugi("stairsWoodSugi");
+	public static final BlockChestSugi sugi_chest = new BlockChestSugi("chestSugi");
 
 	public static void registerBlocks()
 	{
@@ -94,6 +97,18 @@ public class SugiBlocks
 
 			Blocks.fire.setFireInfo(sugi_stairs, 5, 20);
 		}
+
+		if (Config.chestSugi)
+		{
+			GameRegistry.registerBlock(sugi_chest, ItemChestSugi.class, "sugi_chest");
+			GameRegistry.registerTileEntity(TileEntityChestSugi.class, "SugiChest");
+
+			OreDictionary.registerOre("chestSugi", sugi_chest);
+			OreDictionary.registerOre("sugiChest", sugi_chest);
+			OreDictionary.registerOre("chest", sugi_chest);
+
+			Blocks.fire.setFireInfo(sugi_chest, 5, 5);
+		}
 	}
 
 	public static void registerRecipes()
@@ -119,6 +134,18 @@ public class SugiBlocks
 		{
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(sugi_stairs, 4), "  #", " ##", "###", '#', "planksSugi"));
 			GameRegistry.addRecipe(new ItemStack(sugi_stairs, 4), "  #", " ##", "###", '#', sugi_planks);
+		}
+
+		if (Config.chestSugi)
+		{
+			GameRegistry.addRecipe(new ShapedOreRecipe(sugi_chest,
+				"XXX", "X X", "XXX",
+				'X', "planksSugi"
+			));
+			GameRegistry.addShapedRecipe(new ItemStack(sugi_chest),
+				"XXX", "X X", "XXX",
+				'X', sugi_planks
+			);
 		}
 	}
 }

@@ -39,6 +39,7 @@ public class ThaumcraftPlugin
 		ThaumcraftApi.registerObjectTag(new ItemStack(SugiBlocks.sugi_planks, 1, OreDictionary.WILDCARD_VALUE), new AspectList().add(Aspect.TREE, 2));
 		ThaumcraftApi.registerObjectTag(new ItemStack(SugiBlocks.sugi_slab, 1, OreDictionary.WILDCARD_VALUE), new AspectList().add(Aspect.TREE, 1));
 		ThaumcraftApi.registerObjectTag(new ItemStack(SugiBlocks.sugi_stairs, 1, OreDictionary.WILDCARD_VALUE), new AspectList().add(Aspect.TREE, 2));
+		ThaumcraftApi.registerObjectTag(new ItemStack(SugiBlocks.sugi_chest, 1, OreDictionary.WILDCARD_VALUE), new AspectList().add(Aspect.TREE, 3));
 		ThaumcraftApi.registerObjectTag(new ItemStack(SugiItems.myst_sap, 1, OreDictionary.WILDCARD_VALUE), new AspectList().add(Aspect.HEAL, 3).add(Aspect.TREE, 2).add(Aspect.ELDRITCH, 2));
 	}
 }

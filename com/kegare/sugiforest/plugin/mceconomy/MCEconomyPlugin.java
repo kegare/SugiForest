@@ -36,6 +36,7 @@ public class MCEconomyPlugin
 		MCEconomyAPI.addPurchaseItem(new ItemStack(SugiBlocks.sugi_planks), 0);
 		MCEconomyAPI.addPurchaseItem(new ItemStack(SugiBlocks.sugi_slab), 0);
 		MCEconomyAPI.addPurchaseItem(new ItemStack(SugiBlocks.sugi_stairs), 0);
+		MCEconomyAPI.addPurchaseItem(new ItemStack(SugiBlocks.sugi_chest), 6);
 		MCEconomyAPI.addPurchaseItem(new ItemStack(SugiItems.myst_sap), 50);
 	}
 }

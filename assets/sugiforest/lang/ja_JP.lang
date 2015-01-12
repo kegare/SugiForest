@@ -8,6 +8,8 @@ tile.saplingSugi.name=杉の苗木
 tile.planksSugi.name=杉の木材
 tile.woodSlabSugi.name=杉の木材ハーフブロック
 tile.stairsWoodSugi.name=杉の木の階段
+tile.chestSugi.name=杉箪笥
+tile.chestSugi.contained.name=中身入りの杉箪笥
 
 item.mystSap.name=神秘の樹液
 
@@ -28,6 +30,8 @@ sugiforest.config.blocks.woodSlabSugi=杉の木材ハーフブロック
 sugiforest.config.blocks.woodSlabSugi.tooltip=杉の木材ハーフブロックを追加します。
 sugiforest.config.blocks.stairsWoodSugi=杉の木の階段
 sugiforest.config.blocks.stairsWoodSugi.tooltip=杉の木の階段を追加します。
+sugiforest.config.blocks.chestSugi=杉箪笥
+sugiforest.config.blocks.chestSugi.tooltip=杉箪笥を追加します。
 sugiforest.config.items.mystSap=神秘の樹液
 sugiforest.config.items.mystSap.tooltip=神秘の樹液を追加します。
 sugiforest.config.biomes.Sugi Forest=Sugi Forest

@@ -12,6 +12,7 @@ package com.kegare.sugiforest.handler;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
+import com.kegare.sugiforest.block.BlockChestSugi;
 import com.kegare.sugiforest.block.BlockLeavesSugi;
 import com.kegare.sugiforest.block.BlockLogSugi;
 import com.kegare.sugiforest.block.BlockSaplingSugi;
@@ -39,6 +40,10 @@ public class SugiFuelHandler implements IFuelHandler
 		else if (block instanceof BlockWoodSlabSugi)
 		{
 			return 150;
+		}
+		else if (block instanceof BlockChestSugi)
+		{
+			return 2300;
 		}
 
 		return 0;

@@ -1,0 +1,14 @@
+{
+  "sugichest.open": {
+    "category": "block",
+    "sounds": [
+      "open"
+    ]
+  },
+  "sugichest.close": {
+    "category": "block",
+    "sounds": [
+      "close"
+    ]
+  }
+}

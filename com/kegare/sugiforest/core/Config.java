@@ -37,6 +37,7 @@ public class Config
 	public static boolean planksSugi;
 	public static boolean woodSlabSugi;
 	public static boolean stairsWoodSugi;
+	public static boolean chestSugi;
 
 	public static boolean mystSap;
 
@@ -128,6 +129,12 @@ public class Config
 		prop.comment += " [default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		stairsWoodSugi = prop.getBoolean(stairsWoodSugi);
+		prop = config.get(category, "chestSugi", true).setRequiresMcRestart(true);
+		prop.setLanguageKey(SugiForest.CONFIG_LANG + category + "." + prop.getName());
+		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		prop.comment += " [default: " + prop.getDefault() + "]";
+		propOrder.add(prop.getName());
+		chestSugi = prop.getBoolean(chestSugi);
 
 		config.addCustomCategoryComment(category, "If multiplayer, values must match on client-side and server-side.");
 		config.setCategoryRequiresMcRestart(category, true);
