@@ -42,7 +42,7 @@ public class ItemMystSap extends ItemSoup
 	{
 		player.extinguish();
 
-		if (player instanceof EntityPlayerMP)
+		if (player instanceof EntityPlayerMP && !player.isSneaking())
 		{
 			int x = MathHelper.floor_double(player.posX);
 			int z = MathHelper.floor_double(player.posZ);

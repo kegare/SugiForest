@@ -73,6 +73,8 @@ public class BlockLogSugi extends BlockLog
 			world.spawnEntityInWorld(item);
 		}
 
+		world.setBlockMetadataWithNotify(x, y, z, 0, 2);
+
 		return result;
 	}
 
