@@ -121,7 +121,7 @@ public class SugiBlocks
 		if (Config.planksSugi)
 		{
 			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(sugi_planks, 4), "woodSugi"));
-			GameRegistry.addRecipe(new ItemStack(sugi_planks, 4), new ItemStack(sugi_log, 1, OreDictionary.WILDCARD_VALUE));
+			GameRegistry.addShapelessRecipe(new ItemStack(sugi_planks, 4), new ItemStack(sugi_log, 1, OreDictionary.WILDCARD_VALUE));
 		}
 
 		if (Config.woodSlabSugi)
