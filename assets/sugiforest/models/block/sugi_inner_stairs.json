@@ -1,0 +1,8 @@
+{
+    "parent": "block/inner_stairs",
+    "textures": {
+        "bottom": "sugiforest:blocks/planks_sugi",
+        "top": "sugiforest:blocks/planks_sugi",
+        "side": "sugiforest:blocks/planks_sugi"
+    }
+}

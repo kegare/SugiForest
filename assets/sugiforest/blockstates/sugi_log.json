@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "axis=y":  { "model": "sugiforest:sugi_log" },
+        "axis=z":   { "model": "sugiforest:sugi_log_side" },
+        "axis=x":   { "model": "sugiforest:sugi_log_side", "y": 90 },
+        "axis=none": { "model": "sugiforest:sugi_log" }
+    }
+}

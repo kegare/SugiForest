@@ -2,14 +2,17 @@
 
 sugiforest.version.message=A new %s version is available
 
-tile.woodSugi.name=Sugi Wood
-tile.leavesSugi.name=Sugi Leaves
-tile.saplingSugi.name=Sugi Sapling
-tile.planksSugi.name=Sugi Wood Planks
-tile.woodSlabSugi.name=Sugi Wood Slab
-tile.stairsWoodSugi.name=Sugi Wood Stairs
-tile.chestSugi.name=Sugi Chest of Drawers
-tile.chestSugi.contained.name=Contained Sugi Chest of Drawers
+tile.log.sugi.name=Sugi Wood
+tile.leaves.sugi.name=Sugi Leaves
+tile.sapling.sugi.name=Sugi Sapling
+tile.wood.sugi.name=Sugi Wood Planks
+tile.woodSlab.sugi.name=Sugi Wood Slab
+tile.stairs.sugi.name=Sugi Wood Stairs
+tile.fence.sugi.name=Sugi Fence
+tile.fenceGate.sugi.name=Sugi Fence Gate
+tile.chest.sugi.name=Sugi Chest of Drawers
+tile.chest.sugi.contained.name=Contained Sugi Chest of Drawers
+tile.portal.sugi.name=Sugi Forest Portal
 
 item.mystSap.name=Mystical Sap
 
@@ -18,28 +21,9 @@ sugiforest.config.general.versionNotify=Version Notify
 sugiforest.config.general.versionNotify.tooltip=Whether or not to notify when a new SugiForest version is available.
 sugiforest.config.general.sugiOnHills=Sugi Trees on Hills
 sugiforest.config.general.sugiOnHills.tooltip=Specify the generation rate of sugi trees on hills. If specify 0, sugi trees will be not generated in there.
-sugiforest.config.blocks.woodSugi=Sugi Wood
-sugiforest.config.blocks.woodSugi.tooltip=Whether or not to add the Sugi Wood.
-sugiforest.config.blocks.leavesSugi=Sugi Leaves
-sugiforest.config.blocks.leavesSugi.tooltip=Whether or not to add the Sugi Leaves.
-sugiforest.config.blocks.saplingSugi=Sugi Sapling
-sugiforest.config.blocks.saplingSugi.tooltip=Whether or not to add the Sugi Sapling.
-sugiforest.config.blocks.planksSugi=Sugi Wood Planks
-sugiforest.config.blocks.planksSugi.tooltip=Whether or not to add the Sugi Wood Planks.
-sugiforest.config.blocks.woodSlabSugi=Sugi Wood Slab
-sugiforest.config.blocks.woodSlabSugi.tooltip=Whether or not to add the Sugi Wood Slab.
-sugiforest.config.blocks.stairsWoodSugi=Sugi Wood Stairs
-sugiforest.config.blocks.stairsWoodSugi.tooltip=Whether or not to add the Sugi Wood Stairs.
-sugiforest.config.blocks.chestSugi=Sugi Chest of Drawers
-sugiforest.config.blocks.chestSugi.tooltip=Whether or not to add the Sugi Chest of Drawers.
-sugiforest.config.items.mystSap=Mystical Sap
-sugiforest.config.items.mystSap.tooltip=Whether or not to add the Mystical Sap.
-sugiforest.config.biomes.Sugi Forest=Sugi Forest
-sugiforest.config.biomes.Sugi Forest.tooltip=Specify the biome ID for Sugi Forest.
-sugiforest.config.biomes.sugiForestGenWeight=Sugi Forest Generation Weight
-sugiforest.config.biomes.sugiForestGenWeight.tooltip=Specify the generation weight for Sugi Forest.
-sugiforest.config.dimension.Sugi Forest=Sugi Forest
-sugiforest.config.dimension.Sugi Forest.tooltip=Specify the dimension ID for Sugi Forest.
-
-bedrocklayer.config.sugiforest=Sugi Forest
-bedrocklayer.config.sugiforest.tooltip=Whether or not to flatten uneven bedrock layers of Sugi Forest.
+sugiforest.config.sugiforest.biomeID_SugiForest=Sugi Forest Biome ID
+sugiforest.config.sugiforest.biomeID_SugiForest.tooltip=Specify the biome ID for Sugi Forest.
+sugiforest.config.sugiforest.biomeGenWeight_SugiForest=Sugi Forest Generation Weight
+sugiforest.config.sugiforest.biomeGenWeight_SugiForest.tooltip=Specify the generation weight for Sugi Forest.
+sugiforest.config.sugiforest.dimensionID_SugiForest=Sugi Forest Dimension ID
+sugiforest.config.sugiforest.dimensionID_SugiForest.tooltip=Specify the dimension ID for Sugi Forest.

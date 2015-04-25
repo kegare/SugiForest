@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "half=bottom": { "model": "sugiforest:sugi_half_slab" },
+        "half=top": { "model": "sugiforest:sugi_upper_slab" }
+    }
+}

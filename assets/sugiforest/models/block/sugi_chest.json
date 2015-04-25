@@ -1,0 +1,8 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+        "top": "sugiforest:blocks/chest_sugi_top",
+        "front": "sugiforest:blocks/chest_sugi",
+        "side": "sugiforest:blocks/chest_sugi_side"
+    }
+}
