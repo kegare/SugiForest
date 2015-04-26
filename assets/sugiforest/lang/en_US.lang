@@ -4,6 +4,7 @@ sugiforest.version.message=A new %s version is available
 
 tile.log.sugi.name=Sugi Wood
 tile.leaves.sugi.name=Sugi Leaves
+tile.fallenLeaves.sugi.name=Sugi Fallen Leaves
 tile.sapling.sugi.name=Sugi Sapling
 tile.wood.sugi.name=Sugi Wood Planks
 tile.woodSlab.sugi.name=Sugi Wood Slab
@@ -21,6 +22,8 @@ sugiforest.config.general.versionNotify=Version Notify
 sugiforest.config.general.versionNotify.tooltip=Whether or not to notify when a new SugiForest version is available.
 sugiforest.config.general.sugiOnHills=Sugi Trees on Hills
 sugiforest.config.general.sugiOnHills.tooltip=Specify the generation rate of sugi trees on hills. If specify 0, sugi trees will be not generated in there.
+sugiforest.config.general.fallenSugiLeaves=Fallen Sugi Leaves
+sugiforest.config.general.fallenSugiLeaves.tooltip=When grew the Sugi Tree, generate the Sugi Fallen Leaves on under.
 sugiforest.config.sugiforest.biomeID_SugiForest=Sugi Forest Biome ID
 sugiforest.config.sugiforest.biomeID_SugiForest.tooltip=Specify the biome ID for Sugi Forest.
 sugiforest.config.sugiforest.biomeGenWeight_SugiForest=Sugi Forest Generation Weight

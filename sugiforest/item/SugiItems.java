@@ -1,3 +1,12 @@
+/*
+ * SugiForest
+ *
+ * Copyright (c) 2015 kegare
+ * https://github.com/kegare
+ *
+ * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
+ */
+
 package sugiforest.item;
 
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -5,7 +14,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
+import sugiforest.util.SugiUtils;
 
 public class SugiItems
 {
@@ -15,8 +24,7 @@ public class SugiItems
 	{
 		GameRegistry.registerItem(myst_sap, "myst_sap");
 
-		OreDictionary.registerOre("mystSap", myst_sap);
-		OreDictionary.registerOre("sapMyst", myst_sap);
+		SugiUtils.registerOreDict(myst_sap, "mystSap", "sapMyst");
 	}
 
 	@SideOnly(Side.CLIENT)

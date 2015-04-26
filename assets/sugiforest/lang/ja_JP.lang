@@ -4,6 +4,7 @@ sugiforest.version.message=%s の新しいバージョンが利用可能です
 
 tile.log.sugi.name=杉の原木
 tile.leaves.sugi.name=杉の葉
+tile.fallenLeaves.sugi.name=杉の落ち葉
 tile.sapling.sugi.name=杉の苗木
 tile.wood.sugi.name=杉の木材
 tile.woodSlab.sugi.name=杉の木材ハーフブロック
@@ -21,6 +22,8 @@ sugiforest.config.general.versionNotify=バージョン通知
 sugiforest.config.general.versionNotify.tooltip=SugiForestの新しいバージョンが利用可能な場合、チャットログで通知します。
 sugiforest.config.general.sugiOnHills=丘の杉の木
 sugiforest.config.general.sugiOnHills.tooltip=杉の木の丘バイオームでの自生量を指定します。0を指定すると、丘バイオームには自生しません。
+sugiforest.config.general.fallenSugiLeaves=杉の落葉
+sugiforest.config.general.fallenSugiLeaves.tooltip=杉の木が成長したときに、下に杉の落ち葉を生成します。
 sugiforest.config.sugiforest.biomeID_SugiForest=Sugi Forest バイオームID
 sugiforest.config.sugiforest.biomeID_SugiForest.tooltip=Sugi ForestのバイオームIDを指定します。
 sugiforest.config.sugiforest.biomeGenWeight_SugiForest=Sugi Forestの生成量

@@ -1,3 +1,12 @@
+/*
+ * SugiForest
+ *
+ * Copyright (c) 2015 kegare
+ * https://github.com/kegare
+ *
+ * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
+ */
+
 package sugiforest.core;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -9,21 +18,26 @@ import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.BiomeManager.BiomeType;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Metadata;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+
+import org.apache.logging.log4j.Level;
+
 import sugiforest.block.SugiBlocks;
 import sugiforest.handler.SugiEventHooks;
 import sugiforest.handler.SugiFuelHandler;
 import sugiforest.handler.SugiWorldGenerator;
 import sugiforest.item.SugiItems;
+import sugiforest.plugin.bedrocklayer.BedrockLayerPlugin;
+import sugiforest.util.SugiLog;
 import sugiforest.util.Version;
 import sugiforest.world.BiomeGenSugiForest;
 import sugiforest.world.WorldProviderSugiForest;
@@ -63,8 +77,6 @@ public class SugiForest
 	{
 		FMLCommonHandler.instance().bus().register(SugiEventHooks.instance);
 
-		MinecraftForge.EVENT_BUS.register(SugiEventHooks.instance);
-
 		if (Config.biomeID_SugiForest > 0)
 		{
 			sugiForest = new BiomeGenSugiForest(Config.biomeID_SugiForest);
@@ -87,6 +99,22 @@ public class SugiForest
 		}
 
 		SugiBlocks.registerRecipes();
+	}
+
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent event)
+	{
+		try
+		{
+			if (BedrockLayerPlugin.enabled())
+			{
+				BedrockLayerPlugin.invoke();
+			}
+		}
+		catch (Throwable e)
+		{
+			SugiLog.log(Level.WARN, e, "Failed to trying invoke plugin: BedrockLayerPlugin");
+		}
 	}
 
 	@EventHandler

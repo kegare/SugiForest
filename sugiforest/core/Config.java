@@ -1,3 +1,12 @@
+/*
+ * SugiForest
+ *
+ * Copyright (c) 2015 kegare
+ * https://github.com/kegare
+ *
+ * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
+ */
+
 package sugiforest.core;
 
 import java.io.File;
@@ -21,6 +30,7 @@ public class Config
 
 	public static boolean versionNotify;
 	public static int sugiOnHills;
+	public static boolean fallenSugiLeaves;
 
 	public static int biomeID_SugiForest;
 	public static int biomeGenWeight_SugiForest;
@@ -68,6 +78,12 @@ public class Config
 		prop.comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		sugiOnHills = MathHelper.clamp_int(prop.getInt(sugiOnHills), Integer.parseInt(prop.getMinValue()), Integer.parseInt(prop.getMaxValue()));
+		prop = config.get(category, "fallenSugiLeaves", false);
+		prop.setLanguageKey("sugiforest.config." + category + "." + prop.getName());
+		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		prop.comment += " [default: " + prop.getDefault() + "]";
+		propOrder.add(prop.getName());
+		fallenSugiLeaves = prop.getBoolean(fallenSugiLeaves);
 
 		config.setCategoryPropertyOrder(category, propOrder);
 

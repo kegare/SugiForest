@@ -1,9 +1,19 @@
+/*
+ * SugiForest
+ *
+ * Copyright (c) 2015 kegare
+ * https://github.com/kegare
+ *
+ * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
+ */
+
 package sugiforest.handler;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.IFuelHandler;
 import sugiforest.block.BlockSugiChest;
+import sugiforest.block.BlockSugiFallenLeaves;
 import sugiforest.block.BlockSugiLeaves;
 import sugiforest.block.BlockSugiLog;
 import sugiforest.block.BlockSugiSapling;
@@ -25,6 +35,10 @@ public class SugiFuelHandler implements IFuelHandler
 		else if (block instanceof BlockSugiLeaves || block instanceof BlockSugiSapling)
 		{
 			return 100;
+		}
+		else if (block instanceof BlockSugiFallenLeaves)
+		{
+			return 20;
 		}
 		else if (block instanceof BlockSugiWoodSlab)
 		{

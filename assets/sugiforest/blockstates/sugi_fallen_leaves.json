@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "layers=1":  { "model": "sugiforest:sugi_leaves_height2" },
+        "layers=2":  { "model": "sugiforest:sugi_leaves_height4" },
+        "layers=3":  { "model": "sugiforest:sugi_leaves_height6" },
+        "layers=4":  { "model": "sugiforest:sugi_leaves_height8" },
+        "layers=5":  { "model": "sugiforest:sugi_leaves_height10" },
+        "layers=6":  { "model": "sugiforest:sugi_leaves_height12" },
+        "layers=7":  { "model": "sugiforest:sugi_leaves_height14" },
+        "layers=8":  { "model": "sugiforest:sugi_leaves" }
+    }
+}

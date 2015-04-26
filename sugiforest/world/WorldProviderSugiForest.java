@@ -1,10 +1,18 @@
+/*
+ * SugiForest
+ *
+ * Copyright (c) 2015 kegare
+ * https://github.com/kegare
+ *
+ * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
+ */
+
 package sugiforest.world;
 
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.biome.WorldChunkManagerHell;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.ChunkProviderGenerate;
 import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -24,7 +32,7 @@ public class WorldProviderSugiForest extends WorldProviderSurface
 	@Override
 	public IChunkProvider createChunkGenerator()
 	{
-		return new ChunkProviderGenerate(worldObj, worldObj.getSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled(), worldObj.getWorldInfo().getGeneratorOptions());
+		return new ChunkProviderSugiForest(worldObj, worldObj.getSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled(), worldObj.getWorldInfo().getGeneratorOptions());
 	}
 
 	@Override
@@ -68,6 +76,13 @@ public class WorldProviderSugiForest extends WorldProviderSurface
 	public boolean shouldMapSpin(String entity, double x, double y, double z)
 	{
 		return false;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public float getSunBrightness(float ticks)
+	{
+		return super.getSunBrightness(ticks) * 1.5F;
 	}
 
 	@SideOnly(Side.CLIENT)

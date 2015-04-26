@@ -1,3 +1,12 @@
+/*
+ * SugiForest
+ *
+ * Copyright (c) 2015 kegare
+ * https://github.com/kegare
+ *
+ * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
+ */
+
 package sugiforest.world;
 
 import java.util.Random;
@@ -15,6 +24,7 @@ import net.minecraft.world.biome.BiomeGenJungle;
 import net.minecraft.world.biome.BiomeGenSwamp;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import sugiforest.block.SugiBlocks;
+import sugiforest.core.Config;
 
 public class WorldGenSugiTree extends WorldGenAbstractTree
 {
@@ -40,17 +50,17 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 
 	private boolean isGeneratableTree(World world, BlockPos pos)
 	{
-		for (int Y = pos.getY(); Y <= pos.getY() + 1 + treeHeight; ++Y)
+		for (int y = pos.getY(); y <= pos.getY() + 1 + treeHeight; ++y)
 		{
-			if (Y >= 0 && Y < 256)
+			if (y >= 0 && y < 256)
 			{
-				int checkedRange = Y == pos.getY() ? 0 : Y >= pos.getY() + 1 + treeHeight - 2 ? 2 : 1;
+				int checkedRange = y == pos.getY() ? 0 : y >= pos.getY() + 1 + treeHeight - 2 ? 2 : 1;
 
-				for (int X = pos.getX() - checkedRange; X <= pos.getX() + checkedRange; ++X)
+				for (int x = pos.getX() - checkedRange; x <= pos.getX() + checkedRange; ++x)
 				{
-					for (int Z = pos.getZ() - checkedRange; Z <= pos.getZ() + checkedRange; ++Z)
+					for (int z = pos.getZ() - checkedRange; z <= pos.getZ() + checkedRange; ++z)
 					{
-						if (!isReplaceable(world, new BlockPos(X, Y, Z)))
+						if (!isReplaceable(world, new BlockPos(x, y, z)))
 						{
 							return false;
 						}
@@ -109,11 +119,11 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 					{
 						byte count = 0;
 
-						for (int X = pos.getX() - 2; count < 3 && X <= pos.getX() + 2; ++X)
+						for (int x = pos.getX() - 2; count < 3 && x <= pos.getX() + 2; ++x)
 						{
-							for (int Z = pos.getZ() - 2; count < 3 && Z <= pos.getZ() + 2; ++Z)
+							for (int z = pos.getZ() - 2; count < 3 && z <= pos.getZ() + 2; ++z)
 							{
-								blockpos = new BlockPos(X, pos.getY() - 1, Z);
+								blockpos = new BlockPos(x, pos.getY() - 1, z);
 								state = world.getBlockState(blockpos);
 								block = state.getBlock();
 
@@ -144,18 +154,18 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 			leavesHeight += 2;
 		}
 
-		for (int Y = pos.getY() - leavesHeight + treeHeight; Y <= pos.getY() + treeHeight; ++Y)
+		for (int y = pos.getY() - leavesHeight + treeHeight; y <= pos.getY() + treeHeight; ++y)
 		{
-			int leaveNum = Y - (pos.getY() + treeHeight);
+			int leaveNum = y - (pos.getY() + treeHeight);
 			int leaveRange = 1 - leaveNum / (leavesHeight / 2 - 1);
 
-			for (int X = pos.getX() - leaveRange; X <= pos.getX() + leaveRange; ++X)
+			for (int x = pos.getX() - leaveRange; x <= pos.getX() + leaveRange; ++x)
 			{
-				for (int Z = pos.getZ() - leaveRange; Z <= pos.getZ() + leaveRange; ++Z)
+				for (int z = pos.getZ() - leaveRange; z <= pos.getZ() + leaveRange; ++z)
 				{
-					if (Math.abs(X - pos.getX()) != leaveRange || Math.abs(Z - pos.getZ()) != leaveRange || random.nextInt(2) != 0 && leaveNum != 0)
+					if (Math.abs(x - pos.getX()) != leaveRange || Math.abs(z - pos.getZ()) != leaveRange || random.nextInt(2) != 0 && leaveNum != 0)
 					{
-						BlockPos blockpos = new BlockPos(X, Y, Z);
+						BlockPos blockpos = new BlockPos(x, y, z);
 						IBlockState state = world.getBlockState(blockpos);
 						Block block = state.getBlock();
 
@@ -164,6 +174,43 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 							func_175906_a(world, blockpos, SugiBlocks.sugi_leaves);
 						}
 					}
+				}
+			}
+		}
+	}
+
+	private void setFallenLeaves(World world, Random random, BlockPos pos)
+	{
+		int leavesHeight = 12;
+
+		if (treeHeight - leavesHeight >= leavesHeight - 3)
+		{
+			leavesHeight += 2;
+		}
+
+		int leaveRange = leavesHeight / 3 - 1;
+		int y = pos.getY() + treeHeight - leavesHeight - 3;
+
+		for (int x = pos.getX() - leaveRange; x <= pos.getX() + leaveRange; ++x)
+		{
+			for (int z = pos.getZ() - leaveRange; z <= pos.getZ() + leaveRange; ++z)
+			{
+				BlockPos blockpos = new BlockPos(x, y, z);
+
+				if (!world.isAirBlock(blockpos))
+				{
+					continue;
+				}
+
+				do
+				{
+					blockpos = blockpos.down();
+				}
+				while (blockpos.getY() > 0 && world.isAirBlock(blockpos.down()));
+
+				if (SugiBlocks.sugi_fallen_leaves.canPlaceBlockAt(world, blockpos) && random.nextInt(3) == 0)
+				{
+					func_175906_a(world, blockpos, SugiBlocks.sugi_fallen_leaves);
 				}
 			}
 		}
@@ -178,16 +225,16 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 			vinesHeight += 2;
 		}
 
-		for (int Y = pos.getY() - vinesHeight + treeHeight; Y <= pos.getY() + treeHeight; ++Y)
+		for (int y = pos.getY() - vinesHeight + treeHeight; y <= pos.getY() + treeHeight; ++y)
 		{
-			int vineNum = Y - (pos.getY() + treeHeight);
+			int vineNum = y - (pos.getY() + treeHeight);
 			int vineRange = 1 - vineNum / (vinesHeight / 2 - 1);
 
-			for (int X = pos.getX() - vineRange; X <= pos.getX() + vineRange; ++X)
+			for (int x = pos.getX() - vineRange; x <= pos.getX() + vineRange; ++x)
 			{
-				for (int Z = pos.getZ() - vineRange; Z <= pos.getZ() + vineRange; ++Z)
+				for (int z = pos.getZ() - vineRange; z <= pos.getZ() + vineRange; ++z)
 				{
-					BlockPos blockpos = new BlockPos(X, Y, Z);
+					BlockPos blockpos = new BlockPos(x, y, z);
 
 					if (world.getBlockState(blockpos).getBlock().isLeaves(world, blockpos))
 					{
@@ -283,6 +330,11 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 				if (!doBlockNotify && (biome instanceof BiomeGenSwamp || biome instanceof BiomeGenJungle))
 				{
 					setVines(world, random, pos);
+				}
+
+				if (Config.fallenSugiLeaves)
+				{
+					setFallenLeaves(world, random, pos);
 				}
 
 				return true;
