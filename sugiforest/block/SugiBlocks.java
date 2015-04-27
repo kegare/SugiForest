@@ -93,6 +93,10 @@ public class SugiBlocks
 		Blocks.fire.setFireInfo(sugi_fence, 5, 20);
 		Blocks.fire.setFireInfo(sugi_fence_gate, 5, 20);
 		Blocks.fire.setFireInfo(sugi_chest, 5, 5);
+
+		BlockSugiFallenLeaves.addFallenSeed(new ItemStack(sugi_sapling), 10);
+		BlockSugiFallenLeaves.addFallenSeed(new ItemStack(Blocks.brown_mushroom), 12);
+		BlockSugiFallenLeaves.addFallenSeed(new ItemStack(Blocks.red_mushroom), 8);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -103,6 +107,7 @@ public class SugiBlocks
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sugi_leaves), 0, new ModelResourceLocation("sugiforest:sugi_leaves", "inventory"));
 		ModelLoader.setCustomStateMapper(sugi_leaves, new StateMap.Builder().addPropertiesToIgnore(BlockLeaves.DECAYABLE, BlockLeaves.CHECK_DECAY).build());
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sugi_fallen_leaves), 0, new ModelResourceLocation("sugiforest:sugi_fallen_leaves", "inventory"));
+		ModelLoader.setCustomStateMapper(sugi_fallen_leaves, new StateMap.Builder().addPropertiesToIgnore(BlockSugiFallenLeaves.CHANCE).build());
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sugi_sapling), 0, new ModelResourceLocation("sugiforest:sugi_sapling", "inventory"));
 		ModelLoader.setCustomStateMapper(sugi_sapling, new StateMap.Builder().addPropertiesToIgnore(BlockSapling.TYPE, BlockSapling.STAGE).build());
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sugi_planks), 0, new ModelResourceLocation("sugiforest:sugi_planks", "inventory"));

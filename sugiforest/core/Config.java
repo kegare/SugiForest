@@ -78,7 +78,7 @@ public class Config
 		prop.comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		sugiOnHills = MathHelper.clamp_int(prop.getInt(sugiOnHills), Integer.parseInt(prop.getMinValue()), Integer.parseInt(prop.getMaxValue()));
-		prop = config.get(category, "fallenSugiLeaves", false);
+		prop = config.get(category, "fallenSugiLeaves", true);
 		prop.setLanguageKey("sugiforest.config." + category + "." + prop.getName());
 		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
 		prop.comment += " [default: " + prop.getDefault() + "]";

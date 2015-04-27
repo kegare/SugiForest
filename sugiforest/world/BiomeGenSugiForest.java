@@ -12,6 +12,7 @@ package sugiforest.world;
 import java.util.Random;
 
 import net.minecraft.entity.passive.EntityWolf;
+import net.minecraft.world.biome.BiomeDecorator;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 
@@ -29,10 +30,16 @@ public class BiomeGenSugiForest extends BiomeGenBase
 		this.setColor(6726755);
 		this.spawnableCreatureList.add(new SpawnListEntry(EntityWolf.class, 5, 4, 4));
 		this.theBiomeDecorator.treesPerChunk = 16;
-		this.theBiomeDecorator.grassPerChunk = 6;
-		this.theBiomeDecorator.mushroomsPerChunk = 2;
+		this.theBiomeDecorator.grassPerChunk = 12;
+		this.theBiomeDecorator.mushroomsPerChunk = 10;
 		this.theBiomeDecorator.reedsPerChunk = 5;
-		this.theBiomeDecorator.clayPerChunk = 3;
+		this.theBiomeDecorator.clayPerChunk = 6;
+	}
+
+	@Override
+	public BiomeDecorator createBiomeDecorator()
+	{
+		return getModdedBiomeDecorator(new BiomeSugiForestDecorator());
 	}
 
 	@Override

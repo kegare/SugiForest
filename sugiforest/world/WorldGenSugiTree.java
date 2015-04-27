@@ -23,6 +23,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenJungle;
 import net.minecraft.world.biome.BiomeGenSwamp;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
+import sugiforest.block.BlockSugiFallenLeaves;
 import sugiforest.block.SugiBlocks;
 import sugiforest.core.Config;
 
@@ -210,7 +211,7 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 
 				if (SugiBlocks.sugi_fallen_leaves.canPlaceBlockAt(world, blockpos) && random.nextInt(3) == 0)
 				{
-					func_175906_a(world, blockpos, SugiBlocks.sugi_fallen_leaves);
+					func_175903_a(world, blockpos, SugiBlocks.sugi_fallen_leaves.getDefaultState().withProperty(BlockSugiFallenLeaves.CHANCE, Boolean.valueOf(true)));
 				}
 			}
 		}

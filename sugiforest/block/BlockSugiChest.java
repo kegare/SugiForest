@@ -143,6 +143,16 @@ public class BlockSugiChest extends BlockContainer
 			world.setBlockState(pos, state, 3);
 		}
 
+		if (stack.hasDisplayName())
+		{
+			TileEntity tileentity = world.getTileEntity(pos);
+
+			if (tileentity instanceof TileEntitySugiChest)
+			{
+				((TileEntitySugiChest)tileentity).setCustomName(stack.getDisplayName());
+			}
+		}
+
 		if (stack.hasTagCompound())
 		{
 			NBTTagCompound nbt = stack.getTagCompound();

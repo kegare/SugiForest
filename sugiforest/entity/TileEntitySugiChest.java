@@ -27,6 +27,8 @@ public class TileEntitySugiChest extends TileEntity implements IInventory
 
 	public int numUsingPlayers;
 
+	private String customName;
+
 	@Override
 	public int getSizeInventory()
 	{
@@ -108,7 +110,7 @@ public class TileEntitySugiChest extends TileEntity implements IInventory
 	@Override
 	public String getName()
 	{
-		return SugiBlocks.sugi_chest.getUnlocalizedName() + ".name";
+		return hasCustomName() ? customName : SugiBlocks.sugi_chest.getUnlocalizedName() + ".name";
 	}
 
 	@Override
@@ -120,7 +122,12 @@ public class TileEntitySugiChest extends TileEntity implements IInventory
 	@Override
 	public boolean hasCustomName()
 	{
-		return false;
+		return customName != null && customName.length() > 0;
+	}
+
+	public void setCustomName(String name)
+	{
+		customName = name;
 	}
 
 	@Override
@@ -172,14 +179,6 @@ public class TileEntitySugiChest extends TileEntity implements IInventory
 		}
 	}
 
-	public void clearInventory()
-	{
-		for (int i = 0; i < chestContents.length; ++i)
-		{
-			chestContents[i] = null;
-		}
-	}
-
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack itemstack)
 	{
@@ -203,7 +202,7 @@ public class TileEntitySugiChest extends TileEntity implements IInventory
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		clearInventory();
+		clear();
 
 		NBTTagList list = nbt.getTagList("Items", NBT.TAG_COMPOUND);
 
@@ -216,6 +215,11 @@ public class TileEntitySugiChest extends TileEntity implements IInventory
 			{
 				chestContents[slot] = ItemStack.loadItemStackFromNBT(data);
 			}
+		}
+
+		if (nbt.hasKey("CustomName", NBT.TAG_STRING))
+		{
+			customName = nbt.getString("CustomName");
 		}
 	}
 
@@ -240,6 +244,11 @@ public class TileEntitySugiChest extends TileEntity implements IInventory
 		}
 
 		nbt.setTag("Items", list);
+
+		if (hasCustomName())
+		{
+			nbt.setString("CustomName", customName);
+		}
 	}
 
 	@Override
