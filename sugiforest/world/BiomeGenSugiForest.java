@@ -11,6 +11,7 @@ package sugiforest.world;
 
 import java.util.Random;
 
+import sugiforest.world.gen.WorldGenSugiTree;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.world.biome.BiomeDecorator;
 import net.minecraft.world.biome.BiomeGenBase;

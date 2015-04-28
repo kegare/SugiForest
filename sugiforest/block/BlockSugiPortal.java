@@ -30,7 +30,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import sugiforest.core.Config;
+import sugiforest.api.SugiForestAPI;
 import sugiforest.core.SugiForest;
 import sugiforest.world.TeleporterSugiForest;
 
@@ -106,7 +106,7 @@ public class BlockSugiPortal extends BlockPortal
 	@Override
 	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity)
 	{
-		if (Config.dimensionID_SugiForest == 0)
+		if (SugiForestAPI.getDimension() == 0)
 		{
 			return;
 		}
@@ -117,7 +117,7 @@ public class BlockSugiPortal extends BlockPortal
 			{
 				MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
 				int dimOld = entity.dimension;
-				int dimNew = dimOld == Config.dimensionID_SugiForest ? entity.getEntityData().getInteger("SugiForest:LastDim") : Config.dimensionID_SugiForest;
+				int dimNew = dimOld == SugiForestAPI.getDimension() ? entity.getEntityData().getInteger("SugiForest:LastDim") : SugiForestAPI.getDimension();
 				WorldServer worldOld = server.worldServerForDimension(dimOld);
 				WorldServer worldNew = server.worldServerForDimension(dimNew);
 

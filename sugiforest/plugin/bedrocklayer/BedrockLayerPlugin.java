@@ -12,7 +12,7 @@ package sugiforest.plugin.bedrocklayer;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional.Method;
-import sugiforest.core.Config;
+import sugiforest.api.SugiForestAPI;
 
 import com.kegare.bedrocklayer.api.BedrockLayerAPI;
 
@@ -28,9 +28,9 @@ public class BedrockLayerPlugin
 	@Method(modid = MODID)
 	public static void invoke()
 	{
-		if (Config.dimensionID_SugiForest != 0)
+		if (SugiForestAPI.getDimension() != 0)
 		{
-			BedrockLayerAPI.registerFlatten(Config.dimensionID_SugiForest, 1, 5, Blocks.stone.getDefaultState(), "sugiforest", false);
+			BedrockLayerAPI.registerFlatten(SugiForestAPI.getDimension(), 1, 5, Blocks.stone.getDefaultState(), "sugiforest", false);
 		}
 	}
 }

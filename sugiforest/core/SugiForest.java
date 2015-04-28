@@ -23,6 +23,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Metadata;
 import net.minecraftforge.fml.common.ModMetadata;
+import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -31,8 +32,10 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import org.apache.logging.log4j.Level;
 
+import sugiforest.api.SugiForestAPI;
 import sugiforest.block.SugiBlocks;
 import sugiforest.handler.SugiEventHooks;
+import sugiforest.handler.SugiForestAPIHandler;
 import sugiforest.handler.SugiFuelHandler;
 import sugiforest.handler.SugiWorldGenerator;
 import sugiforest.item.SugiItems;
@@ -53,10 +56,16 @@ public class SugiForest
 	public static BiomeGenBase sugiForest;
 
 	@EventHandler
+	public void construct(FMLConstructionEvent event)
+	{
+		SugiForestAPI.instance = new SugiForestAPIHandler();
+
+		Version.versionCheck();
+	}
+
+	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		Version.versionCheck();
-
 		Config.syncConfig();
 
 		SugiBlocks.registerBlocks();
@@ -68,6 +77,11 @@ public class SugiForest
 			SugiItems.registerModels();
 		}
 
+		if (Config.biomeID_SugiForest > 0)
+		{
+			sugiForest = new BiomeGenSugiForest(Config.biomeID_SugiForest);
+		}
+
 		GameRegistry.registerFuelHandler(new SugiFuelHandler());
 		GameRegistry.registerWorldGenerator(new SugiWorldGenerator(), 10);
 	}
@@ -77,10 +91,8 @@ public class SugiForest
 	{
 		FMLCommonHandler.instance().bus().register(SugiEventHooks.instance);
 
-		if (Config.biomeID_SugiForest > 0)
+		if (sugiForest != null)
 		{
-			sugiForest = new BiomeGenSugiForest(Config.biomeID_SugiForest);
-
 			BiomeManager.addBiome(BiomeType.WARM, new BiomeEntry(sugiForest, Config.biomeGenWeight_SugiForest));
 			BiomeManager.addSpawnBiome(sugiForest);
 			BiomeManager.addStrongholdBiome(sugiForest);
@@ -89,9 +101,9 @@ public class SugiForest
 
 			BiomeDictionary.registerBiomeType(sugiForest, Type.FOREST, Type.HILLS);
 
-			if (Config.dimensionID_SugiForest != 0)
+			if (SugiForestAPI.getDimension() != 0)
 			{
-				int id = Config.dimensionID_SugiForest;
+				int id = SugiForestAPI.getDimension();
 
 				DimensionManager.registerProviderType(id, WorldProviderSugiForest.class, true);
 				DimensionManager.registerDimension(id, id);

@@ -26,6 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import sugiforest.api.SugiForestAPI;
 import sugiforest.entity.TileEntitySugiChest;
 import sugiforest.item.ItemSugiChest;
 import sugiforest.item.ItemSugiFallenLeaves;
@@ -94,9 +95,10 @@ public class SugiBlocks
 		Blocks.fire.setFireInfo(sugi_fence_gate, 5, 20);
 		Blocks.fire.setFireInfo(sugi_chest, 5, 5);
 
-		BlockSugiFallenLeaves.addFallenSeed(new ItemStack(sugi_sapling), 10);
-		BlockSugiFallenLeaves.addFallenSeed(new ItemStack(Blocks.brown_mushroom), 12);
-		BlockSugiFallenLeaves.addFallenSeed(new ItemStack(Blocks.red_mushroom), 8);
+		SugiForestAPI.addFallenSeed(new ItemStack(sugi_sapling), 10);
+		SugiForestAPI.addFallenSeed(new ItemStack(Blocks.brown_mushroom), 12);
+		SugiForestAPI.addFallenSeed(new ItemStack(Blocks.red_mushroom), 8);
+		SugiForestAPI.addFallenSeed(new ItemStack(Items.stick), 5);
 	}
 
 	@SideOnly(Side.CLIENT)

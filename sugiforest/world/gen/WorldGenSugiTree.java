@@ -7,7 +7,7 @@
  * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
  */
 
-package sugiforest.world;
+package sugiforest.world.gen;
 
 import java.util.Random;
 
@@ -212,6 +212,18 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 				if (SugiBlocks.sugi_fallen_leaves.canPlaceBlockAt(world, blockpos) && random.nextInt(3) == 0)
 				{
 					func_175903_a(world, blockpos, SugiBlocks.sugi_fallen_leaves.getDefaultState().withProperty(BlockSugiFallenLeaves.CHANCE, Boolean.valueOf(true)));
+				}
+				else
+				{
+					blockpos = blockpos.down();
+					IBlockState state = world.getBlockState(blockpos);
+
+					if (state.getBlock() instanceof BlockSugiFallenLeaves)
+					{
+						int layers = ((Integer)state.getValue(BlockSugiFallenLeaves.LAYERS)).intValue();
+
+						func_175903_a(world, blockpos, SugiBlocks.sugi_fallen_leaves.getDefaultState().withProperty(BlockSugiFallenLeaves.LAYERS, (layers & 7) + 1).withProperty(BlockSugiFallenLeaves.CHANCE, Boolean.valueOf(true)));
+					}
 				}
 			}
 		}

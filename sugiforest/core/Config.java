@@ -96,7 +96,7 @@ public class Config
 		prop.comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 		propOrder.add(prop.getName());
 		biomeID_SugiForest = MathHelper.clamp_int(prop.getInt(biomeID_SugiForest), Integer.parseInt(prop.getMinValue()), Integer.parseInt(prop.getMaxValue()));
-		prop = config.get(category, "biomeGenWeight_SugiForest", 15).setRequiresMcRestart(true);
+		prop = config.get(category, "biomeGenWeight_SugiForest", 10).setRequiresMcRestart(true);
 		prop.setMinValue(0).setMaxValue(100).setLanguageKey("sugiforest.config." + category + "." + prop.getName());
 		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
 		prop.comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";

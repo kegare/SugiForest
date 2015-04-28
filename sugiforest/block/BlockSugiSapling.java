@@ -27,7 +27,7 @@ import net.minecraftforge.event.terraingen.TerrainGen;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sugiforest.core.SugiForest;
-import sugiforest.world.WorldGenSugiTree;
+import sugiforest.world.gen.WorldGenSugiTree;
 
 public class BlockSugiSapling extends BlockSapling
 {

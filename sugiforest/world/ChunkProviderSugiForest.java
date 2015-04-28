@@ -9,56 +9,50 @@
 
 package sugiforest.world;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.IProgressUpdate;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.SpawnerAnimals;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderSettings;
 import net.minecraft.world.gen.MapGenBase;
-import net.minecraft.world.gen.MapGenRavine;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
 import net.minecraft.world.gen.NoiseGeneratorPerlin;
 import net.minecraft.world.gen.feature.WorldGenDungeons;
 import net.minecraft.world.gen.feature.WorldGenLakes;
-import net.minecraft.world.gen.structure.MapGenVillage;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.ChunkProviderEvent;
-import net.minecraftforge.event.terraingen.InitMapGenEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType;
 import net.minecraftforge.event.terraingen.TerrainGen;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import sugiforest.world.gen.MapGenSugiForestCaves;
 
-import com.google.common.base.Strings;
-
 public class ChunkProviderSugiForest implements IChunkProvider
 {
 	private final World worldObj;
-	private final boolean mapFeaturesEnabled;
 	private final WorldType terrainType;
 	private final Random rand;
 
 	private final MapGenBase caveGenerator = new MapGenSugiForestCaves();
-	private MapGenBase ravineGenerator = new MapGenRavine();
-	private MapGenVillage villageGenerator = new MapGenVillage();
 
 	private ChunkProviderSettings settings;
-	private Block liquid = Blocks.water;
+	private Block oceanLiquid = Blocks.water;
 
 	private final double[] noiseField = new double[825];
 	private final float[] parabolicField = new float[25];
@@ -76,14 +70,11 @@ public class ChunkProviderSugiForest implements IChunkProvider
 	private double[] noise3;
 	private double[] noise5;
 
-	public ChunkProviderSugiForest(World world, long seed, boolean features, String options)
+	public ChunkProviderSugiForest(World world, long seed, String options)
 	{
 		this.worldObj = world;
-		this.mapFeaturesEnabled = features;
 		this.terrainType = world.getWorldInfo().getTerrainType();
 		this.rand = new Random(seed);
-		this.ravineGenerator = TerrainGen.getModdedMapGen(ravineGenerator, InitMapGenEvent.EventType.RAVINE);
-		this.villageGenerator = (MapGenVillage)TerrainGen.getModdedMapGen(villageGenerator, InitMapGenEvent.EventType.VILLAGE);
 		this.noiseGen1 = new NoiseGeneratorOctaves(rand, 16);
 		this.noiseGen2 = new NoiseGeneratorOctaves(rand, 16);
 		this.noiseGen3 = new NoiseGeneratorOctaves(rand, 8);
@@ -101,7 +92,7 @@ public class ChunkProviderSugiForest implements IChunkProvider
 		if (options != null)
 		{
 			this.settings = ChunkProviderSettings.Factory.func_177865_a(options).func_177864_b();
-			this.liquid = settings.useLavaOceans ? Blocks.lava : Blocks.water;
+			this.oceanLiquid = settings.useLavaOceans ? Blocks.lava : Blocks.water;
 		}
 	}
 
@@ -156,7 +147,7 @@ public class ChunkProviderSugiForest implements IChunkProvider
 								}
 								else if (k2 * 8 + l2 < settings.seaLevel)
 								{
-									primer.setBlockState(k * 4 + i3, k2 * 8 + l2, j1 * 4 + j3, liquid.getDefaultState());
+									primer.setBlockState(k * 4 + i3, k2 * 8 + l2, j1 * 4 + j3, oceanLiquid.getDefaultState());
 								}
 							}
 
@@ -334,16 +325,6 @@ public class ChunkProviderSugiForest implements IChunkProvider
 			caveGenerator.func_175792_a(this, worldObj, chunkX, chunkZ, primer);
 		}
 
-		if (settings.useRavines)
-		{
-			ravineGenerator.func_175792_a(this, worldObj, chunkX, chunkZ, primer);
-		}
-
-		if (settings.useVillages && mapFeaturesEnabled)
-		{
-			villageGenerator.func_175792_a(this, worldObj, chunkX, chunkZ, primer);
-		}
-
 		for (int x = 0; x < 16; ++x)
 		{
 			for (int z = 0; z < 16; ++z)
@@ -366,9 +347,9 @@ public class ChunkProviderSugiForest implements IChunkProvider
 		Chunk chunk = new Chunk(worldObj, primer, chunkX, chunkZ);
 		byte[] biomes = chunk.getBiomeArray();
 
-		for (int k = 0; k < biomes.length; ++k)
+		for (int i = 0; i < biomes.length; ++i)
 		{
-			biomes[k] = (byte)biomesForGeneration[k].biomeID;
+			biomes[i] = (byte)biomesForGeneration[i].biomeID;
 		}
 
 		chunk.generateSkylightMap();
@@ -395,21 +376,14 @@ public class ChunkProviderSugiForest implements IChunkProvider
 		long xSeed = rand.nextLong() / 2L * 2L + 1L;
 		long zSeed = rand.nextLong() / 2L * 2L + 1L;
 		rand.setSeed(chunkX * xSeed + chunkZ * zSeed ^ worldObj.getSeed());
-		boolean flag = false;
-		ChunkCoordIntPair coord = new ChunkCoordIntPair(chunkX, chunkZ);
 
-		MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Pre(provider, worldObj, rand, chunkX, chunkZ, flag));
-
-		if (settings.useVillages && mapFeaturesEnabled)
-		{
-			flag = villageGenerator.func_175794_a(worldObj, rand, coord);
-		}
+		MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Pre(provider, worldObj, rand, chunkX, chunkZ, false));
 
 		int i;
 		int j;
 		int k;
 
-		if (settings.useWaterLakes && !flag && rand.nextInt(settings.waterLakeChance) == 0 && TerrainGen.populate(provider, worldObj, rand, chunkX, chunkZ, flag, EventType.LAKE))
+		if (settings.useWaterLakes && rand.nextInt(settings.waterLakeChance) == 0 && TerrainGen.populate(provider, worldObj, rand, chunkX, chunkZ, false, EventType.LAKE))
 		{
 			i = rand.nextInt(16) + 8;
 			j = rand.nextInt(256);
@@ -417,41 +391,29 @@ public class ChunkProviderSugiForest implements IChunkProvider
 			new WorldGenLakes(Blocks.water).generate(worldObj, rand, blockpos.add(i, j, k));
 		}
 
-		if (TerrainGen.populate(provider, worldObj, rand, chunkX, chunkZ, flag, EventType.LAVA) && !flag && rand.nextInt(settings.lavaLakeChance / 10) == 0 && settings.useLavaLakes)
-		{
-			i = rand.nextInt(16) + 8;
-			j = rand.nextInt(rand.nextInt(248) + 8);
-			k = rand.nextInt(16) + 8;
-
-			if (j < 63 || rand.nextInt(settings.lavaLakeChance / 8) == 0)
-			{
-				new WorldGenLakes(Blocks.lava).generate(worldObj, rand, blockpos.add(i, j, k));
-			}
-		}
-
 		if (settings.useDungeons)
 		{
-			boolean doGen = TerrainGen.populate(provider, worldObj, rand, chunkX, chunkZ, flag, EventType.DUNGEON);
+			boolean doGen = TerrainGen.populate(provider, worldObj, rand, chunkX, chunkZ, false, EventType.DUNGEON);
 
 			for (i = 0; doGen && i < settings.dungeonChance; ++i)
 			{
 				j = rand.nextInt(16) + 8;
 				k = rand.nextInt(256);
-				int j2 = rand.nextInt(16) + 8;
-				new WorldGenDungeons().generate(worldObj, rand, blockpos.add(j, k, j2));
+				int l = rand.nextInt(16) + 8;
+				new WorldGenDungeons().generate(worldObj, rand, blockpos.add(j, k, l));
 			}
 		}
 
 		biome.decorate(worldObj, rand, new BlockPos(x, 0, z));
 
-		if (TerrainGen.populate(provider, worldObj, rand, chunkX, chunkZ, flag, EventType.ANIMALS))
+		if (TerrainGen.populate(provider, worldObj, rand, chunkX, chunkZ, false, EventType.ANIMALS))
 		{
 			SpawnerAnimals.performWorldGenSpawning(worldObj, biome, x + 8, z + 8, 16, 16, rand);
 		}
 
 		blockpos = blockpos.add(8, 0, 8);
 
-		boolean doGen = TerrainGen.populate(provider, worldObj, rand, chunkX, chunkZ, flag, EventType.ICE);
+		boolean doGen = TerrainGen.populate(provider, worldObj, rand, chunkX, chunkZ, false, EventType.ICE);
 
 		for (i = 0; doGen && i < 16; ++i)
 		{
@@ -472,7 +434,7 @@ public class ChunkProviderSugiForest implements IChunkProvider
 			}
 		}
 
-		MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Post(provider, worldObj, rand, chunkX, chunkZ, flag));
+		MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Post(provider, worldObj, rand, chunkX, chunkZ, false));
 
 		BlockFalling.fallInstantly = false;
 	}
@@ -513,24 +475,27 @@ public class ChunkProviderSugiForest implements IChunkProvider
 	@Override
 	public List func_177458_a(EnumCreatureType type, BlockPos pos)
 	{
-		return worldObj.getBiomeGenForCoords(pos).getSpawnableList(type);
+		List list = worldObj.getBiomeGenForCoords(pos).getSpawnableList(type);
+
+		if (list == null)
+		{
+			list = Collections.emptyList();
+		}
+		else switch (type)
+		{
+			case CREATURE:
+				list.add(new SpawnListEntry(EntityHorse.class, 5, 2, 6));
+				break;
+			default:
+		}
+
+		return list;
 	}
 
 	@Override
 	public BlockPos getStrongholdGen(World world, String name, BlockPos pos)
 	{
-		if (Strings.isNullOrEmpty(name))
-		{
-			return null;
-		}
-
-		switch (name)
-		{
-			case "Village":
-				return villageGenerator.getClosestStrongholdPos(world, pos);
-			default:
-				return null;
-		}
+		return null;
 	}
 
 	@Override
@@ -540,11 +505,5 @@ public class ChunkProviderSugiForest implements IChunkProvider
 	}
 
 	@Override
-	public void recreateStructures(Chunk chunk, int x, int z)
-	{
-		if (settings.useVillages && mapFeaturesEnabled)
-		{
-			villageGenerator.func_175792_a(this, worldObj, x, z, (ChunkPrimer)null);
-		}
-	}
+	public void recreateStructures(Chunk chunk, int x, int z) {}
 }

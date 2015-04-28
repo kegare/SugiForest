@@ -16,8 +16,7 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import sugiforest.core.Config;
-import sugiforest.core.SugiForest;
+import sugiforest.api.SugiForestAPI;
 import sugiforest.util.SugiUtils;
 
 public class WorldProviderSugiForest extends WorldProviderSurface
@@ -25,14 +24,14 @@ public class WorldProviderSugiForest extends WorldProviderSurface
 	@Override
 	protected void registerWorldChunkManager()
 	{
-		dimensionId = Config.dimensionID_SugiForest;
-		worldChunkMgr = new WorldChunkManagerHell(SugiForest.sugiForest, SugiForest.sugiForest.rainfall);
+		dimensionId = SugiForestAPI.getDimension();
+		worldChunkMgr = new WorldChunkManagerHell(SugiForestAPI.getBiome(), SugiForestAPI.getBiome().rainfall);
 	}
 
 	@Override
 	public IChunkProvider createChunkGenerator()
 	{
-		return new ChunkProviderSugiForest(worldObj, worldObj.getSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled(), worldObj.getWorldInfo().getGeneratorOptions());
+		return new ChunkProviderSugiForest(worldObj, worldObj.getSeed(), worldObj.getWorldInfo().getGeneratorOptions());
 	}
 
 	@Override
@@ -76,13 +75,6 @@ public class WorldProviderSugiForest extends WorldProviderSurface
 	public boolean shouldMapSpin(String entity, double x, double y, double z)
 	{
 		return false;
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public float getSunBrightness(float ticks)
-	{
-		return super.getSunBrightness(ticks) * 1.5F;
 	}
 
 	@SideOnly(Side.CLIENT)

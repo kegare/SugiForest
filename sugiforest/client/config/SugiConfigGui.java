@@ -19,7 +19,7 @@ import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.IConfigElement;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import sugiforest.core.Config;
+import sugiforest.api.SugiForestAPI;
 
 import com.google.common.collect.Lists;
 
@@ -35,8 +35,8 @@ public class SugiConfigGui extends GuiConfig
 	{
 		List<IConfigElement> list = Lists.newArrayList();
 
-		list.addAll(new ConfigElement(Config.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements());
-		list.addAll(new ConfigElement(Config.config.getCategory("sugiforest")).getChildElements());
+		list.addAll(new ConfigElement(SugiForestAPI.getConfig().getCategory(Configuration.CATEGORY_GENERAL)).getChildElements());
+		list.addAll(new ConfigElement(SugiForestAPI.getConfig().getCategory("sugiforest")).getChildElements());
 
 		return list;
 	}

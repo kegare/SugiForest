@@ -23,10 +23,17 @@ import net.minecraftforge.event.terraingen.TerrainGen;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import sugiforest.core.Config;
 import sugiforest.world.BiomeGenSugiForest;
-import sugiforest.world.WorldGenSugiTree;
+import sugiforest.world.gen.WorldGenSugiTree;
 
 public class SugiWorldGenerator implements IWorldGenerator
 {
+	private WorldGenerator treeGen;
+
+	public SugiWorldGenerator()
+	{
+		this.treeGen = new WorldGenSugiTree(false);
+	}
+
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
 	{
@@ -38,17 +45,18 @@ public class SugiWorldGenerator implements IWorldGenerator
 			return;
 		}
 
-		if (Config.sugiOnHills > 0 && BiomeDictionary.isBiomeOfType(biome, Type.HILLS))
+		if (treeGen != null && Config.sugiOnHills > 0 && BiomeDictionary.isBiomeOfType(biome, Type.HILLS))
 		{
-			WorldGenerator worldGenSugiTree = new WorldGenSugiTree(false);
-
 			for (int i = 0; i < Config.sugiOnHills; ++i)
 			{
-				BlockPos blockpos = world.getHorizon(pos.add(random.nextInt(16), 0, random.nextInt(16)));
-
-				if (TerrainGen.decorate(world, random, blockpos, EventType.TREE))
+				if (random.nextInt(10) == 0)
 				{
-					worldGenSugiTree.generate(world, random, blockpos);
+					BlockPos blockpos = world.getHorizon(pos.add(random.nextInt(16), 0, random.nextInt(16)));
+
+					if (TerrainGen.decorate(world, random, blockpos, EventType.TREE))
+					{
+						treeGen.generate(world, random, blockpos);
+					}
 				}
 			}
 		}
