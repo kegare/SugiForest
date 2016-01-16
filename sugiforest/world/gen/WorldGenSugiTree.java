@@ -14,6 +14,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockVine;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
@@ -87,7 +88,7 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 
 			if (block.isAir(world, blockpos) || block.isLeaves(world, blockpos) || block.getMaterial() == Material.vine)
 			{
-				func_175905_a(world, blockpos, SugiBlocks.sugi_log, random.nextInt(40) == 0 ? 1 : 0);
+				setBlockAndNotifyAdequately(world, blockpos, SugiBlocks.sugi_log.getStateFromMeta(random.nextInt(40) == 0 ? 1 : 0));
 
 				if (!doBlockNotify)
 				{
@@ -97,22 +98,22 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 						{
 							if (random.nextInt(3) > 0 && world.isAirBlock(pos.add(-1, woodHeight, 0)))
 							{
-								func_175905_a(world, pos.add(-1, woodHeight, 0), Blocks.vine, BlockVine.EAST_FLAG);
+								setVineBlock(world, pos.add(-1, woodHeight, 0), BlockVine.EAST);
 							}
 
 							if (random.nextInt(3) > 0 && world.isAirBlock(pos.add(1, woodHeight, 0)))
 							{
-								func_175905_a(world, pos.add(1, woodHeight, 0), Blocks.vine, BlockVine.WEST_FLAG);
+								setVineBlock(world, pos.add(1, woodHeight, 0), BlockVine.WEST);
 							}
 
 							if (random.nextInt(3) > 0 && world.isAirBlock(pos.add(0, woodHeight, -1)))
 							{
-								func_175905_a(world, pos.add(0, woodHeight, -1), Blocks.vine, BlockVine.SOUTH_FLAG);
+								setVineBlock(world, pos.add(0, woodHeight, -1), BlockVine.SOUTH);
 							}
 
 							if (random.nextInt(3) > 0 && world.isAirBlock(pos.add(0, woodHeight, 1)))
 							{
-								func_175905_a(world, pos.add(0, woodHeight, 1), Blocks.vine, BlockVine.NORTH_FLAG);
+								setVineBlock(world, pos.add(0, woodHeight, 1), BlockVine.NORTH);
 							}
 						}
 					}
@@ -172,7 +173,7 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 
 						if ((block.isAir(world, blockpos) || block.isLeaves(world, blockpos) || block.getMaterial() == Material.vine) && random.nextInt(12) != 0)
 						{
-							func_175906_a(world, blockpos, SugiBlocks.sugi_leaves);
+							setBlockAndNotifyAdequately(world, blockpos, SugiBlocks.sugi_leaves.getDefaultState());
 						}
 					}
 				}
@@ -211,7 +212,7 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 
 				if (SugiBlocks.sugi_fallen_leaves.canPlaceBlockAt(world, blockpos) && random.nextInt(3) == 0)
 				{
-					func_175903_a(world, blockpos, SugiBlocks.sugi_fallen_leaves.getDefaultState().withProperty(BlockSugiFallenLeaves.CHANCE, Boolean.valueOf(true)));
+					setBlockAndNotifyAdequately(world, blockpos, SugiBlocks.sugi_fallen_leaves.getDefaultState().withProperty(BlockSugiFallenLeaves.CHANCE, Boolean.valueOf(true)));
 				}
 				else
 				{
@@ -220,9 +221,9 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 
 					if (state.getBlock() instanceof BlockSugiFallenLeaves)
 					{
-						int layers = ((Integer)state.getValue(BlockSugiFallenLeaves.LAYERS)).intValue();
+						int layers = state.getValue(BlockSugiFallenLeaves.LAYERS).intValue();
 
-						func_175903_a(world, blockpos, SugiBlocks.sugi_fallen_leaves.getDefaultState().withProperty(BlockSugiFallenLeaves.LAYERS, (layers & 7) + 1).withProperty(BlockSugiFallenLeaves.CHANCE, Boolean.valueOf(true)));
+						setBlockAndNotifyAdequately(world, blockpos, SugiBlocks.sugi_fallen_leaves.getDefaultState().withProperty(BlockSugiFallenLeaves.LAYERS, (layers & 7) + 1).withProperty(BlockSugiFallenLeaves.CHANCE, Boolean.valueOf(true)));
 					}
 				}
 			}
@@ -255,28 +256,28 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 
 						if (random.nextInt(4) == 0 && world.isAirBlock(blockpos))
 						{
-							growVines(world, blockpos, BlockVine.EAST_FLAG);
+							growVines(world, blockpos, BlockVine.EAST);
 						}
 
 						blockpos = blockpos.add(1, 0, 0);
 
 						if (random.nextInt(4) == 0 && world.isAirBlock(blockpos))
 						{
-							growVines(world, blockpos, BlockVine.WEST_FLAG);
+							growVines(world, blockpos, BlockVine.WEST);
 						}
 
 						blockpos = blockpos.add(0, 0, -1);
 
 						if (random.nextInt(4) == 0 && world.isAirBlock(blockpos))
 						{
-							growVines(world, blockpos, BlockVine.SOUTH_FLAG);
+							growVines(world, blockpos, BlockVine.SOUTH);
 						}
 
 						blockpos = blockpos.add(0, 0, 1);
 
 						if (random.nextInt(4) == 0 && world.isAirBlock(blockpos))
 						{
-							growVines(world, blockpos, BlockVine.NORTH_FLAG);
+							growVines(world, blockpos, BlockVine.NORTH);
 						}
 					}
 				}
@@ -284,9 +285,9 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 		}
 	}
 
-	private void growVines(World world, BlockPos pos, int meta)
+	private void growVines(World world, BlockPos pos, PropertyBool meta)
 	{
-		func_175905_a(world, pos, Blocks.vine, meta);
+		setVineBlock(world, pos, meta);
 
 		byte count = 4;
 
@@ -299,7 +300,7 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 				return;
 			}
 
-			func_175905_a(world, pos, Blocks.vine, meta);
+			setVineBlock(world, pos, meta);
 
 			--count;
 		}
@@ -356,4 +357,9 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 
 		return false;
 	}
+
+    private void setVineBlock(World world, BlockPos pos, PropertyBool prop)
+    {
+        this.setBlockAndNotifyAdequately(world, pos, Blocks.vine.getDefaultState().withProperty(prop, Boolean.valueOf(true)));
+    }
 }

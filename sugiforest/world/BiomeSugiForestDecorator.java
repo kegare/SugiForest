@@ -10,6 +10,7 @@
 package sugiforest.world;
 
 import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.*;
+
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
@@ -76,7 +77,7 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 			l = randomGenerator.nextInt(16) + 8;
 			WorldGenAbstractTree treeGen = biome.genBigTreeChance(randomGenerator);
 			treeGen.func_175904_e();
-			blockpos = currentWorld.getHorizon(field_180294_c.add(k, 0, l));
+			blockpos = currentWorld.getHeight(field_180294_c.add(k, 0, l));
 
 			if (treeGen.generate(currentWorld, randomGenerator, blockpos))
 			{
@@ -91,7 +92,7 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 		{
 			k = randomGenerator.nextInt(16) + 8;
 			l = randomGenerator.nextInt(16) + 8;
-			m = nextInt(currentWorld.getHorizon(field_180294_c.add(k, 0, l)).getY() + 32);
+			m = nextInt(currentWorld.getHeight(field_180294_c.add(k, 0, l)).getY() + 32);
 			blockpos = field_180294_c.add(k, m, l);
 			BlockFlower.EnumFlowerType type = biome.pickRandomFlower(randomGenerator, blockpos);
 			BlockFlower blockflower = type.getBlockType().getBlock();
@@ -108,7 +109,7 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 		{
 			k = randomGenerator.nextInt(16) + 8;
 			l = randomGenerator.nextInt(16) + 8;
-			m = nextInt(currentWorld.getHorizon(field_180294_c.add(k, 0, l)).getY() * 2);
+			m = nextInt(currentWorld.getHeight(field_180294_c.add(k, 0, l)).getY() * 2);
 			biome.getRandomWorldGenForGrass(randomGenerator).generate(currentWorld, randomGenerator, field_180294_c.add(k, m, l));
 		}
 
@@ -119,7 +120,7 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 		{
 			k = randomGenerator.nextInt(16) + 8;
 			l = randomGenerator.nextInt(16) + 8;
-			m = nextInt(currentWorld.getHorizon(field_180294_c.add(k, 0, l)).getY() * 2);
+			m = nextInt(currentWorld.getHeight(field_180294_c.add(k, 0, l)).getY() * 2);
 			blockpos = field_180294_c.add(k, m, l);
 
 			while (true)
@@ -148,7 +149,7 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 			{
 				k = randomGenerator.nextInt(16) + 8;
 				l = randomGenerator.nextInt(16) + 8;
-				BlockPos blockpos2 = currentWorld.getHorizon(field_180294_c.add(k, 0, l));
+				BlockPos blockpos2 = currentWorld.getHeight(field_180294_c.add(k, 0, l));
 				mushroomBrownGen.generate(currentWorld, randomGenerator, blockpos2);
 			}
 
@@ -156,7 +157,7 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 			{
 				k = randomGenerator.nextInt(16) + 8;
 				l = randomGenerator.nextInt(16) + 8;
-				m = nextInt(currentWorld.getHorizon(field_180294_c.add(k, 0, l)).getY() * 2);
+				m = nextInt(currentWorld.getHeight(field_180294_c.add(k, 0, l)).getY() * 2);
 				blockpos = field_180294_c.add(k, m, l);
 				mushroomRedGen.generate(currentWorld, randomGenerator, blockpos);
 			}
@@ -166,7 +167,7 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 		{
 			j = randomGenerator.nextInt(16) + 8;
 			k = randomGenerator.nextInt(16) + 8;
-			l = nextInt(currentWorld.getHorizon(field_180294_c.add(j, 0, k)).getY() * 2);
+			l = nextInt(currentWorld.getHeight(field_180294_c.add(j, 0, k)).getY() * 2);
 			mushroomBrownGen.generate(currentWorld, randomGenerator, field_180294_c.add(j, l, k));
 		}
 
@@ -174,7 +175,7 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 		{
 			j = randomGenerator.nextInt(16) + 8;
 			k = randomGenerator.nextInt(16) + 8;
-			l = nextInt(currentWorld.getHorizon(field_180294_c.add(j, 0, k)).getY() * 2);
+			l = nextInt(currentWorld.getHeight(field_180294_c.add(j, 0, k)).getY() * 2);
 			mushroomRedGen.generate(currentWorld, randomGenerator, field_180294_c.add(j, l, k));
 		}
 
@@ -183,7 +184,7 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 		{
 			k = randomGenerator.nextInt(16) + 8;
 			l = randomGenerator.nextInt(16) + 8;
-			m = nextInt(currentWorld.getHorizon(field_180294_c.add(k, 0, l)).getY() * 2);
+			m = nextInt(currentWorld.getHeight(field_180294_c.add(k, 0, l)).getY() * 2);
 			reedGen.generate(currentWorld, randomGenerator, field_180294_c.add(k, m, l));
 		}
 
@@ -191,7 +192,7 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 		{
 			k = randomGenerator.nextInt(16) + 8;
 			l = randomGenerator.nextInt(16) + 8;
-			m = nextInt(currentWorld.getHorizon(field_180294_c.add(k, 0, l)).getY() * 2);
+			m = nextInt(currentWorld.getHeight(field_180294_c.add(k, 0, l)).getY() * 2);
 			reedGen.generate(currentWorld, randomGenerator, field_180294_c.add(k, m, l));
 		}
 
@@ -200,7 +201,7 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 		{
 			j = randomGenerator.nextInt(16) + 8;
 			k = randomGenerator.nextInt(16) + 8;
-			l = nextInt(currentWorld.getHorizon(field_180294_c.add(j, 0, k)).getY() * 2);
+			l = nextInt(currentWorld.getHeight(field_180294_c.add(j, 0, k)).getY() * 2);
 			new WorldGenPumpkin().generate(currentWorld, randomGenerator, field_180294_c.add(j, l, k));
 		}
 

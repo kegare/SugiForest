@@ -105,20 +105,20 @@ public class SugiBlocks
 	public static void registerModels()
 	{
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sugi_log), 0, new ModelResourceLocation("sugiforest:sugi_log", "inventory"));
-		ModelLoader.setCustomStateMapper(sugi_log, new StateMap.Builder().addPropertiesToIgnore(BlockSugiLog.MYST).build());
+		ModelLoader.setCustomStateMapper(sugi_log, new StateMap.Builder().ignore(BlockSugiLog.MYST).build());
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sugi_leaves), 0, new ModelResourceLocation("sugiforest:sugi_leaves", "inventory"));
-		ModelLoader.setCustomStateMapper(sugi_leaves, new StateMap.Builder().addPropertiesToIgnore(BlockLeaves.DECAYABLE, BlockLeaves.CHECK_DECAY).build());
+		ModelLoader.setCustomStateMapper(sugi_leaves, new StateMap.Builder().ignore(BlockLeaves.DECAYABLE, BlockLeaves.CHECK_DECAY).build());
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sugi_fallen_leaves), 0, new ModelResourceLocation("sugiforest:sugi_fallen_leaves", "inventory"));
-		ModelLoader.setCustomStateMapper(sugi_fallen_leaves, new StateMap.Builder().addPropertiesToIgnore(BlockSugiFallenLeaves.CHANCE).build());
+		ModelLoader.setCustomStateMapper(sugi_fallen_leaves, new StateMap.Builder().ignore(BlockSugiFallenLeaves.CHANCE).build());
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sugi_sapling), 0, new ModelResourceLocation("sugiforest:sugi_sapling", "inventory"));
-		ModelLoader.setCustomStateMapper(sugi_sapling, new StateMap.Builder().addPropertiesToIgnore(BlockSapling.TYPE, BlockSapling.STAGE).build());
+		ModelLoader.setCustomStateMapper(sugi_sapling, new StateMap.Builder().ignore(BlockSapling.TYPE, BlockSapling.STAGE).build());
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sugi_planks), 0, new ModelResourceLocation("sugiforest:sugi_planks", "inventory"));
-		ModelLoader.setCustomStateMapper(sugi_planks, new StateMap.Builder().addPropertiesToIgnore(BlockSugiWood.DOUBLE).build());
+		ModelLoader.setCustomStateMapper(sugi_planks, new StateMap.Builder().ignore(BlockSugiWood.DOUBLE).build());
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sugi_slab), 0, new ModelResourceLocation("sugiforest:sugi_slab", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sugi_stairs), 0, new ModelResourceLocation("sugiforest:sugi_stairs", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sugi_fence), 0, new ModelResourceLocation("sugiforest:sugi_fence", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sugi_fence_gate), 0, new ModelResourceLocation("sugiforest:sugi_fence_gate", "inventory"));
-		ModelLoader.setCustomStateMapper(sugi_fence_gate, new StateMap.Builder().addPropertiesToIgnore(BlockFenceGate.POWERED).build());
+		ModelLoader.setCustomStateMapper(sugi_fence_gate, new StateMap.Builder().ignore(BlockFenceGate.POWERED).build());
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sugi_chest), 0, new ModelResourceLocation("sugiforest:sugi_chest", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sugi_portal), 0, new ModelResourceLocation("sugiforest:sugi_portal", "inventory"));
 	}

@@ -47,7 +47,7 @@ public class TileEntitySugiChest extends TileEntity implements IInventory
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot)
+	public ItemStack removeStackFromSlot(int slot)
 	{
 		ItemStack itemstack = getStackInSlot(slot);
 

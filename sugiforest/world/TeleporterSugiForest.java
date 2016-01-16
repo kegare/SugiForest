@@ -13,6 +13,8 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
+import com.google.common.collect.Sets;
+
 import net.minecraft.block.BlockPortal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -26,17 +28,16 @@ import net.minecraft.util.LongHashMap;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.Teleporter;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import sugiforest.block.SugiBlocks;
-
-import com.google.common.collect.Sets;
 
 public class TeleporterSugiForest extends Teleporter
 {
 	private final WorldServer worldObj;
 	private final Random random;
 
-	private final LongHashMap coordCache = new LongHashMap();
+	private final LongHashMap<PortalPosition> coordCache = new LongHashMap();
 	private final Set<Long> coordKeys = Sets.newHashSet();
 
 	public TeleporterSugiForest(WorldServer worldServer)
@@ -57,6 +58,16 @@ public class TeleporterSugiForest extends Teleporter
 			placeInExistingPortal(entity, rotationYaw);
 		}
 
+		if (entity.isEntityInsideOpaqueBlock())
+		{
+			BlockPos blockpos = getSafeExitLocation(entity.getPosition(), 0);
+
+			if (blockpos != null)
+			{
+				entity.setPosition(blockpos.getX() + 0.5F, blockpos.getY() + 0.1F, blockpos.getZ() + 0.5F);
+			}
+		}
+
 		if (entity instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP player = (EntityPlayerMP)entity;
@@ -64,6 +75,42 @@ public class TeleporterSugiForest extends Teleporter
 			player.addExperienceLevel(0);
 			player.addPotionEffect(new PotionEffect(Potion.blindness.getId(), 25, 0, false, false));
 		}
+	}
+
+	public BlockPos getSafeExitLocation(BlockPos pos, int tries)
+	{
+		EnumFacing enumfacing = EnumFacing.NORTH;
+		int i = pos.getX();
+		int j = pos.getY();
+		int k = pos.getZ();
+
+		for (int l = 0; l <= 1; ++l)
+		{
+			int i1 = i - enumfacing.getFrontOffsetX() * l - 1;
+			int j1 = k - enumfacing.getFrontOffsetZ() * l - 1;
+			int k1 = i1 + 2;
+			int l1 = j1 + 2;
+
+			for (int i2 = i1; i2 <= k1; ++i2)
+			{
+				for (int j2 = j1; j2 <= l1; ++j2)
+				{
+					BlockPos blockpos = new BlockPos(i2, j, j2);
+
+					if (World.doesBlockHaveSolidTopSurface(worldObj, pos.down()) && !worldObj.getBlockState(pos).getBlock().getMaterial().isSolid() && !worldObj.getBlockState(pos.up()).getBlock().getMaterial().isSolid())
+					{
+						if (tries <= 0)
+						{
+							return blockpos;
+						}
+
+						--tries;
+					}
+				}
+			}
+		}
+
+		return null;
 	}
 
 	@Override
@@ -78,7 +125,7 @@ public class TeleporterSugiForest extends Teleporter
 
 		if (coordCache.containsItem(k))
 		{
-			PortalPosition portalposition = (PortalPosition)coordCache.getValueByKey(k);
+			PortalPosition portalposition = coordCache.getValueByKey(k);
 			d0 = 0.0D;
 			object = portalposition;
 			portalposition.lastUpdateTime = worldObj.getTotalWorldTime();
@@ -151,7 +198,7 @@ public class TeleporterSugiForest extends Teleporter
 				facing = EnumFacing.WEST;
 			}
 
-			EnumFacing facing1 = EnumFacing.getHorizontal(entity.getTeleportDirection());
+			EnumFacing facing1 = EnumFacing.getHorizontal(0);
 
 			if (facing != null)
 			{
@@ -234,6 +281,126 @@ public class TeleporterSugiForest extends Teleporter
 		}
 		else return false;
 	}
+
+//	public boolean placeInExistingPortal(Entity entityIn, float rotationYaw)
+//	{
+//		int i = 128;
+//		double d0 = -1.0D;
+//		int j = MathHelper.floor_double(entityIn.posX);
+//		int k = MathHelper.floor_double(entityIn.posZ);
+//		boolean flag = true;
+//		BlockPos blockpos = BlockPos.ORIGIN;
+//		long l = ChunkCoordIntPair.chunkXZ2Int(j, k);
+//
+//		if (coordCache.containsItem(l))
+//		{
+//			Teleporter.PortalPosition pos = coordCache.getValueByKey(l);
+//			d0 = 0.0D;
+//			blockpos = pos;
+//			pos.lastUpdateTime = worldObj.getTotalWorldTime();
+//			flag = false;
+//		}
+//		else
+//		{
+//			BlockPos blockpos3 = new BlockPos(entityIn);
+//
+//			for (int i1 = -128; i1 <= 128; ++i1)
+//			{
+//				BlockPos blockpos2;
+//
+//				for (int j1 = -128; j1 <= 128; ++j1)
+//				{
+//					for (BlockPos blockpos1 = blockpos3.add(i1, worldObj.getActualHeight() - 1 - blockpos3.getY(), j1); blockpos1.getY() >= 0; blockpos1 = blockpos2)
+//					{
+//						blockpos2 = blockpos1.down();
+//
+//						if (worldObj.getBlockState(blockpos1).getBlock() == SugiBlocks.sugi_portal)
+//						{
+//							while (worldObj.getBlockState(blockpos2 = blockpos1.down()).getBlock() == SugiBlocks.sugi_portal)
+//							{
+//								blockpos1 = blockpos2;
+//							}
+//
+//							double d1 = blockpos1.distanceSq(blockpos3);
+//
+//							if (d0 < 0.0D || d1 < d0)
+//							{
+//								d0 = d1;
+//								blockpos = blockpos1;
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
+//
+//		if (d0 >= 0.0D)
+//		{
+//			if (flag)
+//			{
+//				coordCache.add(l, new PortalPosition(blockpos, worldObj.getTotalWorldTime()));
+//				coordKeys.add(Long.valueOf(l));
+//			}
+//
+//			double d5 = blockpos.getX() + 0.5D;
+//			double d6 = blockpos.getY() + 0.5D;
+//			double d7 = blockpos.getZ() + 0.5D;
+//			PatternHelper pattern = SugiBlocks.sugi_portal.func_181089_f(worldObj, blockpos);
+//			boolean flag1 = pattern.getFinger().rotateY().getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE;
+//			double d2 = pattern.getFinger().getAxis() == EnumFacing.Axis.X ? (double)pattern.func_181117_a().getZ() : (double)pattern.func_181117_a().getX();
+//			d6 = pattern.func_181117_a().getY() + 1 - entityIn.func_181014_aG().yCoord * pattern.func_181119_e();
+//
+//			if (flag1)
+//			{
+//				++d2;
+//			}
+//
+//			if (pattern.getFinger().getAxis() == EnumFacing.Axis.X)
+//			{
+//				d7 = d2 + (1.0D - entityIn.func_181014_aG().xCoord) * pattern.func_181118_d() * pattern.getFinger().rotateY().getAxisDirection().getOffset();
+//			}
+//			else
+//			{
+//				d5 = d2 + (1.0D - entityIn.func_181014_aG().xCoord) * pattern.func_181118_d() * pattern.getFinger().rotateY().getAxisDirection().getOffset();
+//			}
+//
+//			float f = 0.0F;
+//			float f1 = 0.0F;
+//			float f2 = 0.0F;
+//			float f3 = 0.0F;
+//
+//			if (pattern.getFinger().getOpposite() == entityIn.func_181012_aH())
+//			{
+//				f = 1.0F;
+//				f1 = 1.0F;
+//			}
+//			else if (pattern.getFinger().getOpposite() == entityIn.func_181012_aH().getOpposite())
+//			{
+//				f = -1.0F;
+//				f1 = -1.0F;
+//			}
+//			else if (pattern.getFinger().getOpposite() == entityIn.func_181012_aH().rotateY())
+//			{
+//				f2 = 1.0F;
+//				f3 = -1.0F;
+//			}
+//			else
+//			{
+//				f2 = -1.0F;
+//				f3 = 1.0F;
+//			}
+//
+//			double d3 = entityIn.motionX;
+//			double d4 = entityIn.motionZ;
+//			entityIn.motionX = d3 * f + d4 * f3;
+//			entityIn.motionZ = d3 * f2 + d4 * f1;
+//			entityIn.rotationYaw = rotationYaw - entityIn.func_181012_aH().getOpposite().getHorizontalIndex() * 90 + pattern.getFinger().getHorizontalIndex() * 90;
+//			entityIn.setLocationAndAngles(d5, d6 + 0.5D, d7, entityIn.rotationYaw, entityIn.rotationPitch);
+//
+//			return true;
+//		}
+//		else return false;
+//	}
 
 	private boolean func_180265_a(BlockPos pos)
 	{
@@ -470,7 +637,7 @@ public class TeleporterSugiForest extends Teleporter
 			while (iterator.hasNext())
 			{
 				long chunkSeed = iterator.next();
-				PortalPosition portal = (PortalPosition)coordCache.getValueByKey(chunkSeed);
+				PortalPosition portal = coordCache.getValueByKey(chunkSeed);
 
 				if (portal == null || portal.lastUpdateTime < var1)
 				{

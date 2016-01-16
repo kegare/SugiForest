@@ -12,6 +12,8 @@ package sugiforest.block;
 import java.util.List;
 import java.util.Random;
 
+import com.google.common.collect.Lists;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -34,8 +36,6 @@ import net.minecraftforge.common.IShearable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sugiforest.core.SugiForest;
-
-import com.google.common.collect.Lists;
 
 public class BlockSugiFallenLeaves extends Block implements IShearable
 {
@@ -62,7 +62,7 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 
 	public static ItemStack getFallenSeed(Random rand)
 	{
-		SeedEntry entry = (SeedEntry)WeightedRandom.getRandomItem(rand, seedList);
+		SeedEntry entry = WeightedRandom.getRandomItem(rand, seedList);
 
 		if (entry == null || entry.stack == null)
 		{
@@ -88,9 +88,9 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		int meta = ((Integer)state.getValue(LAYERS)).intValue() - 1;
+		int meta = state.getValue(LAYERS).intValue() - 1;
 
-		if (((Boolean)state.getValue(CHANCE)).booleanValue())
+		if (state.getValue(CHANCE).booleanValue())
 		{
 			meta += 8;
 		}
@@ -146,7 +146,7 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state)
 	{
-		int i = ((Integer)state.getValue(LAYERS)).intValue() - 1;
+		int i = state.getValue(LAYERS).intValue() - 1;
 		float f = 0.125F;
 
 		return new AxisAlignedBB(pos.getX() + minX, pos.getY() + minY, pos.getZ() + minZ, pos.getX() + maxX, pos.getY() + i * f, pos.getZ() + maxZ);
@@ -168,7 +168,7 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos)
 	{
-		getBoundsForLayers(((Integer)world.getBlockState(pos).getValue(LAYERS)).intValue());
+		getBoundsForLayers(world.getBlockState(pos).getValue(LAYERS).intValue());
 	}
 
 	protected void getBoundsForLayers(int layer)
@@ -198,7 +198,14 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 	public float getBlockHardness(World world, BlockPos pos)
 	{
 		float hardness = super.getBlockHardness(world, pos);
-		int layers = ((Integer)world.getBlockState(pos).getValue(LAYERS)).intValue();
+		IBlockState state = world.getBlockState(pos);
+
+		if (!state.getProperties().containsKey(LAYERS))
+		{
+			return hardness;
+		}
+
+		int layers = state.getValue(LAYERS).intValue();
 
 		if (layers >= 6)
 		{
@@ -216,13 +223,13 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 	@Override
 	public boolean isReplaceable(World world, BlockPos pos)
 	{
-		return ((Integer)world.getBlockState(pos).getValue(LAYERS)).intValue() == 1;
+		return world.getBlockState(pos).getValue(LAYERS).intValue() == 1;
 	}
 
 	@Override
 	public boolean isPassable(IBlockAccess world, BlockPos pos)
 	{
-		return ((Integer)world.getBlockState(pos).getValue(LAYERS)).intValue() < 5;
+		return world.getBlockState(pos).getValue(LAYERS).intValue() < 5;
 	}
 
 	@Override
@@ -237,7 +244,7 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 		IBlockState state = world.getBlockState(pos.down());
 		Block block = state.getBlock();
 
-		return block != this && block.isLeaves(world, pos.down()) && block.isFullCube() || block == this && ((Integer)state.getValue(LAYERS)).intValue() == 8 || block.isOpaqueCube() && block.getMaterial().blocksMovement();
+		return block != this && block.isLeaves(world, pos.down()) && block.isFullCube() || block == this && state.getValue(LAYERS).intValue() == 8 || block.isOpaqueCube() && block.getMaterial().blocksMovement();
 	}
 
 	@Override
@@ -269,13 +276,13 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 	@Override
 	public boolean isShearable(ItemStack item, IBlockAccess world, BlockPos pos)
 	{
-		return true;
+		return item != null;
 	}
 
 	@Override
 	public List<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune)
 	{
-		return Lists.newArrayList(new ItemStack(this, ((Integer)world.getBlockState(pos).getValue(LAYERS)).intValue()));
+		return Lists.newArrayList(new ItemStack(this, world.getBlockState(pos).getValue(LAYERS).intValue()));
 	}
 
 	@Override
@@ -283,7 +290,7 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 	{
 		List<ItemStack> ret = Lists.newArrayList();
 
-		if (!((Boolean)state.getValue(CHANCE)).booleanValue() || RANDOM.nextInt(5) != 0)
+		if (!state.getValue(CHANCE).booleanValue() || RANDOM.nextInt(5) != 0)
 		{
 			return ret;
 		}

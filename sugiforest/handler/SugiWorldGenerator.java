@@ -51,7 +51,7 @@ public class SugiWorldGenerator implements IWorldGenerator
 			{
 				if (random.nextInt(10) == 0)
 				{
-					BlockPos blockpos = world.getHorizon(pos.add(random.nextInt(16), 0, random.nextInt(16)));
+					BlockPos blockpos = world.getHeight(pos.add(random.nextInt(16), 0, random.nextInt(16)));
 
 					if (TerrainGen.decorate(world, random, blockpos, EventType.TREE))
 					{

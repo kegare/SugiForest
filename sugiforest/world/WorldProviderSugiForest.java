@@ -37,7 +37,7 @@ public class WorldProviderSugiForest extends WorldProviderSurface
 	@Override
 	public boolean canCoordinateBeSpawn(int x, int z)
 	{
-		return worldObj.getBlockState(worldObj.getHorizon(new BlockPos(x, 0, z))).getBlock().getMaterial().isSolid();
+		return worldObj.getBlockState(worldObj.getHeight(new BlockPos(x, 0, z))).getBlock().getMaterial().isSolid();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -89,7 +89,7 @@ public class WorldProviderSugiForest extends WorldProviderSurface
 	{
 		super.resetRainAndThunder();
 
-		if (worldObj.getGameRules().getGameRuleBooleanValue("doDaylightCycle"))
+		if (worldObj.getGameRules().getBoolean("doDaylightCycle"))
 		{
 			WorldInfo worldInfo = SugiUtils.getWorldInfo(worldObj);
 			long i = worldInfo.getWorldTime() + 24000L;

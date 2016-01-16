@@ -91,7 +91,7 @@ public class ChunkProviderSugiForest implements IChunkProvider
 
 		if (options != null)
 		{
-			this.settings = ChunkProviderSettings.Factory.func_177865_a(options).func_177864_b();
+			this.settings = ChunkProviderSettings.Factory.jsonToFactory(options).func_177864_b();
 			this.oceanLiquid = settings.useLavaOceans ? Blocks.lava : Blocks.water;
 		}
 	}
@@ -322,7 +322,7 @@ public class ChunkProviderSugiForest implements IChunkProvider
 
 		if (settings.useCaves)
 		{
-			caveGenerator.func_175792_a(this, worldObj, chunkX, chunkZ, primer);
+			caveGenerator.generate(this, worldObj, chunkX, chunkZ, primer);
 		}
 
 		for (int x = 0; x < 16; ++x)
@@ -422,7 +422,7 @@ public class ChunkProviderSugiForest implements IChunkProvider
 				BlockPos blockpos1 = worldObj.getPrecipitationHeight(blockpos.add(i, 0, j));
 				BlockPos blockpos2 = blockpos1.down();
 
-				if (worldObj.func_175675_v(blockpos2))
+				if (worldObj.canBlockFreezeWater(blockpos2))
 				{
 					worldObj.setBlockState(blockpos2, Blocks.ice.getDefaultState(), 2);
 				}
@@ -473,7 +473,7 @@ public class ChunkProviderSugiForest implements IChunkProvider
 	}
 
 	@Override
-	public List func_177458_a(EnumCreatureType type, BlockPos pos)
+	public List getPossibleCreatures(EnumCreatureType type, BlockPos pos)
 	{
 		List list = worldObj.getBiomeGenForCoords(pos).getSpawnableList(type);
 

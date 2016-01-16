@@ -21,7 +21,7 @@ import net.minecraft.world.gen.MapGenCaves;
 public class MapGenSugiForestCaves extends MapGenCaves
 {
 	@Override
-	protected void func_180701_a(World worldIn, int x, int z, int chunkX, int chunkZ, ChunkPrimer primer)
+	protected void recursiveGenerate(World worldIn, int x, int z, int chunkX, int chunkZ, ChunkPrimer primer)
 	{
 		int i = rand.nextInt(rand.nextInt(rand.nextInt(20) + 1) + 1);
 

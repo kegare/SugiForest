@@ -57,7 +57,7 @@ public class BlockSugiChest extends BlockContainer
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return ((EnumFacing)state.getValue(FACING)).getIndex();
+		return state.getValue(FACING).getIndex();
 	}
 
 	@Override
@@ -285,7 +285,7 @@ public class BlockSugiChest extends BlockContainer
 	}
 
 	@Override
-	public int isProvidingWeakPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
+	public int getWeakPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
 	{
 		if (!canProvidePower())
 		{
@@ -306,9 +306,9 @@ public class BlockSugiChest extends BlockContainer
 	}
 
 	@Override
-	public int isProvidingStrongPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
+	public int getStrongPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
 	{
-		return side == EnumFacing.UP ? isProvidingWeakPower(world, pos, state, side) : 0;
+		return side == EnumFacing.UP ? getWeakPower(world, pos, state, side) : 0;
 	}
 
 	@Override

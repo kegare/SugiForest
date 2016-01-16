@@ -11,10 +11,15 @@ package sugiforest.block;
 
 import java.util.Random;
 
+import com.google.common.cache.LoadingCache;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPortal;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockWorldState;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.pattern.BlockPattern;
+import net.minecraft.block.state.pattern.BlockPattern.PatternHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -80,7 +85,7 @@ public class BlockSugiPortal extends BlockPortal
 	@Override
 	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
 	{
-		EnumFacing.Axis axis = (EnumFacing.Axis)state.getValue(AXIS);
+		EnumFacing.Axis axis = state.getValue(AXIS);
 		Size size;
 
 		if (axis == EnumFacing.Axis.X)
@@ -132,6 +137,14 @@ public class BlockSugiPortal extends BlockPortal
 				entity.isDead = false;
 				entity.timeUntilPortal = entity.getPortalCooldown();
 
+//				PatternHelper pattern = Blocks.portal.func_181089_f(entity.worldObj, pos);
+//				double d0 = pattern.getFinger().getAxis() == EnumFacing.Axis.X ? (double)pattern.func_181117_a().getZ() : (double)pattern.func_181117_a().getX();
+//				double d1 = pattern.getFinger().getAxis() == EnumFacing.Axis.X ? entity.posZ : entity.posX;
+//				d1 = Math.abs(MathHelper.func_181160_c(d1 - (pattern.getFinger().rotateY().getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE ? 1 : 0), d0, d0 - pattern.func_181118_d()));
+//				double d2 = MathHelper.func_181160_c(entity.posY - 1.0D, pattern.func_181117_a().getY(), pattern.func_181117_a().getY() - pattern.func_181119_e());
+//				ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, new Vec3(d1, d2, 0.0D), "field_" + "181017_ao");
+//				ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, pattern.getFinger(), "field_" + "181018_ap");
+
 				if (entity instanceof EntityPlayerMP)
 				{
 					EntityPlayerMP player = (EntityPlayerMP)entity;
@@ -179,6 +192,61 @@ public class BlockSugiPortal extends BlockPortal
 			{
 				entity.timeUntilPortal = entity.getPortalCooldown();
 			}
+		}
+	}
+
+	@Override
+	public PatternHelper func_181089_f(World world, BlockPos pos)
+	{
+		EnumFacing.Axis axis = EnumFacing.Axis.Z;
+		Size size = new Size(world, pos, EnumFacing.Axis.X);
+		LoadingCache<BlockPos, BlockWorldState> cache = BlockPattern.func_181627_a(world, true);
+
+		if (!size.func_150860_b())
+		{
+			axis = EnumFacing.Axis.X;
+			size = new Size(world, pos, EnumFacing.Axis.Z);
+		}
+
+		if (!size.func_150860_b())
+		{
+			return new PatternHelper(pos, EnumFacing.NORTH, EnumFacing.UP, cache, 1, 1, 1);
+		}
+		else
+		{
+			int[] aint = new int[EnumFacing.AxisDirection.values().length];
+			EnumFacing facing = size.field_150866_c.rotateYCCW();
+			BlockPos blockpos = size.field_150861_f.up(size.func_181100_a() - 1);
+
+			for (EnumFacing.AxisDirection direction : EnumFacing.AxisDirection.values())
+			{
+				PatternHelper pattern = new PatternHelper(facing.getAxisDirection() == direction ? blockpos : blockpos.offset(size.field_150866_c, size.func_181101_b() - 1), EnumFacing.func_181076_a(direction, axis), EnumFacing.UP, cache, size.func_181101_b(), size.func_181100_a(), 1);
+
+				for (int i = 0; i < size.func_181101_b(); ++i)
+				{
+					for (int j = 0; j < size.func_181100_a(); ++j)
+					{
+						BlockWorldState blockworldstate = pattern.translateOffset(i, j, 1);
+
+						if (blockworldstate.getBlockState() != null && blockworldstate.getBlockState().getBlock().getMaterial() != Material.air)
+						{
+							++aint[direction.ordinal()];
+						}
+					}
+				}
+			}
+
+			EnumFacing.AxisDirection var1 = EnumFacing.AxisDirection.POSITIVE;
+
+			for (EnumFacing.AxisDirection direction : EnumFacing.AxisDirection.values())
+			{
+				if (aint[direction.ordinal()] < aint[var1.ordinal()])
+				{
+					var1 = direction;
+				}
+			}
+
+			return new PatternHelper(facing.getAxisDirection() == var1 ? blockpos : blockpos.offset(size.field_150866_c, size.func_181101_b() - 1), EnumFacing.func_181076_a(var1, axis), EnumFacing.UP, cache, size.func_181101_b(), size.func_181100_a(), 1);
 		}
 	}
 
@@ -262,6 +330,16 @@ public class BlockSugiPortal extends BlockPortal
 			Block block = world.getBlockState(pos.offset(face, i)).getBlock();
 
 			return block == SugiBlocks.sugi_log ? i : 0;
+		}
+
+		public int func_181100_a()
+		{
+			return field_150862_g;
+		}
+
+		public int func_181101_b()
+		{
+			return field_150868_h;
 		}
 
 		protected int func_150858_a()
