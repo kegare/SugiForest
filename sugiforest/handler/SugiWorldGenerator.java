@@ -1,21 +1,12 @@
-/*
- * SugiForest
- *
- * Copyright (c) 2015 kegare
- * https://github.com/kegare
- *
- * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
- */
-
 package sugiforest.handler;
 
 import java.util.Random;
 
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType;
@@ -27,15 +18,8 @@ import sugiforest.world.gen.WorldGenSugiTree;
 
 public class SugiWorldGenerator implements IWorldGenerator
 {
-	private WorldGenerator treeGen;
-
-	public SugiWorldGenerator()
-	{
-		this.treeGen = new WorldGenSugiTree(false);
-	}
-
 	@Override
-	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
+	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider)
 	{
 		BlockPos pos = new BlockPos(chunkX * 16, 0, chunkZ * 16);
 		BiomeGenBase biome = world.getBiomeGenForCoords(pos);
@@ -45,7 +29,7 @@ public class SugiWorldGenerator implements IWorldGenerator
 			return;
 		}
 
-		if (treeGen != null && Config.sugiOnHills > 0 && BiomeDictionary.isBiomeOfType(biome, Type.HILLS))
+		if (Config.sugiOnHills > 0 && BiomeDictionary.isBiomeOfType(biome, Type.HILLS))
 		{
 			for (int i = 0; i < Config.sugiOnHills; ++i)
 			{
@@ -55,7 +39,7 @@ public class SugiWorldGenerator implements IWorldGenerator
 
 					if (TerrainGen.decorate(world, random, blockpos, EventType.TREE))
 					{
-						treeGen.generate(world, random, blockpos);
+						WorldGenSugiTree.naturalGen.generate(world, random, blockpos);
 					}
 				}
 			}

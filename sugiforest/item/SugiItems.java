@@ -1,20 +1,18 @@
-/*
- * SugiForest
- *
- * Copyright (c) 2015 kegare
- * https://github.com/kegare
- *
- * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
- */
-
 package sugiforest.item;
 
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
+import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import sugiforest.util.SugiUtils;
+import sugiforest.core.SugiForest;
 
 public class SugiItems
 {
@@ -22,14 +20,44 @@ public class SugiItems
 
 	public static void registerItems()
 	{
-		GameRegistry.registerItem(myst_sap, "myst_sap");
+		myst_sap.setRegistryName("myst_sap");
 
-		SugiUtils.registerOreDict(myst_sap, "mystSap", "sapMyst");
+		GameRegistry.register(myst_sap);
 	}
 
 	@SideOnly(Side.CLIENT)
 	public static void registerModels()
 	{
-		ModelLoader.setCustomModelResourceLocation(myst_sap, 0, new ModelResourceLocation("sugiforest:myst_sap", "inventory"));
+		registerModel(myst_sap);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void registerModel(Item item, String modelName)
+	{
+		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(SugiForest.MODID + ":" + modelName, "inventory"));
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void registerModel(Item item)
+	{
+		registerModel(item, item.getRegistryName().getResourcePath());
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void registerModelWithMeta(Item item, String... modelName)
+	{
+		List<ModelResourceLocation> models = Lists.newArrayList();
+
+		for (String model : modelName)
+		{
+			models.add(new ModelResourceLocation(SugiForest.MODID + ":" + model, "inventory"));
+		}
+
+		ModelBakery.registerItemVariants(item, models.toArray(new ResourceLocation[models.size()]));
+
+		for (int i = 0; i < models.size(); ++i)
+		{
+			ModelLoader.setCustomModelResourceLocation(item, i, models.get(i));
+		}
 	}
 }

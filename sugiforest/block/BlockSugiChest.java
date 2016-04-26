@@ -1,42 +1,37 @@
-/*
- * SugiForest
- *
- * Copyright (c) 2015 kegare
- * https://github.com/kegare
- *
- * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
- */
-
 package sugiforest.block;
 
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Enchantments;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import sugiforest.core.SugiForest;
-import sugiforest.entity.TileEntitySugiChest;
 import sugiforest.item.ItemSugiChest;
+import sugiforest.tileentity.TileEntitySugiChest;
 
 public class BlockSugiChest extends BlockContainer
 {
@@ -48,16 +43,16 @@ public class BlockSugiChest extends BlockContainer
 		this.setUnlocalizedName("chest.sugi");
 		this.setHardness(3.0F);
 		this.setResistance(5.5F);
-		this.setStepSound(soundTypeWood);
+		this.setStepSound(SoundType.WOOD);
 		this.setHarvestLevel("axe", 0);
 		this.setCreativeTab(SugiForest.tabSugiForest);
 		this.setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state)
+	protected BlockStateContainer createBlockState()
 	{
-		return state.getValue(FACING).getIndex();
+		return new BlockStateContainer(this, new IProperty[] {FACING});
 	}
 
 	@Override
@@ -74,22 +69,33 @@ public class BlockSugiChest extends BlockContainer
 	}
 
 	@Override
-	protected BlockState createBlockState()
+	public int getMetaFromState(IBlockState state)
 	{
-		return new BlockState(this, new IProperty[] {FACING});
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public IBlockState getStateForEntityRender(IBlockState state)
-	{
-		return getDefaultState().withProperty(FACING, EnumFacing.SOUTH);
+		return state.getValue(FACING).getIndex();
 	}
 
 	@Override
-	public int getRenderType()
+	public IBlockState withRotation(IBlockState state, Rotation rot)
 	{
-		return 3;
+		return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
+	}
+
+	@Override
+	public IBlockState withMirror(IBlockState state, Mirror mirror)
+	{
+		return state.withRotation(mirror.toRotation(state.getValue(FACING)));
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World worldIn, int meta)
+	{
+		return new TileEntitySugiChest();
+	}
+
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state)
+	{
+		return EnumBlockRenderType.MODEL;
 	}
 
 	@Override
@@ -185,7 +191,7 @@ public class BlockSugiChest extends BlockContainer
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (!world.isRemote)
 		{
@@ -211,14 +217,14 @@ public class BlockSugiChest extends BlockContainer
 	}
 
 	@Override
-	public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
+	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
 	{
 		if (player.capabilities.isCreativeMode)
 		{
-			return super.removedByPlayer(world, pos, player, willHarvest);
+			return super.removedByPlayer(state, world, pos, player, willHarvest);
 		}
 
-		if (EnchantmentHelper.getSilkTouchModifier(player))
+		if (EnchantmentHelper.getEnchantmentLevel(Enchantments.silkTouch, player.getHeldItemMainhand()) > 0)
 		{
 			TileEntitySugiChest tileentity = (TileEntitySugiChest)world.getTileEntity(pos);
 			ItemStack stack;
@@ -247,7 +253,7 @@ public class BlockSugiChest extends BlockContainer
 			{
 				spawnAsEntity(world, pos, new ItemStack(this));
 
-				return super.removedByPlayer(world, pos, player, willHarvest);
+				return super.removedByPlayer(state, world, pos, player, willHarvest);
 			}
 
 			if (!world.isRemote)
@@ -269,7 +275,7 @@ public class BlockSugiChest extends BlockContainer
 			spawnAsEntity(world, pos, new ItemStack(this));
 		}
 
-		return super.removedByPlayer(world, pos, player, willHarvest);
+		return super.removedByPlayer(state, world, pos, player, willHarvest);
 	}
 
 	@Override
@@ -279,46 +285,38 @@ public class BlockSugiChest extends BlockContainer
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public int getWeakPower(IBlockState state, IBlockAccess source, BlockPos pos, EnumFacing side)
 	{
-		return new TileEntitySugiChest();
-	}
-
-	@Override
-	public int getWeakPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
-	{
-		if (!canProvidePower())
+		if (!canProvidePower(state))
 		{
 			return 0;
 		}
-		else
+
+		int i = 0;
+		TileEntity tileentity = source.getTileEntity(pos);
+
+		if (tileentity instanceof TileEntitySugiChest)
 		{
-			int i = 0;
-			TileEntity tileentity = world.getTileEntity(pos);
-
-			if (tileentity instanceof TileEntitySugiChest)
-			{
-				i = ((TileEntitySugiChest)tileentity).numUsingPlayers;
-			}
-
-			return MathHelper.clamp_int(i, 0, 15);
+			i = ((TileEntitySugiChest)tileentity).numUsingPlayers;
 		}
+
+		return MathHelper.clamp_int(i, 0, 15);
 	}
 
 	@Override
-	public int getStrongPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
+	public int getStrongPower(IBlockState state, IBlockAccess source, BlockPos pos, EnumFacing side)
 	{
-		return side == EnumFacing.UP ? getWeakPower(world, pos, state, side) : 0;
+		return side == EnumFacing.UP ? getWeakPower(state, source, pos, side) : 0;
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride()
+	public boolean hasComparatorInputOverride(IBlockState state)
 	{
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(World world, BlockPos pos)
+	public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos)
 	{
 		return Container.calcRedstone(world.getTileEntity(pos));
 	}

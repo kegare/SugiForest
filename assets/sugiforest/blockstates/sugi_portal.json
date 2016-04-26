@@ -1,6 +1,0 @@
-{
-    "variants": {
-        "axis=z": { "model": "sugiforest:sugi_portal_ew" },
-        "axis=x": { "model": "sugiforest:sugi_portal_ns" }
-    }
-}

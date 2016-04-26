@@ -2,19 +2,13 @@
   "sugichest.open": {
     "category": "block",
     "sounds": [
-      "open"
+      "sugiforest:open"
     ]
   },
   "sugichest.close": {
     "category": "block",
     "sounds": [
-      "close"
-    ]
-  },
-  "sugi_portal": {
-    "category": "block",
-    "sounds": [
-      "sugi_portal"
+      "sugiforest:close"
     ]
   }
 }

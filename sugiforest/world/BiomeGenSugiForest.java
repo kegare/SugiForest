@@ -1,34 +1,18 @@
-/*
- * SugiForest
- *
- * Copyright (c) 2015 kegare
- * https://github.com/kegare
- *
- * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
- */
-
 package sugiforest.world;
 
 import java.util.Random;
 
-import sugiforest.world.gen.WorldGenSugiTree;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.world.biome.BiomeDecorator;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
+import sugiforest.world.gen.WorldGenSugiTree;
 
 public class BiomeGenSugiForest extends BiomeGenBase
 {
-	protected static final Height height_Sugi = new Height(0.05F, 0.65F);
-
-	public BiomeGenSugiForest(int biomeID)
+	public BiomeGenSugiForest()
 	{
-		super(biomeID);
-		this.setBiomeName("Sugi Forest");
-		this.setTemperatureRainfall(0.25F, 0.9F);
-		this.setHeight(height_Sugi);
-		this.func_150563_c(5159473);
-		this.setColor(6726755);
+		super(new BiomeProperties("Sugi Forest").setTemperature(0.25F).setRainfall(0.9F).setBaseHeight(0.05F).setHeightVariation(0.65F));
 		this.spawnableCreatureList.add(new SpawnListEntry(EntityWolf.class, 5, 4, 4));
 		this.theBiomeDecorator.treesPerChunk = 16;
 		this.theBiomeDecorator.grassPerChunk = 12;
@@ -40,13 +24,13 @@ public class BiomeGenSugiForest extends BiomeGenBase
 	@Override
 	public BiomeDecorator createBiomeDecorator()
 	{
-		return getModdedBiomeDecorator(new BiomeSugiForestDecorator());
+		return new BiomeSugiForestDecorator();
 	}
 
 	@Override
-	public WorldGenAbstractTree genBigTreeChance(Random random)
+	public WorldGenAbstractTree genBigTreeChance(Random rand)
 	{
-		return new WorldGenSugiTree(false);
+		return WorldGenSugiTree.naturalGen;
 	}
 
 	@Override

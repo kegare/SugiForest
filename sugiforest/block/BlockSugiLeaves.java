@@ -1,62 +1,44 @@
-/*
- * SugiForest
- *
- * Copyright (c) 2015 kegare
- * https://github.com/kegare
- *
- * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
- */
-
 package sugiforest.block;
 
 import java.util.List;
 import java.util.Random;
 
+import com.google.common.collect.Lists;
+
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockPlanks.EnumType;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.stats.StatList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sugiforest.core.SugiForest;
-
-import com.google.common.collect.Lists;
 
 public class BlockSugiLeaves extends BlockLeaves
 {
 	public BlockSugiLeaves()
 	{
 		super();
-		this.fancyGraphics = true;
 		this.setUnlocalizedName("leaves.sugi");
 		this.setHarvestLevel("axe", 0);
 		this.setCreativeTab(SugiForest.tabSugiForest);
 		this.setDefaultState(blockState.getBaseState().withProperty(DECAYABLE, Boolean.valueOf(true)).withProperty(CHECK_DECAY, Boolean.valueOf(true)));
+		this.leavesFancy = true;
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state)
+	protected BlockStateContainer createBlockState()
 	{
-		byte b = 0;
-		int meta = b | 0;
-
-		if (!((Boolean)state.getValue(DECAYABLE)).booleanValue())
-		{
-			meta |= 4;
-		}
-
-		if (((Boolean)state.getValue(CHECK_DECAY)).booleanValue())
-		{
-			meta |= 8;
-		}
-
-		return meta;
+		return new BlockStateContainer(this, new IProperty[] {DECAYABLE, CHECK_DECAY});
 	}
 
 	@Override
@@ -66,42 +48,34 @@ public class BlockSugiLeaves extends BlockLeaves
 	}
 
 	@Override
-	protected BlockState createBlockState()
+	public int getMetaFromState(IBlockState state)
 	{
-		return new BlockState(this, new IProperty[] {DECAYABLE, CHECK_DECAY});
+		int meta = 0;
+
+		if (!state.getValue(DECAYABLE).booleanValue())
+		{
+			meta |= 4;
+		}
+
+		if (state.getValue(CHECK_DECAY).booleanValue())
+		{
+			meta |= 8;
+		}
+
+		return meta;
+	}
+
+	@Override
+	public EnumType getWoodType(int meta)
+	{
+		return null;
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public int getBlockColor()
+	public void setGraphicsLevel(boolean fancy)
 	{
-		return 6726755;
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public int getRenderColor(IBlockState state)
-	{
-		return getBlockColor();
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public EnumWorldBlockLayer getBlockLayer()
-	{
-		return EnumWorldBlockLayer.CUTOUT_MIPPED;
-	}
-
-	@Override
-	public boolean isOpaqueCube()
-	{
-		return false;
-	}
-
-	@Override
-	public int quantityDropped(Random random)
-	{
-		return random.nextInt(30) == 0 ? 1 : 0;
+		super.setGraphicsLevel(true);
 	}
 
 	@Override
@@ -111,14 +85,24 @@ public class BlockSugiLeaves extends BlockLeaves
 	}
 
 	@Override
-	public List<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune)
+	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity tile, ItemStack stack)
 	{
-		return Lists.newArrayList(new ItemStack(this));
+		if (!world.isRemote && stack != null && stack.getItem() == Items.shears)
+		{
+			player.addStat(StatList.func_188055_a(this));
+		}
+		else super.harvestBlock(world, player, pos, state, tile, stack);
 	}
 
 	@Override
-	public EnumType getWoodType(int meta)
+	public boolean isShearable(ItemStack item, IBlockAccess world, BlockPos pos)
 	{
-		return null;
+		return item != null;
+	}
+
+	@Override
+	public List<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune)
+	{
+		return Lists.newArrayList(new ItemStack(this));
 	}
 }

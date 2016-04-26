@@ -1,12 +1,3 @@
-/*
- * SugiForest
- *
- * Copyright (c) 2015 kegare
- * https://github.com/kegare
- *
- * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
- */
-
 package sugiforest.handler;
 
 import net.minecraft.block.Block;
@@ -27,6 +18,11 @@ public class SugiFuelHandler implements IFuelHandler
 	public int getBurnTime(ItemStack fuel)
 	{
 		Block block = Block.getBlockFromItem(fuel.getItem());
+
+		if (block == null)
+		{
+			return 0;
+		}
 
 		if (block instanceof BlockSugiLog || block instanceof BlockSugiWood || block instanceof BlockSugiStairs)
 		{

@@ -1,5 +1,5 @@
 {
-    "parent": "block/fence_ns",
+    "parent": "block/fence_inventory",
     "textures": {
         "texture": "sugiforest:blocks/planks_sugi"
     }

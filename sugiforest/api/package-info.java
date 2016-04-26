@@ -1,12 +1,8 @@
-/**
- * @author kegare
- */
-
 @API
 (
 	owner = "sugiforest",
 	provides = "sugiforest.api",
-	apiVersion = "1.1.3"
+	apiVersion = "1.2.0"
 )
 package sugiforest.api;
 

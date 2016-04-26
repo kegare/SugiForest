@@ -1,4 +1,5 @@
 {
+    "parent": "block/thin_block",
     "textures": {
         "particle": "sugiforest:blocks/leaves_sugi",
         "texture": "sugiforest:blocks/leaves_sugi"

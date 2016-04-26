@@ -1,24 +1,21 @@
-/*
- * SugiForest
- *
- * Copyright (c) 2015 kegare
- * https://github.com/kegare
- *
- * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
- */
-
 package sugiforest.item;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import sugiforest.block.BlockSugiFallenLeaves;
 
-public class ItemSugiFallenLeaves extends ItemSugiLeaves
+public class ItemSugiFallenLeaves extends ItemBlock
 {
 	public ItemSugiFallenLeaves(Block block)
 	{
@@ -28,49 +25,46 @@ public class ItemSugiFallenLeaves extends ItemSugiLeaves
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-		if (stack.stackSize == 0)
-		{
-			return false;
-		}
-		else if (!player.canPlayerEdit(pos, side, stack))
-		{
-			return false;
-		}
-		else
+		if (stack.stackSize != 0 && player.canPlayerEdit(pos, facing, stack))
 		{
 			IBlockState state = world.getBlockState(pos);
 			Block block = state.getBlock();
+			BlockPos blockpos = pos;
 
-			if (block != this.block && side != EnumFacing.UP)
+			if ((facing != EnumFacing.UP || block != this.block) && !block.isReplaceable(world, pos))
 			{
-				pos = pos.offset(side);
-				state = world.getBlockState(pos);
+				blockpos = pos.offset(facing);
+				state = world.getBlockState(blockpos);
 				block = state.getBlock();
 			}
 
 			if (block == this.block)
 			{
-				int i = ((Integer)state.getValue(BlockSugiFallenLeaves.LAYERS)).intValue();
+				int i = state.getValue(BlockSugiFallenLeaves.LAYERS).intValue();
 
 				if (i <= 7)
 				{
-					IBlockState blockstate = state.withProperty(BlockSugiFallenLeaves.LAYERS, Integer.valueOf(i + 1));
+					IBlockState blockState = state.withProperty(BlockSugiFallenLeaves.LAYERS, Integer.valueOf(i + 1));
+					AxisAlignedBB box = blockState.getSelectedBoundingBox(world, blockpos);
 
-					if (world.checkNoEntityCollision(block.getCollisionBoundingBox(world, pos, blockstate)) && world.setBlockState(pos, blockstate, 2))
+					if (box != Block.NULL_AABB && world.checkNoEntityCollision(box.offset(blockpos)) && world.setBlockState(blockpos, blockState, 10))
 					{
-						world.playSoundEffect(pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, block.stepSound.getPlaceSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getFrequency() * 0.8F);
+						SoundType sound = this.block.getStepSound();
+
+						world.playSound(player, blockpos, sound.getPlaceSound(), SoundCategory.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
 
 						--stack.stackSize;
 
-						return true;
+						return EnumActionResult.SUCCESS;
 					}
 				}
 			}
 
-			return super.onItemUse(stack, player, world, pos, side, hitX, hitY, hitZ);
+			return super.onItemUse(stack, player, world, blockpos, hand, facing, hitX, hitY, hitZ);
 		}
+		else return EnumActionResult.FAIL;
 	}
 
 	@Override
@@ -84,6 +78,6 @@ public class ItemSugiFallenLeaves extends ItemSugiLeaves
 	{
 		IBlockState state = world.getBlockState(pos);
 
-		return state.getBlock() != block || (Integer)state.getValue(BlockSugiFallenLeaves.LAYERS) > 7 ? super.canPlaceBlockOnSide(world, pos, side, player, stack) : true;
+		return state.getBlock() != block || state.getValue(BlockSugiFallenLeaves.LAYERS).intValue() > 7 ? super.canPlaceBlockOnSide(world, pos, side, player, stack) : true;
 	}
 }

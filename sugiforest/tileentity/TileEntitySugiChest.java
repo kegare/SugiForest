@@ -1,13 +1,4 @@
-/*
- * SugiForest
- *
- * Copyright (c) 2015 kegare
- * https://github.com/kegare
- *
- * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
- */
-
-package sugiforest.entity;
+package sugiforest.tileentity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -15,11 +6,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.Constants.NBT;
 import sugiforest.block.SugiBlocks;
+import sugiforest.core.SugiSounds;
 
 public class TileEntitySugiChest extends TileEntity implements IInventory
 {
@@ -114,9 +107,9 @@ public class TileEntitySugiChest extends TileEntity implements IInventory
 	}
 
 	@Override
-	public IChatComponent getDisplayName()
+	public ITextComponent getDisplayName()
 	{
-		return hasCustomName() ? new ChatComponentText(getName()) : new ChatComponentTranslation(getName(), new Object[0]);
+		return hasCustomName() ? new TextComponentString(getName()) : new TextComponentTranslation(getName());
 	}
 
 	@Override
@@ -154,7 +147,7 @@ public class TileEntitySugiChest extends TileEntity implements IInventory
 
 			if (++numUsingPlayers <= 1)
 			{
-				worldObj.playSoundEffect(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, "sugiforest:sugichest.open", 0.5F, 1.0F);
+				worldObj.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, SugiSounds.sugichest_open, SoundCategory.BLOCKS, 0.5F, 1.0F);
 			}
 
 			worldObj.addBlockEvent(pos, getBlockType(), 1, numUsingPlayers);
@@ -170,7 +163,7 @@ public class TileEntitySugiChest extends TileEntity implements IInventory
 		{
 			if (--numUsingPlayers <= 0)
 			{
-				worldObj.playSoundEffect(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, "sugiforest:sugichest.close", 0.5F, 1.0F);
+				worldObj.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, SugiSounds.sugichest_close, SoundCategory.BLOCKS, 0.5F, 1.0F);
 			}
 
 			worldObj.addBlockEvent(pos, getBlockType(), 1, numUsingPlayers);
