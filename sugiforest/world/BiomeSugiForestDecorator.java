@@ -34,8 +34,8 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 
 		for (i = 0; doGen && i < sandPerChunk2; ++i)
 		{
-			j = random.nextInt(16) + 8;
-			k = random.nextInt(16) + 8;
+			j = nextInt(random, 16) + 8;
+			k = nextInt(random, 16) + 8;
 
 			sandGen.generate(world, random, world.getTopSolidOrLiquidBlock(field_180294_c.add(j, 0, k)));
 		}
@@ -44,8 +44,8 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 
 		for (i = 0; doGen && i < clayPerChunk; ++i)
 		{
-			j = random.nextInt(16) + 8;
-			k = random.nextInt(16) + 8;
+			j = nextInt(random, 16) + 8;
+			k = nextInt(random, 16) + 8;
 
 			clayGen.generate(world, random, world.getTopSolidOrLiquidBlock(field_180294_c.add(j, 0, k)));
 		}
@@ -54,15 +54,15 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 
 		for (i = 0; doGen && i < sandPerChunk; ++i)
 		{
-			j = random.nextInt(16) + 8;
-			k = random.nextInt(16) + 8;
+			j = nextInt(random, 16) + 8;
+			k = nextInt(random, 16) + 8;
 
 			gravelAsSandGen.generate(world, random, world.getTopSolidOrLiquidBlock(field_180294_c.add(j, 0, k)));
 		}
 
 		i = treesPerChunk;
 
-		if (random.nextInt(10) == 0)
+		if (nextInt(random, 10) == 0)
 		{
 			++i;
 		}
@@ -74,8 +74,8 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 
 		for (j = 0; doGen && j < i; ++j)
 		{
-			k = random.nextInt(16) + 8;
-			l = random.nextInt(16) + 8;
+			k = nextInt(random, 16) + 8;
+			l = nextInt(random, 16) + 8;
 
 			WorldGenAbstractTree treeGen = biome.genBigTreeChance(random);
 
@@ -94,9 +94,9 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 
 		for (j = 0; doGen && j < flowersPerChunk; ++j)
 		{
-			k = random.nextInt(16) + 8;
-			l = random.nextInt(16) + 8;
-			m = random.nextInt(world.getHeight(field_180294_c.add(k, 0, l)).getY() + 32);
+			k = nextInt(random, 16) + 8;
+			l = nextInt(random, 16) + 8;
+			m = nextInt(random, world.getHeight(field_180294_c.add(k, 0, l)).getY() + 32);
 			blockpos = field_180294_c.add(k, m, l);
 
 			BlockFlower.EnumFlowerType type = biome.pickRandomFlower(random, blockpos);
@@ -113,9 +113,9 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 
 		for (j = 0; doGen && j < grassPerChunk; ++j)
 		{
-			k = random.nextInt(16) + 8;
-			l = random.nextInt(16) + 8;
-			m = random.nextInt(world.getHeight(field_180294_c.add(k, 0, l)).getY() * 2);
+			k = nextInt(random, 16) + 8;
+			l = nextInt(random, 16) + 8;
+			m = nextInt(random, world.getHeight(field_180294_c.add(k, 0, l)).getY() * 2);
 
 			biome.getRandomWorldGenForGrass(random).generate(world, random, field_180294_c.add(k, m, l));
 		}
@@ -126,9 +126,9 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 
 		while (doGen && j < waterlilyPerChunk)
 		{
-			k = random.nextInt(16) + 8;
-			l = random.nextInt(16) + 8;
-			m = random.nextInt(world.getHeight(field_180294_c.add(k, 0, l)).getY() * 2);
+			k = nextInt(random, 16) + 8;
+			l = nextInt(random, 16) + 8;
+			m = nextInt(random, world.getHeight(field_180294_c.add(k, 0, l)).getY() * 2);
 			blockpos = field_180294_c.add(k, m, l);
 
 			while (true)
@@ -154,39 +154,39 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 
 		for (j = 0; doGen && j < mushroomsPerChunk; ++j)
 		{
-			if (random.nextInt(4) == 0)
+			if (nextInt(random, 4) == 0)
 			{
-				k = random.nextInt(16) + 8;
-				l = random.nextInt(16) + 8;
+				k = nextInt(random, 16) + 8;
+				l = nextInt(random, 16) + 8;
 				blockpos = world.getHeight(field_180294_c.add(k, 0, l));
 
 				mushroomBrownGen.generate(world, random, blockpos);
 			}
 
-			if (random.nextInt(8) == 0)
+			if (nextInt(random, 8) == 0)
 			{
-				k = random.nextInt(16) + 8;
-				l = random.nextInt(16) + 8;
-				m = random.nextInt(world.getHeight(field_180294_c.add(k, 0, l)).getY() * 2);
+				k = nextInt(random, 16) + 8;
+				l = nextInt(random, 16) + 8;
+				m = nextInt(random, world.getHeight(field_180294_c.add(k, 0, l)).getY() * 2);
 				blockpos = field_180294_c.add(k, m, l);
 
 				mushroomRedGen.generate(world, random, blockpos);
 			}
 		}
 
-		if (doGen && random.nextInt(4) == 0)
+		if (doGen && nextInt(random, 4) == 0)
 		{
-			j = random.nextInt(16) + 8;
-			k = random.nextInt(16) + 8;
-			l = random.nextInt(world.getHeight(field_180294_c.add(j, 0, k)).getY() * 2);
+			j = nextInt(random, 16) + 8;
+			k = nextInt(random, 16) + 8;
+			l = nextInt(random, world.getHeight(field_180294_c.add(j, 0, k)).getY() * 2);
 			mushroomBrownGen.generate(world, random, field_180294_c.add(j, l, k));
 		}
 
-		if (doGen && random.nextInt(8) == 0)
+		if (doGen && nextInt(random, 8) == 0)
 		{
-			j = random.nextInt(16) + 8;
-			k = random.nextInt(16) + 8;
-			l = random.nextInt(world.getHeight(field_180294_c.add(j, 0, k)).getY() * 2);
+			j = nextInt(random, 16) + 8;
+			k = nextInt(random, 16) + 8;
+			l = nextInt(random, world.getHeight(field_180294_c.add(j, 0, k)).getY() * 2);
 
 			mushroomRedGen.generate(world, random, field_180294_c.add(j, l, k));
 		}
@@ -195,29 +195,29 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 
 		for (j = 0; doGen && j < reedsPerChunk; ++j)
 		{
-			k = random.nextInt(16) + 8;
-			l = random.nextInt(16) + 8;
-			m = random.nextInt(world.getHeight(field_180294_c.add(k, 0, l)).getY() * 2);
+			k = nextInt(random, 16) + 8;
+			l = nextInt(random, 16) + 8;
+			m = nextInt(random, world.getHeight(field_180294_c.add(k, 0, l)).getY() * 2);
 
 			reedGen.generate(world, random, field_180294_c.add(k, m, l));
 		}
 
 		for (j = 0; doGen && j < 10; ++j)
 		{
-			k = random.nextInt(16) + 8;
-			l = random.nextInt(16) + 8;
-			m = random.nextInt(world.getHeight(field_180294_c.add(k, 0, l)).getY() * 2);
+			k = nextInt(random, 16) + 8;
+			l = nextInt(random, 16) + 8;
+			m = nextInt(random, world.getHeight(field_180294_c.add(k, 0, l)).getY() * 2);
 
 			reedGen.generate(world, random, field_180294_c.add(k, m, l));
 		}
 
 		doGen = TerrainGen.decorate(world, random, field_180294_c, Decorate.EventType.PUMPKIN);
 
-		if (doGen && random.nextInt(32) == 0)
+		if (doGen && nextInt(random, 32) == 0)
 		{
-			j = random.nextInt(16) + 8;
-			k = random.nextInt(16) + 8;
-			l = random.nextInt(world.getHeight(field_180294_c.add(j, 0, k)).getY() * 2);
+			j = nextInt(random, 16) + 8;
+			k = nextInt(random, 16) + 8;
+			l = nextInt(random, world.getHeight(field_180294_c.add(j, 0, k)).getY() * 2);
 
 			new WorldGenPumpkin().generate(world, random, field_180294_c.add(j, l, k));
 		}
@@ -230,7 +230,7 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 
 			for (j = 0; doGen && j < 50; ++j)
 			{
-				blockpos1 = field_180294_c.add(random.nextInt(16) + 8, random.nextInt(random.nextInt(248) + 8), random.nextInt(16) + 8);
+				blockpos1 = field_180294_c.add(nextInt(random, 16) + 8, nextInt(random, nextInt(random, 248) + 8), nextInt(random, 16) + 8);
 
 				new WorldGenLiquids(Blocks.flowing_water).generate(world, random, blockpos1);
 			}
@@ -239,12 +239,22 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 
 			for (j = 0; doGen && j < 20; ++j)
 			{
-				blockpos1 = field_180294_c.add(random.nextInt(16) + 8, random.nextInt(random.nextInt(random.nextInt(240) + 8) + 8), random.nextInt(16) + 8);
+				blockpos1 = field_180294_c.add(nextInt(random, 16) + 8, nextInt(random, nextInt(random, nextInt(random, 240) + 8) + 8), nextInt(random, 16) + 8);
 
 				new WorldGenLiquids(Blocks.flowing_lava).generate(world, random, blockpos1);
 			}
 		}
 
 		MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Post(world, random, field_180294_c));
+	}
+
+	private int nextInt(Random random, int bound)
+	{
+		if (bound <= 1)
+		{
+			return 0;
+		}
+
+		return random.nextInt(bound);
 	}
 }
