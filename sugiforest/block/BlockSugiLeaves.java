@@ -87,9 +87,9 @@ public class BlockSugiLeaves extends BlockLeaves
 	@Override
 	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity tile, ItemStack stack)
 	{
-		if (!world.isRemote && stack != null && stack.getItem() == Items.shears)
+		if (!world.isRemote && stack != null && stack.getItem() == Items.SHEARS)
 		{
-			player.addStat(StatList.func_188055_a(this));
+			player.addStat(StatList.getBlockStats(this));
 		}
 		else super.harvestBlock(world, player, pos, state, tile, stack);
 	}

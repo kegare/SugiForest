@@ -51,7 +51,7 @@ public class ItemSugiFallenLeaves extends ItemBlock
 
 					if (box != Block.NULL_AABB && world.checkNoEntityCollision(box.offset(blockpos)) && world.setBlockState(blockpos, blockState, 10))
 					{
-						SoundType sound = this.block.getStepSound();
+						SoundType sound = this.block.getSoundType();
 
 						world.playSound(player, blockpos, sound.getPlaceSound(), SoundCategory.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
 

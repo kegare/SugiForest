@@ -49,7 +49,7 @@ public class ItemSugiWoodSlab extends ItemBlock
 
 					if (box != Block.NULL_AABB && world.checkNoEntityCollision(box.offset(pos)) && world.setBlockState(pos, blockstate, 11))
 					{
-						SoundType sound = blockstate.getBlock().getStepSound();
+						SoundType sound = blockstate.getBlock().getSoundType();
 
 						world.playSound(player, pos, sound.getPlaceSound(), SoundCategory.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
 
@@ -98,7 +98,7 @@ public class ItemSugiWoodSlab extends ItemBlock
 
 			if (box != Block.NULL_AABB && world.checkNoEntityCollision(box.offset(pos)) && world.setBlockState(pos, state, 11))
 			{
-				SoundType sound = state.getBlock().getStepSound();
+				SoundType sound = state.getBlock().getSoundType();
 
 				world.playSound(player, pos, sound.getPlaceSound(), SoundCategory.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
 

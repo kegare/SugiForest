@@ -13,7 +13,7 @@ public class BlockSugiFenceGate extends BlockFenceGate
 		this.setUnlocalizedName("fenceGate.sugi");
 		this.setHardness(1.75F);
 		this.setResistance(4.75F);
-		this.setStepSound(SoundType.WOOD);
+		this.setSoundType(SoundType.WOOD);
 		this.setHarvestLevel("axe", 0);
 		this.setCreativeTab(SugiForest.tabSugiForest);
 	}

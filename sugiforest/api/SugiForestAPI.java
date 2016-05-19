@@ -1,7 +1,7 @@
 package sugiforest.api;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 public final class SugiForestAPI
 {
@@ -10,7 +10,7 @@ public final class SugiForestAPI
 	/**
 	 * Returns the Sugi Forest biome.
 	 */
-	public static BiomeGenBase getBiome()
+	public static Biome getBiome()
 	{
 		if (apiHandler != null)
 		{

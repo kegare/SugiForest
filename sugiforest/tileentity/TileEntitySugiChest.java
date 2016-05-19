@@ -217,9 +217,9 @@ public class TileEntitySugiChest extends TileEntity implements IInventory
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
-		super.writeToNBT(nbt);
+		nbt = super.writeToNBT(nbt);
 
 		NBTTagList list = new NBTTagList();
 
@@ -242,6 +242,8 @@ public class TileEntitySugiChest extends TileEntity implements IInventory
 		{
 			nbt.setString("CustomName", customName);
 		}
+
+		return nbt;
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package sugiforest.handler;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import sugiforest.api.ISugiForestAPI;
 import sugiforest.block.BlockSugiFallenLeaves;
 import sugiforest.world.SugiBiomes;
@@ -9,7 +9,7 @@ import sugiforest.world.SugiBiomes;
 public class SugiForestAPIHandler implements ISugiForestAPI
 {
 	@Override
-	public BiomeGenBase getBiome()
+	public Biome getBiome()
 	{
 		return SugiBiomes.sugiForest;
 	}

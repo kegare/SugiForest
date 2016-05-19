@@ -35,7 +35,7 @@ public class ItemMystSap extends ItemSoup
 
 				while (potion == null || potion.isBadEffect() || player.isPotionActive(potion))
 				{
-					potion = Potion.potionRegistry.getRandomObject(itemRand);
+					potion = Potion.REGISTRY.getRandomObject(itemRand);
 				}
 
 				if (potion != null)

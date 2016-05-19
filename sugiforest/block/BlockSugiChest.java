@@ -39,11 +39,11 @@ public class BlockSugiChest extends BlockContainer
 
 	public BlockSugiChest()
 	{
-		super(Material.wood);
+		super(Material.WOOD);
 		this.setUnlocalizedName("chest.sugi");
 		this.setHardness(3.0F);
 		this.setResistance(5.5F);
-		this.setStepSound(SoundType.WOOD);
+		this.setSoundType(SoundType.WOOD);
 		this.setHarvestLevel("axe", 0);
 		this.setCreativeTab(SugiForest.tabSugiForest);
 		this.setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
@@ -178,9 +178,9 @@ public class BlockSugiChest extends BlockContainer
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block)
 	{
-		super.onNeighborBlockChange(world, pos, state, neighborBlock);
+		super.neighborChanged(state, world, pos, block);
 
 		TileEntity tileentity = world.getTileEntity(pos);
 
@@ -224,7 +224,7 @@ public class BlockSugiChest extends BlockContainer
 			return super.removedByPlayer(state, world, pos, player, willHarvest);
 		}
 
-		if (EnchantmentHelper.getEnchantmentLevel(Enchantments.silkTouch, player.getHeldItemMainhand()) > 0)
+		if (EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, player.getHeldItemMainhand()) > 0)
 		{
 			TileEntitySugiChest tileentity = (TileEntitySugiChest)world.getTileEntity(pos);
 			ItemStack stack;

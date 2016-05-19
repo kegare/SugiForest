@@ -108,21 +108,21 @@ public class SugiBlocks
 		OreDictionary.registerOre("fenceGateWood", new ItemStack(sugi_fence_gate, 1, OreDictionary.WILDCARD_VALUE));
 		OreDictionary.registerOre("fenceGateSugi", sugi_fence_gate);
 
-		Blocks.fire.setFireInfo(sugi_log, 5, 5);
-		Blocks.fire.setFireInfo(sugi_leaves, 30, 60);
-		Blocks.fire.setFireInfo(sugi_fallen_leaves, 30, 60);
-		Blocks.fire.setFireInfo(sugi_sapling, 20, 60);
-		Blocks.fire.setFireInfo(sugi_planks, 5, 20);
-		Blocks.fire.setFireInfo(sugi_slab, 5, 20);
-		Blocks.fire.setFireInfo(sugi_stairs, 5, 20);
-		Blocks.fire.setFireInfo(sugi_fence, 5, 20);
-		Blocks.fire.setFireInfo(sugi_fence_gate, 5, 20);
-		Blocks.fire.setFireInfo(sugi_chest, 5, 5);
+		Blocks.FIRE.setFireInfo(sugi_log, 5, 5);
+		Blocks.FIRE.setFireInfo(sugi_leaves, 30, 60);
+		Blocks.FIRE.setFireInfo(sugi_fallen_leaves, 30, 60);
+		Blocks.FIRE.setFireInfo(sugi_sapling, 20, 60);
+		Blocks.FIRE.setFireInfo(sugi_planks, 5, 20);
+		Blocks.FIRE.setFireInfo(sugi_slab, 5, 20);
+		Blocks.FIRE.setFireInfo(sugi_stairs, 5, 20);
+		Blocks.FIRE.setFireInfo(sugi_fence, 5, 20);
+		Blocks.FIRE.setFireInfo(sugi_fence_gate, 5, 20);
+		Blocks.FIRE.setFireInfo(sugi_chest, 5, 5);
 
 		BlockSugiFallenLeaves.addFallenSeed(new ItemStack(sugi_sapling), 10);
-		BlockSugiFallenLeaves.addFallenSeed(new ItemStack(Blocks.brown_mushroom), 12);
-		BlockSugiFallenLeaves.addFallenSeed(new ItemStack(Blocks.red_mushroom), 8);
-		BlockSugiFallenLeaves.addFallenSeed(new ItemStack(Items.stick), 10);
+		BlockSugiFallenLeaves.addFallenSeed(new ItemStack(Blocks.BROWN_MUSHROOM), 12);
+		BlockSugiFallenLeaves.addFallenSeed(new ItemStack(Blocks.RED_MUSHROOM), 8);
+		BlockSugiFallenLeaves.addFallenSeed(new ItemStack(Items.STICK), 10);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -204,7 +204,7 @@ public class SugiBlocks
 	{
 		GameRegistry.addRecipe(new ItemStack(sugi_fallen_leaves, 6), "###", '#', sugi_leaves);
 
-		GameRegistry.addShapelessRecipe(new ItemStack(Items.stick), new ItemStack(sugi_sapling));
+		GameRegistry.addShapelessRecipe(new ItemStack(Items.STICK), new ItemStack(sugi_sapling));
 
 		GameRegistry.addShapelessRecipe(new ItemStack(sugi_planks, 4), new ItemStack(sugi_log, 1, OreDictionary.WILDCARD_VALUE));
 
@@ -217,6 +217,6 @@ public class SugiBlocks
 
 		GameRegistry.addRecipe(new ItemStack(sugi_chest), "###", "# #", "###", '#', sugi_planks);
 
-		GameRegistry.addSmelting(sugi_log, new ItemStack(Items.coal, 1, 1), 0.15F);
+		GameRegistry.addSmelting(sugi_log, new ItemStack(Items.COAL, 1, 1), 0.15F);
 	}
 }

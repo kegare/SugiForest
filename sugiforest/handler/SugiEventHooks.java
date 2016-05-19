@@ -15,7 +15,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity;
 import net.minecraftforge.common.ForgeVersion.Status;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -29,7 +29,7 @@ import sugiforest.block.SugiBlocks;
 import sugiforest.core.Config;
 import sugiforest.core.SugiForest;
 import sugiforest.util.Version;
-import sugiforest.world.BiomeGenSugiForest;
+import sugiforest.world.BiomeSugiForest;
 
 public class SugiEventHooks
 {
@@ -53,12 +53,12 @@ public class SugiEventHooks
 		Entity entity = event.getEntity();
 		World world = entity.worldObj;
 		BlockPos pos = entity.getPosition();
-		BiomeGenBase biome = world.getBiomeGenForCoords(pos);
+		Biome biome = world.getBiomeGenForCoords(pos);
 
 		float f = (float)Math.pow(0.1D, 6);
 		boolean flag = false;
 
-		if (biome instanceof BiomeGenSugiForest)
+		if (biome instanceof BiomeSugiForest)
 		{
 			long time = world.getWorldTime();
 			int depth = 0;
@@ -112,15 +112,15 @@ public class SugiEventHooks
 		if (Version.DEV_DEBUG || Version.getStatus() == Status.AHEAD || Version.getStatus() == Status.BETA || Config.versionNotify && Version.isOutdated())
 		{
 			ITextComponent name = new TextComponentString(SugiForest.metadata.name);
-			name.getChatStyle().setColor(TextFormatting.DARK_GREEN);
+			name.getStyle().setColor(TextFormatting.DARK_GREEN);
 			ITextComponent latest = new TextComponentString(Version.getLatest().toString());
-			latest.getChatStyle().setColor(TextFormatting.YELLOW);
+			latest.getStyle().setColor(TextFormatting.YELLOW);
 
 			ITextComponent message;
 
 			message = new TextComponentTranslation("sugiforest.version.message", name);
 			message.appendText(" : ").appendSibling(latest);
-			message.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, SugiForest.metadata.url));
+			message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, SugiForest.metadata.url));
 
 			mc.ingameGUI.getChatGUI().printChatMessage(message);
 			message = null;
@@ -150,7 +150,7 @@ public class SugiEventHooks
 
 		if (itemstack != null && itemstack.getItem() == Item.getItemFromBlock(SugiBlocks.sugi_log))
 		{
-			player.addStat(AchievementList.mineWood);
+			player.addStat(AchievementList.MINE_WOOD);
 		}
 	}
 }

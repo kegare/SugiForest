@@ -13,11 +13,11 @@ public class BlockSugiWoodSlab extends BlockSlab
 {
 	public BlockSugiWoodSlab()
 	{
-		super(Material.wood);
+		super(Material.WOOD);
 		this.setUnlocalizedName("woodSlab.sugi");
 		this.setHardness(1.75F);
 		this.setResistance(4.75F);
-		this.setStepSound(SoundType.WOOD);
+		this.setSoundType(SoundType.WOOD);
 		this.setHarvestLevel("axe", 0);
 		this.setCreativeTab(SugiForest.tabSugiForest);
 		this.setDefaultState(blockState.getBaseState().withProperty(HALF, EnumBlockHalf.BOTTOM));

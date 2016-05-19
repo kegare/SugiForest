@@ -78,11 +78,11 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 
 	public BlockSugiFallenLeaves()
 	{
-		super(Material.leaves);
+		super(Material.LEAVES);
 		this.setUnlocalizedName("fallenLeaves.sugi");
 		this.setHardness(0.1F);
 		this.setLightOpacity(1);
-		this.setStepSound(SoundType.PLANT);
+		this.setSoundType(SoundType.PLANT);
 		this.setCreativeTab(SugiForest.tabSugiForest);
 		this.setDefaultState(blockState.getBaseState().withProperty(LAYERS, Integer.valueOf(1)).withProperty(CHANCE, Boolean.valueOf(false)));
 	}
@@ -219,11 +219,11 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 		IBlockState state = world.getBlockState(pos.down());
 		Block block = state.getBlock();
 
-		return block != this && block.isLeaves(state, world, pos.down()) && block.isFullCube(state) || block == this && state.getValue(LAYERS).intValue() == 8 || block.isOpaqueCube(state) && state.getMaterial().blocksMovement();
+		return block != this && block.isLeaves(state, world, pos.down()) && state.isFullCube() || block == this && state.getValue(LAYERS).intValue() == 8 || state.isOpaqueCube() && state.getMaterial().blocksMovement();
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block)
 	{
 		checkAndDropBlock(world, pos, state);
 	}

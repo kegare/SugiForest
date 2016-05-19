@@ -18,11 +18,11 @@ public class BlockSugiWood extends Block
 
 	public BlockSugiWood()
 	{
-		super(Material.wood);
+		super(Material.WOOD);
 		this.setUnlocalizedName("wood.sugi");
 		this.setHardness(1.75F);
 		this.setResistance(4.75F);
-		this.setStepSound(SoundType.WOOD);
+		this.setSoundType(SoundType.WOOD);
 		this.setHarvestLevel("axe", 0);
 		this.setCreativeTab(SugiForest.tabSugiForest);
 		this.setDefaultState(blockState.getBaseState().withProperty(DOUBLE, Boolean.valueOf(false)));

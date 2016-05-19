@@ -3,14 +3,14 @@ package sugiforest.world;
 import java.util.Random;
 
 import net.minecraft.entity.passive.EntityWolf;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeDecorator;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import sugiforest.world.gen.WorldGenSugiTree;
 
-public class BiomeGenSugiForest extends BiomeGenBase
+public class BiomeSugiForest extends Biome
 {
-	public BiomeGenSugiForest()
+	public BiomeSugiForest()
 	{
 		super(new BiomeProperties("Sugi Forest").setTemperature(0.25F).setRainfall(0.9F).setBaseHeight(0.05F).setHeightVariation(0.65F));
 		this.spawnableCreatureList.add(new SpawnListEntry(EntityWolf.class, 5, 4, 4));

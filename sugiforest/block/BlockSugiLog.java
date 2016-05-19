@@ -108,7 +108,7 @@ public class BlockSugiLog extends BlockLog
 
 		if (ret && state.getValue(VARIANT) == EnumType.MYST)
 		{
-			if (player.inventory.hasItemStack(new ItemStack(Items.bowl)) && player.inventory.clearMatchingItems(Items.bowl, 0, 1, null) >= 1)
+			if (player.inventory.hasItemStack(new ItemStack(Items.BOWL)) && player.inventory.clearMatchingItems(Items.BOWL, 0, 1, null) >= 1)
 			{
 				spawnAsEntity(world, pos, new ItemStack(SugiItems.myst_sap));
 			}

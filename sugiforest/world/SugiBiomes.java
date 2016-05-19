@@ -1,6 +1,6 @@
 package sugiforest.world;
 
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.BiomeManager;
@@ -10,17 +10,17 @@ import sugiforest.core.Config;
 
 public class SugiBiomes
 {
-	public static final BiomeGenSugiForest sugiForest = new BiomeGenSugiForest();
+	public static final BiomeSugiForest sugiForest = new BiomeSugiForest();
 
 	public static void registerBiomes()
 	{
-		BiomeGenBase.registerBiome(Config.biomeId, "sugi_forest", sugiForest);
+		Biome.registerBiome(Config.biomeId, "sugi_forest", sugiForest);
 
 		BiomeManager.addBiome(BiomeType.WARM, new BiomeEntry(sugiForest, Config.biomeWeight));
 		BiomeManager.addSpawnBiome(sugiForest);
 		BiomeManager.addStrongholdBiome(sugiForest);
 
-		BiomeGenBase.explorationBiomesList.add(sugiForest);
+		Biome.EXPLORATION_BIOMES_LIST.add(sugiForest);
 
 		BiomeDictionary.registerBiomeType(sugiForest, Type.FOREST, Type.HILLS);
 	}
