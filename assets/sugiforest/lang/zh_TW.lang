@@ -19,7 +19,7 @@ tile.portal.sugi.name=柳杉林傳送門
 
 item.mystSap.name=神秘樹脂
 
-itemGroup.sugiforest=杉
+itemGroup.sugiforest=柳杉
 
 sugiforest.config.title=SugiForest設定
 sugiforest.config.general.versionNotify=版本通知
@@ -35,5 +35,5 @@ sugiforest.config.world.biomeGenWeight_SugiForest.tooltip=指定柳杉樹林生�
 sugiforest.config.world.dimensionID_SugiForest=柳杉林世界的維度ID
 sugiforest.config.world.dimensionID_SugiForest.tooltip=指定柳杉林世界的維度。
 
-bedrocklayer.config.sugiforest=Sugi Forest
+bedrocklayer.config.sugiforest=柳杉林世界
 bedrocklayer.config.sugiforest.tooltip=將柳杉林世界的基岩層設為平坦。
