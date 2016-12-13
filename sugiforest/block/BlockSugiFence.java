@@ -16,6 +16,6 @@ public class BlockSugiFence extends BlockFence
 		this.setResistance(4.75F);
 		this.setSoundType(SoundType.WOOD);
 		this.setHarvestLevel("axe", 0);
-		this.setCreativeTab(SugiForest.tabSugiForest);
+		this.setCreativeTab(SugiForest.TAB_SUGI);
 	}
 }

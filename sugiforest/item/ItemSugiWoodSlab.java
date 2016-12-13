@@ -28,13 +28,15 @@ public class ItemSugiWoodSlab extends ItemBlock
 
 	public IBlockState getFullBlock()
 	{
-		return SugiBlocks.sugi_planks.getDefaultState().withProperty(BlockSugiWood.DOUBLE, Boolean.valueOf(true));
+		return SugiBlocks.SUGI_PLANKS.getDefaultState().withProperty(BlockSugiWood.DOUBLE, Boolean.valueOf(true));
 	}
 
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		if (stack.stackSize > 0 && player.canPlayerEdit(pos.offset(side), side, stack))
+		ItemStack stack = player.getHeldItem(hand);
+
+		if (stack.getCount() > 0 && player.canPlayerEdit(pos.offset(side), side, stack))
 		{
 			IBlockState state = world.getBlockState(pos);
 
@@ -49,18 +51,18 @@ public class ItemSugiWoodSlab extends ItemBlock
 
 					if (box != Block.NULL_AABB && world.checkNoEntityCollision(box.offset(pos)) && world.setBlockState(pos, blockstate, 11))
 					{
-						SoundType sound = blockstate.getBlock().getSoundType();
+						SoundType sound = blockstate.getBlock().getSoundType(state, world, pos, player);
 
 						world.playSound(player, pos, sound.getPlaceSound(), SoundCategory.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
 
-						--stack.stackSize;
+						stack.shrink(1);
 					}
 
 					return EnumActionResult.SUCCESS;
 				}
 			}
 
-			return tryPlace(player, stack, world, pos.offset(side)) ? EnumActionResult.SUCCESS : super.onItemUse(stack, player, world, pos, hand, side, hitX, hitY, hitZ);
+			return tryPlace(player, stack, world, pos.offset(side)) ? EnumActionResult.SUCCESS : super.onItemUse(player, world, pos, hand, side, hitX, hitY, hitZ);
 		}
 
 		return EnumActionResult.FAIL;
@@ -98,11 +100,11 @@ public class ItemSugiWoodSlab extends ItemBlock
 
 			if (box != Block.NULL_AABB && world.checkNoEntityCollision(box.offset(pos)) && world.setBlockState(pos, state, 11))
 			{
-				SoundType sound = state.getBlock().getSoundType();
+				SoundType sound = state.getBlock().getSoundType(state, world, pos, player);
 
 				world.playSound(player, pos, sound.getPlaceSound(), SoundCategory.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
 
-				--stack.stackSize;
+				stack.shrink(1);
 			}
 
 			return true;

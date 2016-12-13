@@ -9,7 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -22,6 +21,7 @@ import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
@@ -34,117 +34,86 @@ import sugiforest.tileentity.TileEntitySugiChest;
 
 public class SugiBlocks
 {
-	public static final BlockSugiLog sugi_log = new BlockSugiLog();
-	public static final BlockSugiLeaves sugi_leaves = new BlockSugiLeaves();
-	public static final BlockSugiFallenLeaves sugi_fallen_leaves = new BlockSugiFallenLeaves();
-	public static final BlockSugiSapling sugi_sapling = new BlockSugiSapling();
-	public static final BlockSugiWood sugi_planks = new BlockSugiWood();
-	public static final BlockSugiWoodSlab sugi_slab = new BlockSugiWoodSlab();
-	public static final BlockSugiStairs sugi_stairs = new BlockSugiStairs();
-	public static final BlockSugiFence sugi_fence = new BlockSugiFence();
-	public static final BlockSugiFenceGate sugi_fence_gate = new BlockSugiFenceGate();
-	public static final BlockSugiChest sugi_chest = new BlockSugiChest();
+	public static final BlockSugiLog SUGI_LOG = new BlockSugiLog();
+	public static final BlockSugiLeaves SUGI_LEAVES = new BlockSugiLeaves();
+	public static final BlockSugiFallenLeaves SUGI_FALLEN_LEAVES = new BlockSugiFallenLeaves();
+	public static final BlockSugiSapling SUGI_SAPLING = new BlockSugiSapling();
+	public static final BlockSugiWood SUGI_PLANKS = new BlockSugiWood();
+	public static final BlockSugiWoodSlab SUGI_SLAB = new BlockSugiWoodSlab();
+	public static final BlockSugiStairs SUGI_STAIRS = new BlockSugiStairs();
+	public static final BlockSugiFence SUGI_FENCE = new BlockSugiFence();
+	public static final BlockSugiFenceGate SUGI_FENCE_GATE = new BlockSugiFenceGate();
+	public static final BlockSugiChest SUGI_CHEST = new BlockSugiChest();
 
-	public static void registerBlocks()
+	public static void registerBlocks(IForgeRegistry<Block> registry)
 	{
-		sugi_log.setRegistryName("sugi_log");
-		sugi_leaves.setRegistryName("sugi_leaves");
-		sugi_fallen_leaves.setRegistryName("sugi_fallen_leaves");
-		sugi_sapling.setRegistryName("sugi_sapling");
-		sugi_planks.setRegistryName("sugi_planks");
-		sugi_slab.setRegistryName("sugi_slab");
-		sugi_stairs.setRegistryName("sugi_stairs");
-		sugi_fence.setRegistryName("sugi_fence");
-		sugi_fence_gate.setRegistryName("sugi_fence_gate");
-		sugi_chest.setRegistryName("sugi_chest");
+		registry.register(SUGI_LOG.setRegistryName("sugi_log"));
+		registry.register(SUGI_LEAVES.setRegistryName("sugi_leaves"));
+		registry.register(SUGI_FALLEN_LEAVES.setRegistryName("sugi_fallen_leaves"));
+		registry.register(SUGI_SAPLING.setRegistryName("sugi_sapling"));
+		registry.register(SUGI_PLANKS.setRegistryName("sugi_planks"));
+		registry.register(SUGI_SLAB.setRegistryName("sugi_slab"));
+		registry.register(SUGI_STAIRS.setRegistryName("sugi_stairs"));
+		registry.register(SUGI_FENCE.setRegistryName("sugi_fence"));
+		registry.register(SUGI_FENCE_GATE.setRegistryName("sugi_fence_gate"));
+		registry.register(SUGI_CHEST.setRegistryName("sugi_chest"));
 
-		GameRegistry.register(sugi_log);
-		GameRegistry.register(new ItemBlock(sugi_log), sugi_log.getRegistryName());
+		Blocks.FIRE.setFireInfo(SUGI_LOG, 5, 5);
+		Blocks.FIRE.setFireInfo(SUGI_LEAVES, 30, 60);
+		Blocks.FIRE.setFireInfo(SUGI_FALLEN_LEAVES, 30, 60);
+		Blocks.FIRE.setFireInfo(SUGI_SAPLING, 20, 60);
+		Blocks.FIRE.setFireInfo(SUGI_PLANKS, 5, 20);
+		Blocks.FIRE.setFireInfo(SUGI_SLAB, 5, 20);
+		Blocks.FIRE.setFireInfo(SUGI_STAIRS, 5, 20);
+		Blocks.FIRE.setFireInfo(SUGI_FENCE, 5, 20);
+		Blocks.FIRE.setFireInfo(SUGI_FENCE_GATE, 5, 20);
+		Blocks.FIRE.setFireInfo(SUGI_CHEST, 5, 5);
 
-		GameRegistry.register(sugi_leaves);
-		GameRegistry.register(new ItemBlock(sugi_leaves), sugi_leaves.getRegistryName());
-
-		GameRegistry.register(sugi_fallen_leaves);
-		GameRegistry.register(new ItemSugiFallenLeaves(sugi_fallen_leaves), sugi_fallen_leaves.getRegistryName());
-
-		GameRegistry.register(sugi_sapling);
-		GameRegistry.register(new ItemBlock(sugi_sapling), sugi_sapling.getRegistryName());
-
-		GameRegistry.register(sugi_planks);
-		GameRegistry.register(new ItemBlock(sugi_planks), sugi_planks.getRegistryName());
-
-		GameRegistry.register(sugi_slab);
-		GameRegistry.register(new ItemSugiWoodSlab(sugi_slab), sugi_slab.getRegistryName());
-
-		GameRegistry.register(sugi_stairs);
-		GameRegistry.register(new ItemBlock(sugi_stairs), sugi_stairs.getRegistryName());
-
-		GameRegistry.register(sugi_fence);
-		GameRegistry.register(new ItemBlock(sugi_fence), sugi_fence.getRegistryName());
-
-		GameRegistry.register(sugi_fence_gate);
-		GameRegistry.register(new ItemBlock(sugi_fence_gate), sugi_fence_gate.getRegistryName());
-
-		GameRegistry.register(sugi_chest);
-		GameRegistry.register(new ItemSugiChest(sugi_chest), sugi_chest.getRegistryName());
-
-		GameRegistry.registerTileEntity(TileEntitySugiChest.class, "SugiChest");
-
-		OreDictionary.registerOre("logWood", new ItemStack(sugi_log, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre("woodSugi", sugi_log);
-		OreDictionary.registerOre("treeLeaves", new ItemStack(sugi_leaves, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre("leavesSugi", sugi_leaves);
-		OreDictionary.registerOre("fallenLeavesSugi", sugi_fallen_leaves);
-		OreDictionary.registerOre("treeSapling", new ItemStack(sugi_sapling, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre("saplingSugi", sugi_sapling);
-		OreDictionary.registerOre("plankWood", new ItemStack(sugi_planks, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre("planksSugi", sugi_planks);
-		OreDictionary.registerOre("slabWood", new ItemStack(sugi_slab, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre("woodSlabSugi", sugi_slab);
-		OreDictionary.registerOre("stairWood", new ItemStack(sugi_stairs, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre("stairsWoodSugi", sugi_stairs);
-		OreDictionary.registerOre("fenceWood", new ItemStack(sugi_fence, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre("fenceSugi", sugi_fence);
-		OreDictionary.registerOre("fenceGateWood", new ItemStack(sugi_fence_gate, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre("fenceGateSugi", sugi_fence_gate);
-
-		Blocks.FIRE.setFireInfo(sugi_log, 5, 5);
-		Blocks.FIRE.setFireInfo(sugi_leaves, 30, 60);
-		Blocks.FIRE.setFireInfo(sugi_fallen_leaves, 30, 60);
-		Blocks.FIRE.setFireInfo(sugi_sapling, 20, 60);
-		Blocks.FIRE.setFireInfo(sugi_planks, 5, 20);
-		Blocks.FIRE.setFireInfo(sugi_slab, 5, 20);
-		Blocks.FIRE.setFireInfo(sugi_stairs, 5, 20);
-		Blocks.FIRE.setFireInfo(sugi_fence, 5, 20);
-		Blocks.FIRE.setFireInfo(sugi_fence_gate, 5, 20);
-		Blocks.FIRE.setFireInfo(sugi_chest, 5, 5);
-
-		BlockSugiFallenLeaves.addFallenSeed(new ItemStack(sugi_sapling), 10);
+		BlockSugiFallenLeaves.addFallenSeed(new ItemStack(SUGI_SAPLING), 10);
 		BlockSugiFallenLeaves.addFallenSeed(new ItemStack(Blocks.BROWN_MUSHROOM), 12);
 		BlockSugiFallenLeaves.addFallenSeed(new ItemStack(Blocks.RED_MUSHROOM), 8);
 		BlockSugiFallenLeaves.addFallenSeed(new ItemStack(Items.STICK), 10);
 	}
 
+	public static void registerItemBlocks(IForgeRegistry<Item> registry)
+	{
+		SugiItems.register(registry, new ItemBlock(SUGI_LOG));
+		SugiItems.register(registry, new ItemBlock(SUGI_LEAVES));
+		SugiItems.register(registry, new ItemSugiFallenLeaves(SUGI_FALLEN_LEAVES));
+		SugiItems.register(registry, new ItemBlock(SUGI_SAPLING));
+		SugiItems.register(registry, new ItemBlock(SUGI_PLANKS));
+		SugiItems.register(registry, new ItemSugiWoodSlab(SUGI_SLAB));
+		SugiItems.register(registry, new ItemBlock(SUGI_STAIRS));
+		SugiItems.register(registry, new ItemBlock(SUGI_FENCE));
+		SugiItems.register(registry, new ItemBlock(SUGI_FENCE_GATE));
+		SugiItems.register(registry, new ItemSugiChest(SUGI_CHEST));
+	}
+
+	public static void registerTileEntities()
+	{
+		GameRegistry.registerTileEntity(TileEntitySugiChest.class, "SugiChest");
+	}
+
 	@SideOnly(Side.CLIENT)
 	public static void registerModels()
 	{
-		registerModel(sugi_log);
-		registerModel(sugi_leaves);
-		registerModel(sugi_fallen_leaves);
-		registerModel(sugi_sapling);
-		registerModel(sugi_planks);
-		registerModel(sugi_slab);
-		registerModel(sugi_stairs);
-		registerModel(sugi_fence);
-		registerModel(sugi_fence_gate);
-		registerModel(sugi_chest);
+		registerModel(SUGI_LOG);
+		registerModel(SUGI_LEAVES);
+		registerModel(SUGI_FALLEN_LEAVES);
+		registerModel(SUGI_SAPLING);
+		registerModel(SUGI_PLANKS);
+		registerModel(SUGI_SLAB);
+		registerModel(SUGI_STAIRS);
+		registerModel(SUGI_FENCE);
+		registerModel(SUGI_FENCE_GATE);
+		registerModel(SUGI_CHEST);
 
-		ModelLoader.setCustomStateMapper(sugi_log, new StateMap.Builder().ignore(BlockSugiLog.VARIANT).build());
-		ModelLoader.setCustomStateMapper(sugi_leaves, new StateMap.Builder().ignore(BlockLeaves.DECAYABLE, BlockLeaves.CHECK_DECAY).build());
-		ModelLoader.setCustomStateMapper(sugi_fallen_leaves, new StateMap.Builder().ignore(BlockSugiFallenLeaves.CHANCE).build());
-		ModelLoader.setCustomStateMapper(sugi_sapling, new StateMap.Builder().ignore(BlockSapling.TYPE, BlockSapling.STAGE).build());
-		ModelLoader.setCustomStateMapper(sugi_planks, new StateMap.Builder().ignore(BlockSugiWood.DOUBLE).build());
-		ModelLoader.setCustomStateMapper(sugi_fence_gate, new StateMap.Builder().ignore(BlockFenceGate.POWERED).build());
+		ModelLoader.setCustomStateMapper(SUGI_LOG, new StateMap.Builder().ignore(BlockSugiLog.VARIANT).build());
+		ModelLoader.setCustomStateMapper(SUGI_LEAVES, new StateMap.Builder().ignore(BlockLeaves.DECAYABLE, BlockLeaves.CHECK_DECAY).build());
+		ModelLoader.setCustomStateMapper(SUGI_FALLEN_LEAVES, new StateMap.Builder().ignore(BlockSugiFallenLeaves.CHANCE).build());
+		ModelLoader.setCustomStateMapper(SUGI_SAPLING, new StateMap.Builder().ignore(BlockSapling.TYPE, BlockSapling.STAGE).build());
+		ModelLoader.setCustomStateMapper(SUGI_PLANKS, new StateMap.Builder().ignore(BlockSugiWood.DOUBLE).build());
+		ModelLoader.setCustomStateMapper(SUGI_FENCE_GATE, new StateMap.Builder().ignore(BlockFenceGate.POWERED).build());
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -178,7 +147,7 @@ public class SugiBlocks
 			{
 				return world != null && pos != null ? BiomeColorHelper.getFoliageColorAtPos(world, pos) : 6726755;
 			}
-		}, new Block[] {sugi_leaves, sugi_fallen_leaves});
+		}, new Block[] {SUGI_LEAVES, SUGI_FALLEN_LEAVES});
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -188,35 +157,52 @@ public class SugiBlocks
 		final BlockColors blockColors = mc.getBlockColors();
 		final ItemColors colors = mc.getItemColors();
 
-		colors.registerItemColorHandler(new IItemColor()
+		colors.registerItemColorHandler((stack, tintIndex) ->
 		{
-			@Override
-			public int getColorFromItemstack(ItemStack stack, int tintIndex)
-			{
-				IBlockState state = ((ItemBlock)stack.getItem()).getBlock().getStateFromMeta(stack.getMetadata());
+			IBlockState state = ((ItemBlock)stack.getItem()).getBlock().getStateFromMeta(stack.getMetadata());
 
-				return blockColors.colorMultiplier(state, null, null, tintIndex);
-			}
-		}, new Block[] {sugi_leaves, sugi_fallen_leaves});
+			return blockColors.colorMultiplier(state, null, null, tintIndex);
+		}, new Block[] {SUGI_LEAVES, SUGI_FALLEN_LEAVES});
+	}
+
+	public static void registerOreDicts()
+	{
+		OreDictionary.registerOre("logWood", new ItemStack(SUGI_LOG, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("woodSugi", SUGI_LOG);
+		OreDictionary.registerOre("treeLeaves", new ItemStack(SUGI_LEAVES, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("leavesSugi", SUGI_LEAVES);
+		OreDictionary.registerOre("fallenLeavesSugi", SUGI_FALLEN_LEAVES);
+		OreDictionary.registerOre("treeSapling", new ItemStack(SUGI_SAPLING, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("saplingSugi", SUGI_SAPLING);
+		OreDictionary.registerOre("plankWood", new ItemStack(SUGI_PLANKS, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("planksSugi", SUGI_PLANKS);
+		OreDictionary.registerOre("slabWood", new ItemStack(SUGI_SLAB, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("woodSlabSugi", SUGI_SLAB);
+		OreDictionary.registerOre("stairWood", new ItemStack(SUGI_STAIRS, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("stairsWoodSugi", SUGI_STAIRS);
+		OreDictionary.registerOre("fenceWood", new ItemStack(SUGI_FENCE, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("fenceSugi", SUGI_FENCE);
+		OreDictionary.registerOre("fenceGateWood", new ItemStack(SUGI_FENCE_GATE, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("fenceGateSugi", SUGI_FENCE_GATE);
 	}
 
 	public static void registerRecipes()
 	{
-		GameRegistry.addRecipe(new ItemStack(sugi_fallen_leaves, 6), "###", '#', sugi_leaves);
+		GameRegistry.addRecipe(new ItemStack(SUGI_FALLEN_LEAVES, 6), "###", '#', SUGI_LEAVES);
 
-		GameRegistry.addShapelessRecipe(new ItemStack(Items.STICK), new ItemStack(sugi_sapling));
+		GameRegistry.addShapelessRecipe(new ItemStack(Items.STICK), new ItemStack(SUGI_SAPLING));
 
-		GameRegistry.addShapelessRecipe(new ItemStack(sugi_planks, 4), new ItemStack(sugi_log, 1, OreDictionary.WILDCARD_VALUE));
+		GameRegistry.addShapelessRecipe(new ItemStack(SUGI_PLANKS, 4), new ItemStack(SUGI_LOG, 1, OreDictionary.WILDCARD_VALUE));
 
-		GameRegistry.addRecipe(new ItemStack(sugi_slab, 6), "###", '#', sugi_planks);
+		GameRegistry.addRecipe(new ItemStack(SUGI_SLAB, 6), "###", '#', SUGI_PLANKS);
 
-		GameRegistry.addRecipe(new ItemStack(sugi_stairs, 4), "  #", " ##", "###", '#', sugi_planks);
+		GameRegistry.addRecipe(new ItemStack(SUGI_STAIRS, 4), "  #", " ##", "###", '#', SUGI_PLANKS);
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(sugi_fence, 3), "#S#", "#S#", 'S', "stickWood", '#', sugi_planks));
-		GameRegistry.addRecipe(new ShapedOreRecipe(sugi_fence_gate, "S#S", "S#S", 'S', "stickWood", '#', sugi_planks));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(SUGI_FENCE, 3), "#S#", "#S#", 'S', "stickWood", '#', SUGI_PLANKS));
+		GameRegistry.addRecipe(new ShapedOreRecipe(SUGI_FENCE_GATE, "S#S", "S#S", 'S', "stickWood", '#', SUGI_PLANKS));
 
-		GameRegistry.addRecipe(new ItemStack(sugi_chest), "###", "# #", "###", '#', sugi_planks);
+		GameRegistry.addRecipe(new ItemStack(SUGI_CHEST), "###", "# #", "###", '#', SUGI_PLANKS);
 
-		GameRegistry.addSmelting(sugi_log, new ItemStack(Items.COAL, 1, 1), 0.15F);
+		GameRegistry.addSmelting(SUGI_LOG, new ItemStack(Items.COAL, 1, 1), 0.15F);
 	}
 }

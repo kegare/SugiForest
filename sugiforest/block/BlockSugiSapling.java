@@ -28,7 +28,7 @@ public class BlockSugiSapling extends BlockBush implements IGrowable
 	{
 		this.setUnlocalizedName("sapling.sugi");
 		this.setSoundType(SoundType.PLANT);
-		this.setCreativeTab(SugiForest.tabSugiForest);
+		this.setCreativeTab(SugiForest.TAB_SUGI);
 		this.setDefaultState(blockState.getBaseState().withProperty(STAGE, Integer.valueOf(0)));
 	}
 
@@ -96,7 +96,7 @@ public class BlockSugiSapling extends BlockBush implements IGrowable
 
 		world.setBlockState(pos, Blocks.AIR.getDefaultState(), 4);
 
-		if (!WorldGenSugiTree.treeGen.generate(world, rand, pos))
+		if (!WorldGenSugiTree.TREE_GEN.generate(world, rand, pos))
 		{
 			world.setBlockState(pos, state, 4);
 		}

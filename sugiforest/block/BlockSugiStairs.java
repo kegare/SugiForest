@@ -7,10 +7,10 @@ public class BlockSugiStairs extends BlockStairs
 {
 	public BlockSugiStairs()
 	{
-		super(SugiBlocks.sugi_planks.getDefaultState());
+		super(SugiBlocks.SUGI_PLANKS.getDefaultState());
 		this.setUnlocalizedName("stairs.sugi");
 		this.setHarvestLevel("axe", 0);
-		this.setCreativeTab(SugiForest.tabSugiForest);
+		this.setCreativeTab(SugiForest.TAB_SUGI);
 		this.useNeighborBrightness = true;
 	}
 }

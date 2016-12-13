@@ -25,9 +25,11 @@ public class ItemSugiFallenLeaves extends ItemBlock
 	}
 
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-		if (stack.stackSize != 0 && player.canPlayerEdit(pos, facing, stack))
+		ItemStack stack = player.getHeldItem(hand);
+
+		if (stack.getCount() > 0 && player.canPlayerEdit(pos, facing, stack))
 		{
 			IBlockState state = world.getBlockState(pos);
 			Block block = state.getBlock();
@@ -51,18 +53,18 @@ public class ItemSugiFallenLeaves extends ItemBlock
 
 					if (box != Block.NULL_AABB && world.checkNoEntityCollision(box.offset(blockpos)) && world.setBlockState(blockpos, blockState, 10))
 					{
-						SoundType sound = this.block.getSoundType();
+						SoundType sound = this.block.getSoundType(state, world, pos, player);
 
 						world.playSound(player, blockpos, sound.getPlaceSound(), SoundCategory.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
 
-						--stack.stackSize;
+						stack.shrink(1);
 
 						return EnumActionResult.SUCCESS;
 					}
 				}
 			}
 
-			return super.onItemUse(stack, player, world, blockpos, hand, facing, hitX, hitY, hitZ);
+			return super.onItemUse(player, world, blockpos, hand, facing, hitX, hitY, hitZ);
 		}
 		else return EnumActionResult.FAIL;
 	}

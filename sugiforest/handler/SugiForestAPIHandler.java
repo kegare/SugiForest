@@ -11,7 +11,7 @@ public class SugiForestAPIHandler implements ISugiForestAPI
 	@Override
 	public Biome getBiome()
 	{
-		return SugiBiomes.sugiForest;
+		return SugiBiomes.SUGIFOREST;
 	}
 
 	@Override

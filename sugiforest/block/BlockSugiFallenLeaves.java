@@ -57,16 +57,16 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 		}
 	}
 
-	protected static final List<SeedEntry> seedList = Lists.newArrayList();
+	protected static final List<SeedEntry> ENTRIES = Lists.newArrayList();
 
 	public static void addFallenSeed(ItemStack stack, int weight)
 	{
-		seedList.add(new SeedEntry(stack, weight));
+		ENTRIES.add(new SeedEntry(stack, weight));
 	}
 
 	public static ItemStack getFallenSeed(Random rand)
 	{
-		SeedEntry entry = WeightedRandom.getRandomItem(rand, seedList);
+		SeedEntry entry = WeightedRandom.getRandomItem(rand, ENTRIES);
 
 		if (entry == null || entry.stack == null)
 		{
@@ -83,7 +83,7 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 		this.setHardness(0.1F);
 		this.setLightOpacity(1);
 		this.setSoundType(SoundType.PLANT);
-		this.setCreativeTab(SugiForest.tabSugiForest);
+		this.setCreativeTab(SugiForest.TAB_SUGI);
 		this.setDefaultState(blockState.getBaseState().withProperty(LAYERS, Integer.valueOf(1)).withProperty(CHANCE, Boolean.valueOf(false)));
 	}
 
@@ -165,7 +165,7 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 	}
 
 	@Override
-	public boolean isVisuallyOpaque()
+	public boolean causesSuffocation(IBlockState state)
 	{
 		return false;
 	}
@@ -223,7 +223,7 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos)
 	{
 		checkAndDropBlock(world, pos, state);
 	}
@@ -251,7 +251,7 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 	@Override
 	public boolean isShearable(ItemStack item, IBlockAccess world, BlockPos pos)
 	{
-		return item != null;
+		return !item.isEmpty();
 	}
 
 	@Override

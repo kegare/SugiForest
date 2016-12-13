@@ -10,18 +10,18 @@ import sugiforest.core.Config;
 
 public class SugiBiomes
 {
-	public static final BiomeSugiForest sugiForest = new BiomeSugiForest();
+	public static final BiomeSugiForest SUGIFOREST = new BiomeSugiForest();
 
 	public static void registerBiomes()
 	{
-		Biome.registerBiome(Config.biomeId, "sugi_forest", sugiForest);
+		Biome.registerBiome(Config.biomeId, "sugi_forest", SUGIFOREST);
 
-		BiomeManager.addBiome(BiomeType.WARM, new BiomeEntry(sugiForest, Config.biomeWeight));
-		BiomeManager.addSpawnBiome(sugiForest);
-		BiomeManager.addStrongholdBiome(sugiForest);
+		BiomeManager.addBiome(BiomeType.WARM, new BiomeEntry(SUGIFOREST, Config.biomeWeight));
+		BiomeManager.addSpawnBiome(SUGIFOREST);
+		BiomeManager.addStrongholdBiome(SUGIFOREST);
 
-		Biome.EXPLORATION_BIOMES_LIST.add(sugiForest);
+		Biome.EXPLORATION_BIOMES_LIST.add(SUGIFOREST);
 
-		BiomeDictionary.registerBiomeType(sugiForest, Type.FOREST, Type.HILLS);
+		BiomeDictionary.addTypes(SUGIFOREST, Type.FOREST, Type.HILLS, Type.WET);
 	}
 }

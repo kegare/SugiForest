@@ -1,126 +1,85 @@
 package sugiforest.tileentity;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerChest;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityLockableLoot;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.common.util.Constants.NBT;
 import sugiforest.block.SugiBlocks;
+import sugiforest.core.SugiForest;
 import sugiforest.core.SugiSounds;
 
-public class TileEntitySugiChest extends TileEntity implements IInventory
+public class TileEntitySugiChest extends TileEntityLockableLoot
 {
-	private final ItemStack[] chestContents = new ItemStack[36];
+	private NonNullList<ItemStack> chestContents = NonNullList.withSize(36, ItemStack.EMPTY);
 
 	public int numUsingPlayers;
-
-	private String customName;
 
 	@Override
 	public int getSizeInventory()
 	{
-		return chestContents.length;
+		return 36;
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int slot)
+	public boolean isEmpty()
 	{
-		if (slot < 0 || slot >= chestContents.length)
+		for (ItemStack stack : chestContents)
 		{
-			return null;
-		}
-
-		return chestContents[slot];
-	}
-
-	@Override
-	public ItemStack removeStackFromSlot(int slot)
-	{
-		ItemStack itemstack = getStackInSlot(slot);
-
-		if (itemstack != null)
-		{
-			chestContents[slot] = null;
-		}
-
-		return itemstack;
-	}
-
-	@Override
-	public ItemStack decrStackSize(int slot, int size)
-	{
-		ItemStack itemstack = getStackInSlot(slot);
-
-		if (itemstack != null)
-		{
-			if (itemstack.stackSize <= size)
+			if (!stack.isEmpty())
 			{
-				chestContents[slot] = null;
-				markDirty();
-
-				return itemstack;
+				return false;
 			}
-
-			ItemStack item = itemstack.splitStack(size);
-
-			if (itemstack.stackSize <= 0)
-			{
-				chestContents[slot] = null;
-			}
-
-			markDirty();
-
-			return item;
 		}
 
-		return itemstack;
-	}
-
-	@Override
-	public void setInventorySlotContents(int slot, ItemStack itemstack)
-	{
-		if (slot < 0 || slot >= chestContents.length)
-		{
-			return;
-		}
-
-		chestContents[slot] = itemstack;
-
-		if (itemstack != null && itemstack.stackSize > getInventoryStackLimit())
-		{
-			itemstack.stackSize = getInventoryStackLimit();
-		}
-
-		markDirty();
+		return true;
 	}
 
 	@Override
 	public String getName()
 	{
-		return hasCustomName() ? customName : SugiBlocks.sugi_chest.getUnlocalizedName() + ".name";
+		return hasCustomName() ? customName : SugiBlocks.SUGI_CHEST.getUnlocalizedName() + ".name";
 	}
 
 	@Override
-	public ITextComponent getDisplayName()
+	public void readFromNBT(NBTTagCompound compound)
 	{
-		return hasCustomName() ? new TextComponentString(getName()) : new TextComponentTranslation(getName());
+		super.readFromNBT(compound);
+
+		chestContents = NonNullList.withSize(getSizeInventory(), ItemStack.EMPTY);
+
+		if (!checkLootAndRead(compound))
+		{
+			ItemStackHelper.loadAllItems(compound, chestContents);
+		}
+
+		if (compound.hasKey("CustomName", 8))
+		{
+			customName = compound.getString("CustomName");
+		}
 	}
 
 	@Override
-	public boolean hasCustomName()
+	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
-		return customName != null && customName.length() > 0;
-	}
+		super.writeToNBT(compound);
 
-	public void setCustomName(String name)
-	{
-		customName = name;
+		if (!checkLootAndWrite(compound))
+		{
+			ItemStackHelper.saveAllItems(compound, chestContents);
+		}
+
+		if (hasCustomName())
+		{
+			compound.setString("CustomName", customName);
+		}
+
+		return compound;
 	}
 
 	@Override
@@ -130,9 +89,16 @@ public class TileEntitySugiChest extends TileEntity implements IInventory
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player)
+	public boolean receiveClientEvent(int channel, int type)
 	{
-		return worldObj.getTileEntity(pos) == this && player.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;
+		if (channel == 1)
+		{
+			numUsingPlayers = type;
+
+			return true;
+		}
+
+		return super.receiveClientEvent(channel, type);
 	}
 
 	@Override
@@ -147,12 +113,11 @@ public class TileEntitySugiChest extends TileEntity implements IInventory
 
 			if (++numUsingPlayers <= 1)
 			{
-				worldObj.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, SugiSounds.sugichest_open, SoundCategory.BLOCKS, 0.5F, 1.0F);
+				world.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, SugiSounds.SUGI_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, 1.0F);
 			}
 
-			worldObj.addBlockEvent(pos, getBlockType(), 1, numUsingPlayers);
-			worldObj.notifyNeighborsOfStateChange(pos, getBlockType());
-			worldObj.notifyNeighborsOfStateChange(pos.down(), getBlockType());
+			world.addBlockEvent(pos, getBlockType(), 1, numUsingPlayers);
+			world.notifyNeighborsOfStateChange(pos, getBlockType(), false);
 		}
 	}
 
@@ -163,118 +128,39 @@ public class TileEntitySugiChest extends TileEntity implements IInventory
 		{
 			if (--numUsingPlayers <= 0)
 			{
-				worldObj.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, SugiSounds.sugichest_close, SoundCategory.BLOCKS, 0.5F, 1.0F);
+				world.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, SugiSounds.SUGI_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, 1.0F);
 			}
 
-			worldObj.addBlockEvent(pos, getBlockType(), 1, numUsingPlayers);
-			worldObj.notifyNeighborsOfStateChange(pos, getBlockType());
-			worldObj.notifyNeighborsOfStateChange(pos.down(), getBlockType());
+			world.addBlockEvent(pos, getBlockType(), 1, numUsingPlayers);
+			world.notifyNeighborsOfStateChange(pos, getBlockType(), false);
 		}
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack itemstack)
-	{
-		return true;
-	}
-
-	@Override
-	public boolean receiveClientEvent(int channel, int value)
-	{
-		if (channel == 1)
-		{
-			numUsingPlayers = value;
-
-			return true;
-		}
-
-		return super.receiveClientEvent(channel, value);
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-		clear();
-
-		NBTTagList list = nbt.getTagList("Items", NBT.TAG_COMPOUND);
-
-		for (int i = 0; i < list.tagCount(); ++i)
-		{
-			NBTTagCompound data = list.getCompoundTagAt(i);
-			int slot = data.getByte("Slot") & 255;
-
-			if (slot >= 0 && slot < chestContents.length)
-			{
-				chestContents[slot] = ItemStack.loadItemStackFromNBT(data);
-			}
-		}
-
-		if (nbt.hasKey("CustomName", NBT.TAG_STRING))
-		{
-			customName = nbt.getString("CustomName");
-		}
-	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
-	{
-		nbt = super.writeToNBT(nbt);
-
-		NBTTagList list = new NBTTagList();
-
-		for (int i = 0; i < chestContents.length; ++i)
-		{
-			if (chestContents[i] != null)
-			{
-				NBTTagCompound data = new NBTTagCompound();
-
-				data.setByte("Slot", (byte)i);
-				chestContents[i].writeToNBT(data);
-
-				list.appendTag(data);
-			}
-		}
-
-		nbt.setTag("Items", list);
-
-		if (hasCustomName())
-		{
-			nbt.setString("CustomName", customName);
-		}
-
-		return nbt;
 	}
 
 	@Override
 	public void invalidate()
 	{
-		updateContainingBlockInfo();
-
 		super.invalidate();
+
+		updateContainingBlockInfo();
 	}
 
 	@Override
-	public int getField(int id)
+	public String getGuiID()
 	{
-		return 0;
+		return SugiForest.MODID + ":sugi_chest";
 	}
 
 	@Override
-	public void setField(int id, int value) {}
-
-	@Override
-	public int getFieldCount()
+	public Container createContainer(InventoryPlayer playerInventory, EntityPlayer player)
 	{
-		return 0;
+		fillWithLoot(player);
+
+		return new ContainerChest(playerInventory, this, player);
 	}
 
 	@Override
-	public void clear()
+	protected NonNullList<ItemStack> getItems()
 	{
-		for (int i = 0; i < chestContents.length; ++i)
-		{
-			chestContents[i] = null;
-		}
+		return chestContents;
 	}
 }

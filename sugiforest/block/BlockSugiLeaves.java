@@ -30,7 +30,7 @@ public class BlockSugiLeaves extends BlockLeaves
 		super();
 		this.setUnlocalizedName("leaves.sugi");
 		this.setHarvestLevel("axe", 0);
-		this.setCreativeTab(SugiForest.tabSugiForest);
+		this.setCreativeTab(SugiForest.TAB_SUGI);
 		this.setDefaultState(blockState.getBaseState().withProperty(DECAYABLE, Boolean.valueOf(true)).withProperty(CHECK_DECAY, Boolean.valueOf(true)));
 		this.leavesFancy = true;
 	}
@@ -81,23 +81,17 @@ public class BlockSugiLeaves extends BlockLeaves
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
-		return Item.getItemFromBlock(SugiBlocks.sugi_sapling);
+		return Item.getItemFromBlock(SugiBlocks.SUGI_SAPLING);
 	}
 
 	@Override
 	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity tile, ItemStack stack)
 	{
-		if (!world.isRemote && stack != null && stack.getItem() == Items.SHEARS)
+		if (!world.isRemote && !stack.isEmpty() && stack.getItem() == Items.SHEARS)
 		{
 			player.addStat(StatList.getBlockStats(this));
 		}
 		else super.harvestBlock(world, player, pos, state, tile, stack);
-	}
-
-	@Override
-	public boolean isShearable(ItemStack item, IBlockAccess world, BlockPos pos)
-	{
-		return item != null;
 	}
 
 	@Override

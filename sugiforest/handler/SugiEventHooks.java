@@ -51,9 +51,9 @@ public class SugiEventHooks
 	public void onFogDensity(FogDensity event)
 	{
 		Entity entity = event.getEntity();
-		World world = entity.worldObj;
+		World world = entity.world;
 		BlockPos pos = entity.getPosition();
-		Biome biome = world.getBiomeGenForCoords(pos);
+		Biome biome = world.getBiome(pos);
 
 		float f = (float)Math.pow(0.1D, 6);
 		boolean flag = false;
@@ -148,7 +148,7 @@ public class SugiEventHooks
 		EntityItem entity = event.pickedUp;
 		ItemStack itemstack = entity.getEntityItem();
 
-		if (itemstack != null && itemstack.getItem() == Item.getItemFromBlock(SugiBlocks.sugi_log))
+		if (!itemstack.isEmpty() && itemstack.getItem() == Item.getItemFromBlock(SugiBlocks.SUGI_LOG))
 		{
 			player.addStat(AchievementList.MINE_WOOD);
 		}

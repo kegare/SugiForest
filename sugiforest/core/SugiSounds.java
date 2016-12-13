@@ -2,17 +2,17 @@ package sugiforest.core;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.IForgeRegistry;
 
 public class SugiSounds
 {
-	public static final SugiSoundEvent sugichest_open = new SugiSoundEvent("sugichest.open");
-	public static final SugiSoundEvent sugichest_close = new SugiSoundEvent("sugichest.close");
+	public static final SugiSoundEvent SUGI_CHEST_OPEN = new SugiSoundEvent("sugichest.open");
+	public static final SugiSoundEvent SUGI_CHEST_CLOSE = new SugiSoundEvent("sugichest.close");
 
-	public static void registerSounds()
+	public static void registerSounds(IForgeRegistry<SoundEvent> registry)
 	{
-		GameRegistry.register(sugichest_open);
-		GameRegistry.register(sugichest_close);
+		registry.register(SUGI_CHEST_OPEN);
+		registry.register(SUGI_CHEST_CLOSE);
 	}
 
 	public static class SugiSoundEvent extends SoundEvent

@@ -24,7 +24,7 @@ public class BlockSugiWood extends Block
 		this.setResistance(4.75F);
 		this.setSoundType(SoundType.WOOD);
 		this.setHarvestLevel("axe", 0);
-		this.setCreativeTab(SugiForest.tabSugiForest);
+		this.setCreativeTab(SugiForest.TAB_SUGI);
 		this.setDefaultState(blockState.getBaseState().withProperty(DOUBLE, Boolean.valueOf(false)));
 	}
 
@@ -49,7 +49,7 @@ public class BlockSugiWood extends Block
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
-		return Item.getItemFromBlock(state.getValue(DOUBLE).booleanValue() ? SugiBlocks.sugi_slab : this);
+		return Item.getItemFromBlock(state.getValue(DOUBLE).booleanValue() ? SugiBlocks.SUGI_SLAB : this);
 	}
 
 	@Override

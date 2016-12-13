@@ -26,7 +26,7 @@ public class BlockSugiLog extends BlockLog
 		this.setUnlocalizedName("log.sugi");
 		this.setHarvestLevel("axe", 0);
 		this.setDefaultState(blockState.getBaseState().withProperty(VARIANT, EnumType.NORMAL).withProperty(LOG_AXIS, EnumAxis.Y));
-		this.setCreativeTab(SugiForest.tabSugiForest);
+		this.setCreativeTab(SugiForest.TAB_SUGI);
 	}
 
 	@Override
@@ -110,7 +110,7 @@ public class BlockSugiLog extends BlockLog
 		{
 			if (player.inventory.hasItemStack(new ItemStack(Items.BOWL)) && player.inventory.clearMatchingItems(Items.BOWL, 0, 1, null) >= 1)
 			{
-				spawnAsEntity(world, pos, new ItemStack(SugiItems.myst_sap));
+				spawnAsEntity(world, pos, new ItemStack(SugiItems.MYST_SAP));
 			}
 		}
 

@@ -22,14 +22,14 @@ public class SugiWorldGenerator implements IWorldGenerator
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider)
 	{
 		BlockPos pos = new BlockPos(chunkX * 16, 0, chunkZ * 16);
-		Biome biome = world.getBiomeGenForCoords(pos);
+		Biome biome = world.getBiome(pos);
 
 		if (biome instanceof BiomeSugiForest)
 		{
 			return;
 		}
 
-		if (Config.sugiOnHills > 0 && BiomeDictionary.isBiomeOfType(biome, Type.HILLS))
+		if (Config.sugiOnHills > 0 && BiomeDictionary.hasType(biome, Type.HILLS))
 		{
 			for (int i = 0; i < Config.sugiOnHills; ++i)
 			{
@@ -39,7 +39,7 @@ public class SugiWorldGenerator implements IWorldGenerator
 
 					if (TerrainGen.decorate(world, random, blockpos, EventType.TREE))
 					{
-						WorldGenSugiTree.naturalGen.generate(world, random, blockpos);
+						WorldGenSugiTree.NATURAL_GEN.generate(world, random, blockpos);
 					}
 				}
 			}

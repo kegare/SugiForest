@@ -11,9 +11,9 @@ public class ItemSugiChest extends ItemBlock
 		super(block);
 	}
 
-	public boolean isContained(ItemStack itemstack)
+	public boolean isContained(ItemStack stack)
 	{
-		return itemstack != null && itemstack.hasTagCompound() && itemstack.getTagCompound().hasKey("Chest");
+		return !stack.isEmpty() && stack.hasTagCompound() && stack.getTagCompound().hasKey("Chest");
 	}
 
 	@Override

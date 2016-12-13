@@ -19,11 +19,6 @@ public class SugiFuelHandler implements IFuelHandler
 	{
 		Block block = Block.getBlockFromItem(fuel.getItem());
 
-		if (block == null)
-		{
-			return 0;
-		}
-
 		if (block instanceof BlockSugiLog || block instanceof BlockSugiWood || block instanceof BlockSugiStairs)
 		{
 			return 300;

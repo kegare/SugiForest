@@ -1,7 +1,0 @@
-{
-    "parent": "block/column_side",
-    "textures": {
-        "end": "sugiforest:blocks/log_sugi_top",
-        "side": "sugiforest:blocks/log_sugi"
-    }
-}

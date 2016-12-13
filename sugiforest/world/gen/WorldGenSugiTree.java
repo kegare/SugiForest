@@ -24,8 +24,8 @@ import sugiforest.core.Config;
 
 public class WorldGenSugiTree extends WorldGenAbstractTree
 {
-	public static final WorldGenSugiTree treeGen = new WorldGenSugiTree(true);
-	public static final WorldGenSugiTree naturalGen = new WorldGenSugiTree(false);
+	public static final WorldGenSugiTree TREE_GEN = new WorldGenSugiTree(true);
+	public static final WorldGenSugiTree NATURAL_GEN = new WorldGenSugiTree(false);
 
 	private final boolean doBlockNotify;
 
@@ -92,7 +92,7 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 
 			if (block.isAir(state, world, blockpos) || block.isLeaves(state, world, blockpos) || state.getMaterial() == Material.VINE)
 			{
-				IBlockState blockstate = SugiBlocks.sugi_log.getDefaultState();
+				IBlockState blockstate = SugiBlocks.SUGI_LOG.getDefaultState();
 
 				if (random.nextInt(40) == 0)
 				{
@@ -189,7 +189,7 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 
 						if ((block.isAir(state, world, blockpos) || block.isLeaves(state, world, blockpos) || state.getMaterial() == Material.VINE) && random.nextInt(12) != 0)
 						{
-							setBlockAndNotifyAdequately(world, blockpos, SugiBlocks.sugi_leaves.getDefaultState());
+							setBlockAndNotifyAdequately(world, blockpos, SugiBlocks.SUGI_LEAVES.getDefaultState());
 						}
 					}
 				}
@@ -230,9 +230,9 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 
 				blockpos.move(EnumFacing.UP);
 
-				if (SugiBlocks.sugi_fallen_leaves.canPlaceBlockAt(world, blockpos) && random.nextInt(3) == 0)
+				if (SugiBlocks.SUGI_FALLEN_LEAVES.canPlaceBlockAt(world, blockpos) && random.nextInt(3) == 0)
 				{
-					setBlockAndNotifyAdequately(world, blockpos, SugiBlocks.sugi_fallen_leaves.getDefaultState().withProperty(BlockSugiFallenLeaves.CHANCE, Boolean.valueOf(true)));
+					setBlockAndNotifyAdequately(world, blockpos, SugiBlocks.SUGI_FALLEN_LEAVES.getDefaultState().withProperty(BlockSugiFallenLeaves.CHANCE, Boolean.valueOf(true)));
 				}
 				else
 				{
@@ -244,7 +244,7 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 					{
 						int layers = state.getValue(BlockSugiFallenLeaves.LAYERS).intValue();
 
-						setBlockAndNotifyAdequately(world, blockpos, SugiBlocks.sugi_fallen_leaves.getDefaultState().withProperty(BlockSugiFallenLeaves.LAYERS, (layers & 7) + 1).withProperty(BlockSugiFallenLeaves.CHANCE, Boolean.valueOf(true)));
+						setBlockAndNotifyAdequately(world, blockpos, SugiBlocks.SUGI_FALLEN_LEAVES.getDefaultState().withProperty(BlockSugiFallenLeaves.LAYERS, (layers & 7) + 1).withProperty(BlockSugiFallenLeaves.CHANCE, Boolean.valueOf(true)));
 					}
 				}
 			}
@@ -339,7 +339,7 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 	@Override
 	public boolean generate(World world, Random random, BlockPos pos)
 	{
-		Biome biome = world.getBiomeGenForCoords(pos);
+		Biome biome = world.getBiome(pos);
 		int i = 0;
 
 		if (biome.isHighHumidity())
@@ -359,14 +359,14 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 			IBlockState state = world.getBlockState(down);
 			Block block = state.getBlock();
 
-			if (block.canSustainPlant(state, world, down, EnumFacing.UP, SugiBlocks.sugi_sapling) && pos.getY() < 256 - treeHeight - 1)
+			if (block.canSustainPlant(state, world, down, EnumFacing.UP, SugiBlocks.SUGI_SAPLING) && pos.getY() < 256 - treeHeight - 1)
 			{
 				block.onPlantGrow(state, world, down, pos);
 
 				setLeaves(world, random, pos, biome, treeHeight);
 				setTree(world, random, pos, biome, treeHeight);
 
-				if (!doBlockNotify && (BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.JUNGLE) || BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.SWAMP)))
+				if (!doBlockNotify && (BiomeDictionary.hasType(biome, BiomeDictionary.Type.JUNGLE) || BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP)))
 				{
 					setVines(world, random, pos, treeHeight);
 				}

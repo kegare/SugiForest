@@ -30,7 +30,7 @@ public class BiomeSugiForest extends Biome
 	@Override
 	public WorldGenAbstractTree genBigTreeChance(Random rand)
 	{
-		return WorldGenSugiTree.naturalGen;
+		return WorldGenSugiTree.NATURAL_GEN;
 	}
 
 	@Override

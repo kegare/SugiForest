@@ -1,5 +1,6 @@
 package sugiforest.item;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -7,28 +8,47 @@ import com.google.common.collect.Lists;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sugiforest.core.SugiForest;
 
 public class SugiItems
 {
-	public static final ItemMystSap myst_sap = new ItemMystSap();
+	private static final List<Item> ITEMS = NonNullList.create();
 
-	public static void registerItems()
+	public static final ItemMystSap MYST_SAP = new ItemMystSap();
+
+	public static List<Item> getItems()
 	{
-		myst_sap.setRegistryName("myst_sap");
+		return Collections.unmodifiableList(ITEMS);
+	}
 
-		GameRegistry.register(myst_sap);
+	public static void register(IForgeRegistry<Item> registry, Item item)
+	{
+		ITEMS.add(item);
+
+		if (item instanceof ItemBlock && item.getRegistryName() == null)
+		{
+			item.setRegistryName(((ItemBlock)item).getBlock().getRegistryName());
+		}
+
+		registry.register(item);
+	}
+
+	public static void registerItems(IForgeRegistry<Item> registry)
+	{
+		register(registry, MYST_SAP.setRegistryName("myst_sap"));
 	}
 
 	@SideOnly(Side.CLIENT)
 	public static void registerModels()
 	{
-		registerModel(myst_sap);
+		registerModel(MYST_SAP);
 	}
 
 	@SideOnly(Side.CLIENT)

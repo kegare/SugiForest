@@ -2,6 +2,8 @@ package sugiforest.block;
 
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -28,6 +30,7 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
 import sugiforest.core.SugiForest;
 import sugiforest.item.ItemSugiChest;
@@ -45,7 +48,7 @@ public class BlockSugiChest extends BlockContainer
 		this.setResistance(5.5F);
 		this.setSoundType(SoundType.WOOD);
 		this.setHarvestLevel("axe", 0);
-		this.setCreativeTab(SugiForest.tabSugiForest);
+		this.setCreativeTab(SugiForest.TAB_SUGI);
 		this.setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
 	}
 
@@ -99,7 +102,7 @@ public class BlockSugiChest extends BlockContainer
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
 		return getDefaultState().withProperty(FACING, placer.getHorizontalFacing());
 	}
@@ -107,7 +110,7 @@ public class BlockSugiChest extends BlockContainer
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
-		EnumFacing facing = EnumFacing.getHorizontal(MathHelper.floor_double(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3).getOpposite();
+		EnumFacing facing = EnumFacing.getHorizontal(MathHelper.floor(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3).getOpposite();
 		state = state.withProperty(FACING, facing);
 		BlockPos north = pos.north();
 		BlockPos south = pos.south();
@@ -178,9 +181,9 @@ public class BlockSugiChest extends BlockContainer
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos)
 	{
-		super.neighborChanged(state, world, pos, block);
+		super.neighborChanged(state, world, pos, block, fromPos);
 
 		TileEntity tileentity = world.getTileEntity(pos);
 
@@ -191,14 +194,52 @@ public class BlockSugiChest extends BlockContainer
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-		if (!world.isRemote)
+		if (world.isRemote)
 		{
-			player.displayGUIChest((IInventory)world.getTileEntity(pos));
+			return true;
 		}
+		else
+		{
+			ILockableContainer container = getLockableContainer(world, pos);
 
-		return true;
+			if (container != null)
+			{
+				player.displayGUIChest(container);
+			}
+
+			return true;
+		}
+	}
+
+	@Nullable
+	public ILockableContainer getLockableContainer(World world, BlockPos pos)
+	{
+		return getContainer(world, pos, false);
+	}
+
+	@Nullable
+	public ILockableContainer getContainer(World world, BlockPos pos, boolean flag)
+	{
+		TileEntity tileentity = world.getTileEntity(pos);
+
+		if (!(tileentity instanceof TileEntitySugiChest))
+		{
+			return null;
+		}
+		else
+		{
+			ILockableContainer container = (TileEntitySugiChest)tileentity;
+
+			return container;
+		}
+	}
+
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state)
+	{
+		return new TileEntitySugiChest();
 	}
 
 	@Override
@@ -216,6 +257,46 @@ public class BlockSugiChest extends BlockContainer
 		super.breakBlock(world, pos, state);
 	}
 
+	public ItemStack getContainedChest(TileEntitySugiChest chest)
+	{
+		ItemStack ret = ItemStack.EMPTY;
+		boolean flag = false;
+
+		for (int i = 0; i < chest.getSizeInventory(); ++i)
+		{
+			ItemStack stack = chest.getStackInSlot(i);
+
+			if (!stack.isEmpty())
+			{
+				flag = true;
+
+				if (stack.getItem() instanceof ItemSugiChest)
+				{
+					if (((ItemSugiChest)stack.getItem()).isContained(stack))
+					{
+						flag = false;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (!flag)
+		{
+			return ret;
+		}
+
+		ret = new ItemStack(this);
+		NBTTagCompound data = new NBTTagCompound();
+		chest.writeToNBT(data);
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setTag("Chest", data);
+		ret.setTagCompound(nbt);
+
+		return ret;
+	}
+
 	@Override
 	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
 	{
@@ -224,56 +305,21 @@ public class BlockSugiChest extends BlockContainer
 			return super.removedByPlayer(state, world, pos, player, willHarvest);
 		}
 
-		if (EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, player.getHeldItemMainhand()) > 0)
+		ItemStack chest = ItemStack.EMPTY;
+		ItemStack heldMain = player.getHeldItemMainhand();
+
+		if (player.isSneaking() && heldMain.isEmpty() || EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, heldMain) > 0)
 		{
-			TileEntitySugiChest tileentity = (TileEntitySugiChest)world.getTileEntity(pos);
-			ItemStack stack;
-			boolean flag = false;
-
-			for (int i = 0; i < tileentity.getSizeInventory(); ++i)
-			{
-				stack = tileentity.getStackInSlot(i);
-
-				if (stack != null)
-				{
-					flag = true;
-
-					if (stack.getItem() instanceof ItemSugiChest)
-					{
-						if (((ItemSugiChest)stack.getItem()).isContained(stack))
-						{
-							flag = false;
-							break;
-						}
-					}
-				}
-			}
-
-			if (!flag)
-			{
-				spawnAsEntity(world, pos, new ItemStack(this));
-
-				return super.removedByPlayer(state, world, pos, player, willHarvest);
-			}
-
-			if (!world.isRemote)
-			{
-				stack = new ItemStack(this);
-				NBTTagCompound data = new NBTTagCompound();
-				tileentity.writeToNBT(data);
-				NBTTagCompound nbt = new NBTTagCompound();
-				nbt.setTag("Chest", data);
-				stack.setTagCompound(nbt);
-
-				spawnAsEntity(world, pos, stack);
-			}
-
-			super.breakBlock(world, pos, world.getBlockState(pos));
+			chest = getContainedChest((TileEntitySugiChest)world.getTileEntity(pos));
 		}
-		else
+
+		if (chest.isEmpty())
 		{
-			spawnAsEntity(world, pos, new ItemStack(this));
+			chest = new ItemStack(this);
 		}
+		else super.breakBlock(world, pos, state);
+
+		spawnAsEntity(world, pos, chest);
 
 		return super.removedByPlayer(state, world, pos, player, willHarvest);
 	}
@@ -300,7 +346,7 @@ public class BlockSugiChest extends BlockContainer
 			i = ((TileEntitySugiChest)tileentity).numUsingPlayers;
 		}
 
-		return MathHelper.clamp_int(i, 0, 15);
+		return MathHelper.clamp(i, 0, 15);
 	}
 
 	@Override
@@ -318,6 +364,6 @@ public class BlockSugiChest extends BlockContainer
 	@Override
 	public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos)
 	{
-		return Container.calcRedstone(world.getTileEntity(pos));
+		return Container.calcRedstoneFromInventory(getLockableContainer(world, pos));
 	}
 }

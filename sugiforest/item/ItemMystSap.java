@@ -17,7 +17,7 @@ public class ItemMystSap extends ItemSoup
 		super(0);
 		this.setUnlocalizedName("mystSap");
 		this.setAlwaysEdible();
-		this.setCreativeTab(SugiForest.tabSugiForest);
+		this.setCreativeTab(SugiForest.TAB_SUGI);
 	}
 
 	@Override
