@@ -101,56 +101,21 @@ public class BlockSugiChest extends BlockContainer
 		return EnumBlockRenderType.MODEL;
 	}
 
-	@Override
-	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+	public EnumFacing getFacingForPlacement(EntityLivingBase placer)
 	{
-		return getDefaultState().withProperty(FACING, placer.getHorizontalFacing());
+		return EnumFacing.getHorizontal(MathHelper.floor(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3).getOpposite();
+	}
+
+	@Override
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+	{
+		return getDefaultState().withProperty(FACING, getFacingForPlacement(placer));
 	}
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
-		EnumFacing facing = EnumFacing.getHorizontal(MathHelper.floor(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3).getOpposite();
-		state = state.withProperty(FACING, facing);
-		BlockPos north = pos.north();
-		BlockPos south = pos.south();
-		BlockPos west = pos.west();
-		BlockPos east = pos.east();
-		boolean flag = this == world.getBlockState(north).getBlock();
-		boolean flag1 = this == world.getBlockState(south).getBlock();
-		boolean flag2 = this == world.getBlockState(west).getBlock();
-		boolean flag3 = this == world.getBlockState(east).getBlock();
-
-		if (!flag && !flag1 && !flag2 && !flag3)
-		{
-			world.setBlockState(pos, state, 3);
-		}
-		else if (facing.getAxis() == EnumFacing.Axis.X && (flag || flag1))
-		{
-			if (flag)
-			{
-				world.setBlockState(north, state, 3);
-			}
-			else
-			{
-				world.setBlockState(south, state, 3);
-			}
-
-			world.setBlockState(pos, state, 3);
-		}
-		else if (facing.getAxis() == EnumFacing.Axis.Z && (flag2 || flag3))
-		{
-			if (flag2)
-			{
-				world.setBlockState(west, state, 3);
-			}
-			else
-			{
-				world.setBlockState(east, state, 3);
-			}
-
-			world.setBlockState(pos, state, 3);
-		}
+		world.setBlockState(pos, state.withProperty(FACING, getFacingForPlacement(placer)), 2);
 
 		if (stack.hasDisplayName())
 		{
@@ -191,6 +156,12 @@ public class BlockSugiChest extends BlockContainer
 		{
 			tileentity.updateContainingBlockInfo();
 		}
+	}
+
+	@Override
+	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side)
+	{
+		return base_state.getValue(FACING) != side;
 	}
 
 	@Override
@@ -294,32 +265,35 @@ public class BlockSugiChest extends BlockContainer
 		nbt.setTag("Chest", data);
 		ret.setTagCompound(nbt);
 
+		if (chest.hasCustomName())
+		{
+			ret.setStackDisplayName(chest.getName());
+		}
+
 		return ret;
 	}
 
 	@Override
 	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
 	{
-		if (player.capabilities.isCreativeMode)
+		if (willHarvest)
 		{
-			return super.removedByPlayer(state, world, pos, player, willHarvest);
+			ItemStack chest = ItemStack.EMPTY;
+			ItemStack heldMain = player.getHeldItemMainhand();
+
+			if (player.isSneaking() && heldMain.isEmpty() || EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, heldMain) > 0)
+			{
+				chest = getContainedChest((TileEntitySugiChest)world.getTileEntity(pos));
+			}
+
+			if (chest.isEmpty())
+			{
+				chest = new ItemStack(this);
+			}
+			else super.breakBlock(world, pos, state);
+
+			spawnAsEntity(world, pos, chest);
 		}
-
-		ItemStack chest = ItemStack.EMPTY;
-		ItemStack heldMain = player.getHeldItemMainhand();
-
-		if (player.isSneaking() && heldMain.isEmpty() || EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, heldMain) > 0)
-		{
-			chest = getContainedChest((TileEntitySugiChest)world.getTileEntity(pos));
-		}
-
-		if (chest.isEmpty())
-		{
-			chest = new ItemStack(this);
-		}
-		else super.breakBlock(world, pos, state);
-
-		spawnAsEntity(world, pos, chest);
 
 		return super.removedByPlayer(state, world, pos, player, willHarvest);
 	}
