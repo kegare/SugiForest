@@ -30,7 +30,8 @@ import sugiforest.world.SugiBiomes;
 (
 	modid = SugiForest.MODID,
 	guiFactory = "sugiforest.client.config.SugiGuiFactory",
-	updateJSON = "https://dl.dropboxusercontent.com/u/51943112/versions/sugiforest.json"
+	updateJSON = "https://raw.githubusercontent.com/kegare/SugiForest/2bbc14aa882dec035347c41e9dc9869ca0a05244/sugiforest.json",
+	dependencies = "required-after:Forge@[13.20.0.2262,)"
 )
 @EventBusSubscriber
 public class SugiForest

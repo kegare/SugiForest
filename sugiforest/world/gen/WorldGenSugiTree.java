@@ -10,7 +10,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeJungle;
@@ -47,8 +46,6 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 
 	private boolean isGeneratableTree(World world, BlockPos pos, int treeHeight)
 	{
-		MutableBlockPos blockpos = new MutableBlockPos();
-
 		for (int y = pos.getY(); y <= pos.getY() + 1 + treeHeight; ++y)
 		{
 			if (y >= 0 && y < 256)
@@ -59,9 +56,7 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 				{
 					for (int z = pos.getZ() - checkedRange; z <= pos.getZ() + checkedRange; ++z)
 					{
-						blockpos.setPos(x, y, z);
-
-						if (!isReplaceable(world, blockpos))
+						if (!isReplaceable(world, new BlockPos(x, y, z)))
 						{
 							return false;
 						}
@@ -79,13 +74,11 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 
 	private void setTree(World world, Random random, BlockPos pos, Biome biome, int treeHeight)
 	{
-		MutableBlockPos blockpos = new MutableBlockPos(pos);
-
-		blockpos.move(EnumFacing.DOWN);
+		BlockPos blockpos = pos.down();
 
 		for (int woodHeight = 0; woodHeight < treeHeight; ++woodHeight)
 		{
-			blockpos.move(EnumFacing.UP);
+			blockpos = blockpos.up();
 
 			IBlockState state = world.getBlockState(blockpos);
 			Block block = state.getBlock();
@@ -131,13 +124,12 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 					else if (random.nextInt(10) == 0)
 					{
 						byte count = 0;
-						MutableBlockPos pos1 = new MutableBlockPos();
 
 						for (int x = pos.getX() - 2; count < 3 && x <= pos.getX() + 2; ++x)
 						{
 							for (int z = pos.getZ() - 2; count < 3 && z <= pos.getZ() + 2; ++z)
 							{
-								pos1.setPos(x, pos.getY() - 1, z);
+								BlockPos pos1 = new BlockPos(x, pos.getY() - 1, z);
 
 								state = world.getBlockState(pos1);
 								block = state.getBlock();
@@ -169,8 +161,6 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 			leavesHeight += 2;
 		}
 
-		MutableBlockPos blockpos = new MutableBlockPos();
-
 		for (int y = pos.getY() - leavesHeight + treeHeight; y <= pos.getY() + treeHeight; ++y)
 		{
 			int leaveNum = y - (pos.getY() + treeHeight);
@@ -182,8 +172,7 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 				{
 					if (Math.abs(x - pos.getX()) != leaveRange || Math.abs(z - pos.getZ()) != leaveRange || random.nextInt(2) != 0 && leaveNum != 0)
 					{
-						blockpos.setPos(x, y, z);
-
+						BlockPos blockpos = new BlockPos(x, y, z);
 						IBlockState state = world.getBlockState(blockpos);
 						Block block = state.getBlock();
 
@@ -206,7 +195,6 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 			leavesHeight += 2;
 		}
 
-		MutableBlockPos blockpos = new MutableBlockPos();
 		int leaveRange = leavesHeight / 3 - 1;
 		int y = pos.getY() + treeHeight - leavesHeight - 3;
 
@@ -214,21 +202,21 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 		{
 			for (int z = pos.getZ() - leaveRange; z <= pos.getZ() + leaveRange; ++z)
 			{
-				blockpos.setPos(x, y, z);
+				BlockPos blockpos = new BlockPos(x, y, z);
 
 				if (!world.isAirBlock(blockpos))
 				{
 					continue;
 				}
 
-				blockpos.move(EnumFacing.DOWN);
+				blockpos = blockpos.down();
 
 				while (blockpos.getY() > 0 && world.isAirBlock(blockpos))
 				{
-					blockpos.move(EnumFacing.DOWN);
+					blockpos = blockpos.down();
 				}
 
-				blockpos.move(EnumFacing.UP);
+				blockpos = blockpos.up();
 
 				if (SugiBlocks.SUGI_FALLEN_LEAVES.canPlaceBlockAt(world, blockpos) && random.nextInt(3) == 0)
 				{
@@ -236,7 +224,7 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 				}
 				else
 				{
-					blockpos.move(EnumFacing.DOWN);
+					blockpos = blockpos.down();
 
 					IBlockState state = world.getBlockState(blockpos);
 
@@ -260,8 +248,6 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 			vinesHeight += 2;
 		}
 
-		MutableBlockPos blockpos = new MutableBlockPos();
-
 		for (int y = pos.getY() - vinesHeight + treeHeight; y <= pos.getY() + treeHeight; ++y)
 		{
 			int vineNum = y - (pos.getY() + treeHeight);
@@ -271,34 +257,33 @@ public class WorldGenSugiTree extends WorldGenAbstractTree
 			{
 				for (int z = pos.getZ() - vineRange; z <= pos.getZ() + vineRange; ++z)
 				{
-					blockpos.setPos(x, y, z);
-
+					BlockPos blockpos = new BlockPos(x, y, z);
 					IBlockState state = world.getBlockState(blockpos);
 
 					if (state.getBlock().isLeaves(state, world, blockpos))
 					{
-						blockpos.move(EnumFacing.WEST);
+						blockpos = blockpos.west();
 
 						if (random.nextInt(4) == 0 && world.isAirBlock(blockpos))
 						{
 							growVines(world, blockpos, BlockVine.EAST);
 						}
 
-						blockpos.move(EnumFacing.EAST);
+						blockpos = blockpos.east();
 
 						if (random.nextInt(4) == 0 && world.isAirBlock(blockpos))
 						{
 							growVines(world, blockpos, BlockVine.WEST);
 						}
 
-						blockpos.move(EnumFacing.NORTH);
+						blockpos = blockpos.north();
 
 						if (random.nextInt(4) == 0 && world.isAirBlock(blockpos))
 						{
 							growVines(world, blockpos, BlockVine.SOUTH);
 						}
 
-						blockpos.move(EnumFacing.SOUTH);
+						blockpos = blockpos.south();
 
 						if (random.nextInt(4) == 0 && world.isAirBlock(blockpos))
 						{
