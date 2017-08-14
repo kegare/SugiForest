@@ -3,7 +3,6 @@ package sugiforest.block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.MapColor;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -12,6 +11,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import sugiforest.core.SugiForest;
 import sugiforest.item.SugiItems;
@@ -32,7 +32,7 @@ public class BlockSugiLog extends BlockLog
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {VARIANT, LOG_AXIS});
+		return new BlockStateContainer(this, VARIANT, LOG_AXIS);
 	}
 
 	@Override
@@ -43,19 +43,14 @@ public class BlockSugiLog extends BlockLog
 		switch (meta & 12)
 		{
 			case 0:
-				state = state.withProperty(LOG_AXIS, BlockLog.EnumAxis.Y);
-				break;
+				return state.withProperty(LOG_AXIS, BlockLog.EnumAxis.Y);
 			case 4:
-				state = state.withProperty(LOG_AXIS, BlockLog.EnumAxis.X);
-				break;
+				return state.withProperty(LOG_AXIS, BlockLog.EnumAxis.X);
 			case 8:
-				state = state.withProperty(LOG_AXIS, BlockLog.EnumAxis.Z);
-				break;
+				return state.withProperty(LOG_AXIS, BlockLog.EnumAxis.Z);
 			default:
-				state = state.withProperty(LOG_AXIS, BlockLog.EnumAxis.NONE);
+				return state.withProperty(LOG_AXIS, BlockLog.EnumAxis.NONE);
 		}
-
-		return state;
 	}
 
 	@Override
@@ -68,22 +63,18 @@ public class BlockSugiLog extends BlockLog
 		switch (state.getValue(LOG_AXIS))
 		{
 			case X:
-				meta |= 4;
-				break;
+				return meta | 4;
 			case Z:
-				meta |= 8;
-				break;
+				return meta | 8;
 			case NONE:
-				meta |= 12;
-				break;
+				return meta | 12;
 			default:
+				return meta;
 		}
-
-		return meta;
 	}
 
 	@Override
-	public MapColor getMapColor(IBlockState state)
+	public MapColor getMapColor(IBlockState state, IBlockAccess blockAccess, BlockPos pos)
 	{
 		return BlockPlanks.EnumType.BIRCH.getMapColor();
 	}
@@ -122,7 +113,7 @@ public class BlockSugiLog extends BlockLog
 		NORMAL(0, "normal"),
 		MYST(1, "myst");
 
-		private static final EnumType[] META_LOOKUP = new EnumType[values().length];
+		private static final EnumType[] VALUES = new EnumType[values().length];
 
 		private final int meta;
 		private final String name;
@@ -152,19 +143,19 @@ public class BlockSugiLog extends BlockLog
 
 		public static EnumType byMetadata(int meta)
 		{
-			if (meta < 0 || meta >= META_LOOKUP.length)
+			if (meta < 0 || meta >= VALUES.length)
 			{
 				meta = 0;
 			}
 
-			return META_LOOKUP[meta];
+			return VALUES[meta];
 		}
 
 		static
 		{
 			for (EnumType type : values())
 			{
-				META_LOOKUP[type.getMetadata()] = type;
+				VALUES[type.getMetadata()] = type;
 			}
 		}
 	}

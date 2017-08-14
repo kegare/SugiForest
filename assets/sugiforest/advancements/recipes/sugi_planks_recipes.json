@@ -1,0 +1,33 @@
+{
+    "parent": "minecraft:recipes/root",
+    "criteria": {
+        "sugi_planks": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "sugiforest:sugi_planks"
+                    }
+                ]
+            }
+        }
+    },
+    "rewards": {
+        "recipes": [
+            "sugiforest:sugi_planks",
+            "sugiforest:sugi_slab",
+            "sugiforest:sugi_stairs",
+            "sugiforest:sugi_fence",
+            "sugiforest:sugi_fence_gate",
+            "sugiforest:sugi_chest",
+            "sugiforest:sugi_crafting_table",
+            "sugiforest:sugi_stick",
+            "sugiforest:sugi_sword",
+            "sugiforest:sugi_pickaxe",
+            "sugiforest:sugi_axe",
+            "sugiforest:sugi_shovel",
+            "sugiforest:sugi_hoe",
+            "sugiforest:sugi_shield"
+        ]
+    }
+}

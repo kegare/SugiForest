@@ -3,11 +3,6 @@ package sugiforest.handler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.stats.AchievementList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -17,15 +12,12 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity;
-import net.minecraftforge.common.ForgeVersion.Status;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import sugiforest.block.SugiBlocks;
 import sugiforest.core.Config;
 import sugiforest.core.SugiForest;
 import sugiforest.util.Version;
@@ -109,20 +101,24 @@ public class SugiEventHooks
 	{
 		Minecraft mc = FMLClientHandler.instance().getClient();
 
-		if (Version.DEV_DEBUG || Version.getStatus() == Status.AHEAD || Version.getStatus() == Status.BETA || Config.versionNotify && Version.isOutdated())
+		if (Config.versionNotify)
 		{
+			ITextComponent message;
 			ITextComponent name = new TextComponentString(SugiForest.metadata.name);
 			name.getStyle().setColor(TextFormatting.DARK_GREEN);
-			ITextComponent latest = new TextComponentString(Version.getLatest().toString());
-			latest.getStyle().setColor(TextFormatting.YELLOW);
 
-			ITextComponent message;
+			if (Version.isOutdated())
+			{
+				ITextComponent latest = new TextComponentString(Version.getLatest().toString());
+				latest.getStyle().setColor(TextFormatting.YELLOW);
 
-			message = new TextComponentTranslation("sugiforest.version.message", name);
-			message.appendText(" : ").appendSibling(latest);
-			message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, SugiForest.metadata.url));
+				message = new TextComponentTranslation("sugiforest.version.message", name);
+				message.appendText(" : ").appendSibling(latest);
+				message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, SugiForest.metadata.url));
 
-			mc.ingameGUI.getChatGUI().printChatMessage(message);
+				mc.ingameGUI.getChatGUI().printChatMessage(message);
+			}
+
 			message = null;
 
 			if (Version.isBeta())
@@ -138,19 +134,6 @@ public class SugiEventHooks
 			{
 				mc.ingameGUI.getChatGUI().printChatMessage(message);
 			}
-		}
-	}
-
-	@SubscribeEvent
-	public void onItemPickup(ItemPickupEvent event)
-	{
-		EntityPlayer player = event.player;
-		EntityItem entity = event.pickedUp;
-		ItemStack itemstack = entity.getEntityItem();
-
-		if (!itemstack.isEmpty() && itemstack.getItem() == Item.getItemFromBlock(SugiBlocks.SUGI_LOG))
-		{
-			player.addStat(AchievementList.MINE_WOOD);
 		}
 	}
 }

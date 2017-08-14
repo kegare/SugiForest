@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "W#W",
+        "WWW",
+        " W "
+    ],
+    "key": {
+        "W": {
+            "item": "sugiforest:sugi_planks"
+        },
+        "#": {
+            "item": "minecraft:iron_ingot"
+        }
+    },
+    "result": {
+        "item": "minecraft:shield"
+    }
+}

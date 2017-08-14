@@ -27,12 +27,5 @@ sugiforest.config.general.fallenSugiLeaves=杉樹落葉
 sugiforest.config.general.fallenSugiLeaves.tooltip=山木生長時在樹下生成落葉。
 sugiforest.config.general.sugiOnHills=山丘上的柳杉
 sugiforest.config.general.sugiOnHills.tooltip=柳杉在山丘上的生成量。設為0則不生成於山丘。
-sugiforest.config.world.biomeID_SugiForest=柳杉樹林 Biome ID
-sugiforest.config.world.biomeID_SugiForest.tooltip=指定柳杉樹林的Biome ID。
 sugiforest.config.world.biomeGenWeight_SugiForest=柳杉樹林的生成量
 sugiforest.config.world.biomeGenWeight_SugiForest.tooltip=指定柳杉樹林生態系的生成量。
-sugiforest.config.world.dimensionID_SugiForest=柳杉林世界的維度ID
-sugiforest.config.world.dimensionID_SugiForest.tooltip=指定柳杉林世界的維度。
-
-bedrocklayer.config.sugiforest=柳杉林世界
-bedrocklayer.config.sugiforest.tooltip=將柳杉林世界的基岩層設為平坦。

@@ -8,7 +8,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -22,6 +21,8 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityLockable;
+import net.minecraft.tileentity.TileEntityLockableLoot;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -55,7 +56,7 @@ public class BlockSugiChest extends BlockContainer
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {FACING});
+		return new BlockStateContainer(this, FACING);
 	}
 
 	@Override
@@ -90,7 +91,7 @@ public class BlockSugiChest extends BlockContainer
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta)
+	public TileEntity createNewTileEntity(World world, int meta)
 	{
 		return new TileEntitySugiChest();
 	}
@@ -119,11 +120,11 @@ public class BlockSugiChest extends BlockContainer
 
 		if (stack.hasDisplayName())
 		{
-			TileEntity tileentity = world.getTileEntity(pos);
+			TileEntity tile = world.getTileEntity(pos);
 
-			if (tileentity instanceof TileEntitySugiChest)
+			if (tile != null && tile instanceof TileEntityLockableLoot)
 			{
-				((TileEntitySugiChest)tileentity).setCustomName(stack.getDisplayName());
+				((TileEntityLockableLoot)tile).setCustomName(stack.getDisplayName());
 			}
 		}
 
@@ -133,14 +134,20 @@ public class BlockSugiChest extends BlockContainer
 
 			if (nbt.hasKey("Chest"))
 			{
-				TileEntity tileentity = world.getTileEntity(pos);
+				TileEntity tile = world.getTileEntity(pos);
+
+				if (tile == null)
+				{
+					return;
+				}
+
 				NBTTagCompound data = nbt.getCompoundTag("Chest");
 
 				data.setInteger("x", pos.getX());
 				data.setInteger("y", pos.getY());
 				data.setInteger("z", pos.getZ());
 
-				tileentity.readFromNBT(data);
+				tile.readFromNBT(data);
 			}
 		}
 	}
@@ -150,18 +157,18 @@ public class BlockSugiChest extends BlockContainer
 	{
 		super.neighborChanged(state, world, pos, block, fromPos);
 
-		TileEntity tileentity = world.getTileEntity(pos);
+		TileEntity tile = world.getTileEntity(pos);
 
-		if (tileentity instanceof TileEntitySugiChest)
+		if (tile != null && tile instanceof TileEntitySugiChest)
 		{
-			tileentity.updateContainingBlockInfo();
+			tile.updateContainingBlockInfo();
 		}
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side)
+	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
-		return base_state.getValue(FACING) != side;
+		return state.getValue(FACING) != side;
 	}
 
 	@Override
@@ -193,17 +200,15 @@ public class BlockSugiChest extends BlockContainer
 	@Nullable
 	public ILockableContainer getContainer(World world, BlockPos pos, boolean flag)
 	{
-		TileEntity tileentity = world.getTileEntity(pos);
+		TileEntity tile = world.getTileEntity(pos);
 
-		if (!(tileentity instanceof TileEntitySugiChest))
+		if (tile == null || !(tile instanceof ILockableContainer))
 		{
 			return null;
 		}
 		else
 		{
-			ILockableContainer container = (TileEntitySugiChest)tileentity;
-
-			return container;
+			return (ILockableContainer)tile;
 		}
 	}
 
@@ -216,11 +221,11 @@ public class BlockSugiChest extends BlockContainer
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state)
 	{
-		TileEntity tileentity = world.getTileEntity(pos);
+		TileEntity tile = world.getTileEntity(pos);
 
-		if (tileentity instanceof IInventory)
+		if (tile != null && tile instanceof IInventory)
 		{
-			InventoryHelper.dropInventoryItems(world, pos, (IInventory)tileentity);
+			InventoryHelper.dropInventoryItems(world, pos, (IInventory)tile);
 
 			world.updateComparatorOutputLevel(pos, this);
 		}
@@ -228,7 +233,7 @@ public class BlockSugiChest extends BlockContainer
 		super.breakBlock(world, pos, state);
 	}
 
-	public ItemStack getContainedChest(TileEntitySugiChest chest)
+	public ItemStack getContainedChest(TileEntityLockable chest)
 	{
 		ItemStack ret = ItemStack.EMPTY;
 		boolean flag = false;
@@ -279,11 +284,16 @@ public class BlockSugiChest extends BlockContainer
 		if (willHarvest)
 		{
 			ItemStack chest = ItemStack.EMPTY;
-			ItemStack heldMain = player.getHeldItemMainhand();
+			ItemStack held = player.getHeldItemMainhand();
 
-			if (player.isSneaking() && heldMain.isEmpty() || EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, heldMain) > 0)
+			if (player.isSneaking() && held.isEmpty() || EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, held) > 0)
 			{
-				chest = getContainedChest((TileEntitySugiChest)world.getTileEntity(pos));
+				TileEntity tile = world.getTileEntity(pos);
+
+				if (tile != null && tile instanceof TileEntityLockable)
+				{
+					chest = getContainedChest((TileEntityLockable)tile);
+				}
 			}
 
 			if (chest.isEmpty())
@@ -313,11 +323,11 @@ public class BlockSugiChest extends BlockContainer
 		}
 
 		int i = 0;
-		TileEntity tileentity = source.getTileEntity(pos);
+		TileEntity tile = source.getTileEntity(pos);
 
-		if (tileentity instanceof TileEntitySugiChest)
+		if (tile != null && tile instanceof TileEntitySugiChest)
 		{
-			i = ((TileEntitySugiChest)tileentity).numUsingPlayers;
+			i = ((TileEntitySugiChest)tile).numUsingPlayers;
 		}
 
 		return MathHelper.clamp(i, 0, 15);

@@ -10,8 +10,8 @@ import com.google.common.collect.Lists;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Loader;
+import sugiforest.util.SugiLog;
 
 public class Config
 {
@@ -24,7 +24,6 @@ public class Config
 	public static boolean fallenSugiLeaves;
 	public static int sugiOnHills;
 
-	public static int biomeId;
 	public static int biomeWeight;
 
 	public static void syncConfig()
@@ -50,7 +49,7 @@ public class Config
 
 				file.renameTo(dest);
 
-				FMLLog.log(Level.ERROR, e, "A critical error occured reading the " + file.getName() + " file, defaults will be used - the invalid file is backed up at " + dest.getName());
+				SugiLog.log(Level.ERROR, e, "A critical error occured reading the " + file.getName() + " file, defaults will be used - the invalid file is backed up at " + dest.getName());
 			}
 		}
 
@@ -80,15 +79,6 @@ public class Config
 
 		category = CATEGORY_WORLD;
 		propOrder = Lists.newArrayList();
-
-		prop = config.get(category, "biomeID_SugiForest", 65);
-		prop.setMinValue(0).setMaxValue(255).setRequiresMcRestart(true);
-		prop.setLanguageKey(LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
-		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
-		prop.setComment(comment);
-		propOrder.add(prop.getName());
-		biomeId = prop.getInt(biomeId);
 
 		prop = config.get(category, "biomeGenWeight_SugiForest", 20);
 		prop.setMinValue(0).setMaxValue(100).setRequiresMcRestart(true);

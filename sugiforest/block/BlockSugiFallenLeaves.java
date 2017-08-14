@@ -8,7 +8,6 @@ import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
@@ -70,7 +69,7 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 
 		if (entry == null || entry.stack == null)
 		{
-			return null;
+			return ItemStack.EMPTY;
 		}
 
 		return entry.stack.copy();
@@ -90,7 +89,7 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {LAYERS, CHANCE});
+		return new BlockStateContainer(this, LAYERS, CHANCE);
 	}
 
 	@Override
@@ -131,14 +130,14 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 	}
 
 	@Override
-	public boolean isFullyOpaque(IBlockState state)
+	public boolean isTopSolid(IBlockState state)
 	{
 		return state.getValue(LAYERS).intValue() == 7;
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess source, BlockPos pos, EnumFacing side)
+	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
 		if (side == EnumFacing.UP)
 		{
@@ -146,9 +145,9 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 		}
 		else
 		{
-			IBlockState blockState = source.getBlockState(pos.offset(side));
+			IBlockState blockState = blockAccess.getBlockState(pos.offset(side));
 
-			return blockState.getBlock() == this && blockState.getValue(LAYERS).intValue() >= state.getValue(LAYERS).intValue() || super.shouldSideBeRendered(state, source, pos, side);
+			return blockState.getBlock() == this && blockState.getValue(LAYERS).intValue() >= state.getValue(LAYERS).intValue() || super.shouldSideBeRendered(state, blockAccess, pos, side);
 		}
 	}
 
@@ -202,9 +201,9 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 	}
 
 	@Override
-	public boolean isPassable(IBlockAccess world, BlockPos pos)
+	public boolean isPassable(IBlockAccess blockAccess, BlockPos pos)
 	{
-		return world.getBlockState(pos).getValue(LAYERS).intValue() < 5;
+		return blockAccess.getBlockState(pos).getValue(LAYERS).intValue() < 5;
 	}
 
 	@Override
@@ -249,19 +248,19 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 	}
 
 	@Override
-	public boolean isShearable(ItemStack item, IBlockAccess world, BlockPos pos)
+	public boolean isShearable(ItemStack stack, IBlockAccess world, BlockPos pos)
 	{
-		return !item.isEmpty();
+		return !stack.isEmpty();
 	}
 
 	@Override
-	public List<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune)
+	public List<ItemStack> onSheared(ItemStack stack, IBlockAccess world, BlockPos pos, int fortune)
 	{
 		return Lists.newArrayList(new ItemStack(this, world.getBlockState(pos).getValue(LAYERS).intValue()));
 	}
 
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
+	public List<ItemStack> getDrops(IBlockAccess blockAccess, BlockPos pos, IBlockState state, int fortune)
 	{
 		List<ItemStack> ret = Lists.newArrayList();
 
@@ -272,7 +271,7 @@ public class BlockSugiFallenLeaves extends Block implements IShearable
 
 		ItemStack stack = getFallenSeed(RANDOM);
 
-		if (stack != null)
+		if (!stack.isEmpty())
 		{
 			ret.add(stack);
 		}

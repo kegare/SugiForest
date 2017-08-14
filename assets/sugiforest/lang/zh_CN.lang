@@ -17,6 +17,3 @@ tile.portal.sugi.name=杉树林传送门
 item.mystSap.name=神秘树脂
 
 itemGroup.sugiforest=杉
-
-bedrocklayer.config.sugiforest=杉木林
-bedrocklayer.config.sugiforest.tooltip=是否铺平杉木林的基岩层.

@@ -8,24 +8,21 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.color.BlockColors;
-import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.registries.IForgeRegistry;
 import sugiforest.item.ItemSugiChest;
 import sugiforest.item.ItemSugiFallenLeaves;
 import sugiforest.item.ItemSugiWoodSlab;
@@ -91,7 +88,7 @@ public class SugiBlocks
 
 	public static void registerTileEntities()
 	{
-		GameRegistry.registerTileEntity(TileEntitySugiChest.class, "SugiChest");
+		TileEntity.register(SUGI_CHEST.getRegistryName().toString(), TileEntitySugiChest.class);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -137,72 +134,40 @@ public class SugiBlocks
 	@SideOnly(Side.CLIENT)
 	public static void registerBlockColors()
 	{
-		final Minecraft mc = FMLClientHandler.instance().getClient();
-		final BlockColors colors = mc.getBlockColors();
+		Minecraft mc = FMLClientHandler.instance().getClient();
+		BlockColors colors = mc.getBlockColors();
 
-		colors.registerBlockColorHandler(new IBlockColor()
-		{
-			@Override
-			public int colorMultiplier(IBlockState state, IBlockAccess world, BlockPos pos, int tintIndex)
-			{
-				return world != null && pos != null ? BiomeColorHelper.getFoliageColorAtPos(world, pos) : 6726755;
-			}
-		}, new Block[] {SUGI_LEAVES, SUGI_FALLEN_LEAVES});
+		colors.registerBlockColorHandler((state, world, pos, tintIndex) -> world != null && pos != null ? BiomeColorHelper.getFoliageColorAtPos(world, pos) : 6726755, new Block[] {SUGI_LEAVES, SUGI_FALLEN_LEAVES});
 	}
 
 	@SideOnly(Side.CLIENT)
 	public static void registerItemBlockColors()
 	{
-		final Minecraft mc = FMLClientHandler.instance().getClient();
-		final BlockColors blockColors = mc.getBlockColors();
-		final ItemColors colors = mc.getItemColors();
+		Minecraft mc = FMLClientHandler.instance().getClient();
+		BlockColors blockColors = mc.getBlockColors();
+		ItemColors colors = mc.getItemColors();
 
 		colors.registerItemColorHandler((stack, tintIndex) ->
 		{
 			IBlockState state = ((ItemBlock)stack.getItem()).getBlock().getStateFromMeta(stack.getMetadata());
 
 			return blockColors.colorMultiplier(state, null, null, tintIndex);
-		}, new Block[] {SUGI_LEAVES, SUGI_FALLEN_LEAVES});
+		},
+		new Block[] {SUGI_LEAVES, SUGI_FALLEN_LEAVES});
 	}
 
 	public static void registerOreDicts()
 	{
-		OreDictionary.registerOre("logWood", new ItemStack(SUGI_LOG, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre("woodSugi", SUGI_LOG);
-		OreDictionary.registerOre("treeLeaves", new ItemStack(SUGI_LEAVES, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre("leavesSugi", SUGI_LEAVES);
-		OreDictionary.registerOre("fallenLeavesSugi", SUGI_FALLEN_LEAVES);
-		OreDictionary.registerOre("treeSapling", new ItemStack(SUGI_SAPLING, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre("saplingSugi", SUGI_SAPLING);
-		OreDictionary.registerOre("plankWood", new ItemStack(SUGI_PLANKS, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre("planksSugi", SUGI_PLANKS);
-		OreDictionary.registerOre("slabWood", new ItemStack(SUGI_SLAB, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre("woodSlabSugi", SUGI_SLAB);
-		OreDictionary.registerOre("stairWood", new ItemStack(SUGI_STAIRS, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre("stairsWoodSugi", SUGI_STAIRS);
-		OreDictionary.registerOre("fenceWood", new ItemStack(SUGI_FENCE, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre("fenceSugi", SUGI_FENCE);
-		OreDictionary.registerOre("fenceGateWood", new ItemStack(SUGI_FENCE_GATE, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre("fenceGateSugi", SUGI_FENCE_GATE);
+		OreDictionary.registerOre("logWood", SUGI_LOG);
+		OreDictionary.registerOre("treeLeaves", SUGI_LEAVES);
+		OreDictionary.registerOre("treeSapling", SUGI_SAPLING);
+		OreDictionary.registerOre("plankWood", SUGI_PLANKS);
+		OreDictionary.registerOre("slabWood", SUGI_SLAB);
+		OreDictionary.registerOre("stairWood", SUGI_STAIRS);
 	}
 
-	public static void registerRecipes()
+	public static void registerSmeltingRecipes()
 	{
-		GameRegistry.addRecipe(new ItemStack(SUGI_FALLEN_LEAVES, 6), "###", '#', SUGI_LEAVES);
-
-		GameRegistry.addShapelessRecipe(new ItemStack(Items.STICK), new ItemStack(SUGI_SAPLING));
-
-		GameRegistry.addShapelessRecipe(new ItemStack(SUGI_PLANKS, 4), new ItemStack(SUGI_LOG, 1, OreDictionary.WILDCARD_VALUE));
-
-		GameRegistry.addRecipe(new ItemStack(SUGI_SLAB, 6), "###", '#', SUGI_PLANKS);
-
-		GameRegistry.addRecipe(new ItemStack(SUGI_STAIRS, 4), "  #", " ##", "###", '#', SUGI_PLANKS);
-
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(SUGI_FENCE, 3), "#S#", "#S#", 'S', "stickWood", '#', SUGI_PLANKS));
-		GameRegistry.addRecipe(new ShapedOreRecipe(SUGI_FENCE_GATE, "S#S", "S#S", 'S', "stickWood", '#', SUGI_PLANKS));
-
-		GameRegistry.addRecipe(new ItemStack(SUGI_CHEST), "###", "# #", "###", '#', SUGI_PLANKS);
-
 		GameRegistry.addSmelting(SUGI_LOG, new ItemStack(Items.COAL, 1, 1), 0.15F);
 	}
 }

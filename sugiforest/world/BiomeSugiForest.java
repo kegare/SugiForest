@@ -14,11 +14,11 @@ public class BiomeSugiForest extends Biome
 	{
 		super(new BiomeProperties("Sugi Forest").setTemperature(0.25F).setRainfall(0.9F).setBaseHeight(0.05F).setHeightVariation(0.65F));
 		this.spawnableCreatureList.add(new SpawnListEntry(EntityWolf.class, 5, 4, 4));
-		this.theBiomeDecorator.treesPerChunk = 16;
-		this.theBiomeDecorator.grassPerChunk = 12;
-		this.theBiomeDecorator.mushroomsPerChunk = 10;
-		this.theBiomeDecorator.reedsPerChunk = 5;
-		this.theBiomeDecorator.clayPerChunk = 6;
+		this.decorator.treesPerChunk = 16;
+		this.decorator.grassPerChunk = 12;
+		this.decorator.mushroomsPerChunk = 10;
+		this.decorator.reedsPerChunk = 5;
+		this.decorator.clayPerChunk = 6;
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class BiomeSugiForest extends Biome
 	}
 
 	@Override
-	public WorldGenAbstractTree genBigTreeChance(Random rand)
+	public WorldGenAbstractTree getRandomTreeFeature(Random rand)
 	{
 		return WorldGenSugiTree.NATURAL_GEN;
 	}

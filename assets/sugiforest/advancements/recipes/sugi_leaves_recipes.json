@@ -1,0 +1,20 @@
+{
+    "parent": "minecraft:recipes/root",
+    "criteria": {
+        "sugi_leaves": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "sugiforest:sugi_leaves"
+                    }
+                ]
+            }
+        }
+    },
+    "rewards": {
+        "recipes": [
+            "sugiforest:sugi_fallen_leaves"
+        ]
+    }
+}

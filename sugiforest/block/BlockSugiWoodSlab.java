@@ -27,7 +27,7 @@ public class BlockSugiWoodSlab extends BlockSlab
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {HALF});
+		return new BlockStateContainer(this, HALF);
 	}
 
 	@Override

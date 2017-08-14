@@ -1,0 +1,12 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "sugiforest:sugi_log"
+        }
+    ],
+    "result": {
+        "item": "sugiforest:sugi_planks",
+        "count": 4
+    }
+}

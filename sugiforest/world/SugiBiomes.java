@@ -6,22 +6,24 @@ import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.BiomeManager.BiomeType;
+import net.minecraftforge.registries.IForgeRegistry;
 import sugiforest.core.Config;
 
 public class SugiBiomes
 {
-	public static final BiomeSugiForest SUGIFOREST = new BiomeSugiForest();
+	public static final BiomeSugiForest SUGI_FOREST = new BiomeSugiForest();
 
-	public static void registerBiomes()
+	public static void registerBiomes(IForgeRegistry<Biome> registry)
 	{
-		Biome.registerBiome(Config.biomeId, "sugi_forest", SUGIFOREST);
+		registry.register(SUGI_FOREST.setRegistryName("sugi_forest"));
+	}
 
-		BiomeManager.addBiome(BiomeType.WARM, new BiomeEntry(SUGIFOREST, Config.biomeWeight));
-		BiomeManager.addSpawnBiome(SUGIFOREST);
-		BiomeManager.addStrongholdBiome(SUGIFOREST);
+	public static void registerBiomeTypes()
+	{
+		BiomeManager.addBiome(BiomeType.WARM, new BiomeEntry(SUGI_FOREST, Config.biomeWeight));
+		BiomeManager.addSpawnBiome(SUGI_FOREST);
+		BiomeManager.addStrongholdBiome(SUGI_FOREST);
 
-		Biome.EXPLORATION_BIOMES_LIST.add(SUGIFOREST);
-
-		BiomeDictionary.addTypes(SUGIFOREST, Type.FOREST, Type.HILLS, Type.WET);
+		BiomeDictionary.addTypes(SUGI_FOREST, Type.FOREST, Type.HILLS, Type.WET);
 	}
 }

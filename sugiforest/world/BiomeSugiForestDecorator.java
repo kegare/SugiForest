@@ -32,7 +32,7 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 
 		boolean doGen = TerrainGen.decorate(world, random, chunkPos, Decorate.EventType.SAND);
 
-		for (i = 0; doGen && i < sandPerChunk2; ++i)
+		for (i = 0; doGen && i < sandPatchesPerChunk; ++i)
 		{
 			j = nextInt(random, 16) + 8;
 			k = nextInt(random, 16) + 8;
@@ -52,12 +52,12 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 
 		doGen = TerrainGen.decorate(world, random, chunkPos, Decorate.EventType.SAND_PASS2);
 
-		for (i = 0; doGen && i < sandPerChunk; ++i)
+		for (i = 0; doGen && i < sandPatchesPerChunk; ++i)
 		{
 			j = nextInt(random, 16) + 8;
 			k = nextInt(random, 16) + 8;
 
-			gravelAsSandGen.generate(world, random, world.getTopSolidOrLiquidBlock(chunkPos.add(j, 0, k)));
+			gravelGen.generate(world, random, world.getTopSolidOrLiquidBlock(chunkPos.add(j, 0, k)));
 		}
 
 		i = treesPerChunk;
@@ -77,7 +77,7 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 			k = nextInt(random, 16) + 8;
 			l = nextInt(random, 16) + 8;
 
-			WorldGenAbstractTree treeGen = biome.genBigTreeChance(random);
+			WorldGenAbstractTree treeGen = biome.getRandomTreeFeature(random);
 
 			treeGen.setDecorationDefaults();
 			blockpos = world.getHeight(chunkPos.add(k, 0, l));
@@ -104,8 +104,8 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 
 			if (flower.getDefaultState().getMaterial() != Material.AIR)
 			{
-				yellowFlowerGen.setGeneratedBlock(flower, type);
-				yellowFlowerGen.generate(world, random, blockpos);
+				flowerGen.setGeneratedBlock(flower, type);
+				flowerGen.generate(world, random, blockpos);
 			}
 		}
 
@@ -222,7 +222,7 @@ public class BiomeSugiForestDecorator extends BiomeDecorator
 			new WorldGenPumpkin().generate(world, random, chunkPos.add(j, l, k));
 		}
 
-		if (generateLakes)
+		if (generateFalls)
 		{
 			BlockPos blockpos1;
 

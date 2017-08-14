@@ -1,6 +1,7 @@
 package sugiforest.item;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemSoup;
@@ -33,7 +34,7 @@ public class ItemMystSap extends ItemSoup
 			{
 				Potion potion = null;
 
-				while (potion == null || potion.isBadEffect() || player.isPotionActive(potion))
+				while (potion == null || potion.isBadEffect() || potion == MobEffects.GLOWING || player.isPotionActive(potion))
 				{
 					potion = Potion.REGISTRY.getRandomObject(itemRand);
 				}

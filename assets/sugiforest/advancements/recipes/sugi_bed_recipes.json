@@ -1,0 +1,35 @@
+{
+    "parent": "minecraft:recipes/root",
+    "criteria": {
+        "wool": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "minecraft:wool"
+                    }
+                ]
+            }
+        }
+    },
+    "rewards": {
+        "recipes": [
+            "sugiforest:white_sugi_bed",
+            "sugiforest:orange_sugi_bed",
+            "sugiforest:magenta_sugi_bed",
+            "sugiforest:light_blue_sugi_bed",
+            "sugiforest:yellow_sugi_bed",
+            "sugiforest:lime_sugi_bed",
+            "sugiforest:pink_sugi_bed",
+            "sugiforest:gray_sugi_bed",
+            "sugiforest:light_gray_sugi_bed",
+            "sugiforest:cyan_sugi_bed",
+            "sugiforest:purple_sugi_bed",
+            "sugiforest:blue_sugi_bed",
+            "sugiforest:brown_sugi_bed",
+            "sugiforest:green_sugi_bed",
+            "sugiforest:red_sugi_bed",
+            "sugiforest:black_sugi_bed"
+        ]
+    }
+}

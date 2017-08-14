@@ -3,10 +3,11 @@ package sugiforest.core;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Metadata;
 import net.minecraftforge.fml.common.ModMetadata;
@@ -15,7 +16,9 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.IForgeRegistry;
 import sugiforest.api.SugiForestAPI;
 import sugiforest.block.SugiBlocks;
 import sugiforest.handler.SugiEventHooks;
@@ -30,10 +33,8 @@ import sugiforest.world.SugiBiomes;
 (
 	modid = SugiForest.MODID,
 	guiFactory = "sugiforest.client.config.SugiGuiFactory",
-	updateJSON = "https://raw.githubusercontent.com/kegare/SugiForest/2bbc14aa882dec035347c41e9dc9869ca0a05244/sugiforest.json",
-	dependencies = "required-after:Forge@[13.20.0.2262,)"
+	updateJSON = "https://raw.githubusercontent.com/kegare/SugiForest/master/sugiforest.json"
 )
-@EventBusSubscriber
 public class SugiForest
 {
 	public static final String MODID = "sugiforest";
@@ -49,10 +50,18 @@ public class SugiForest
 		SugiForestAPI.apiHandler = new SugiForestAPIHandler();
 
 		Version.initVersion();
+
+		MinecraftForge.EVENT_BUS.register(this);
+	}
+
+	@EventHandler
+	public void preInit(FMLPreInitializationEvent event)
+	{
+		Config.syncConfig();
 	}
 
 	@SubscribeEvent
-	public static void registerBlocks(RegistryEvent.Register<Block> event)
+	public void registerBlocks(RegistryEvent.Register<Block> event)
 	{
 		IForgeRegistry<Block> registry = event.getRegistry();
 
@@ -60,7 +69,7 @@ public class SugiForest
 	}
 
 	@SubscribeEvent
-	public static void registerItems(RegistryEvent.Register<Item> event)
+	public void registerItems(RegistryEvent.Register<Item> event)
 	{
 		IForgeRegistry<Item> registry = event.getRegistry();
 
@@ -68,27 +77,28 @@ public class SugiForest
 		SugiItems.registerItems(registry);
 	}
 
+	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public static void registerSounds(RegistryEvent.Register<SoundEvent> event)
+	public void registerModels(ModelRegistryEvent event)
+	{
+		SugiBlocks.registerModels();
+		SugiItems.registerModels();
+	}
+
+	@SubscribeEvent
+	public void registerBiomes(RegistryEvent.Register<Biome> event)
+	{
+		IForgeRegistry<Biome> registry = event.getRegistry();
+
+		SugiBiomes.registerBiomes(registry);
+	}
+
+	@SubscribeEvent
+	public void registerSounds(RegistryEvent.Register<SoundEvent> event)
 	{
 		IForgeRegistry<SoundEvent> registry = event.getRegistry();
 
 		SugiSounds.registerSounds(registry);
-	}
-
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event)
-	{
-		Config.syncConfig();
-
-		if (event.getSide().isClient())
-		{
-			SugiBlocks.registerModels();
-			SugiItems.registerModels();
-		}
-
-		SugiBlocks.registerTileEntities();
-		SugiBlocks.registerOreDicts();
 	}
 
 	@EventHandler
@@ -100,9 +110,12 @@ public class SugiForest
 			SugiBlocks.registerItemBlockColors();
 		}
 
-		SugiBlocks.registerRecipes();
+		SugiBlocks.registerSmeltingRecipes();
 
-		SugiBiomes.registerBiomes();
+		SugiBlocks.registerTileEntities();
+		SugiBlocks.registerOreDicts();
+
+		SugiBiomes.registerBiomeTypes();
 
 		MinecraftForge.EVENT_BUS.register(new SugiEventHooks());
 

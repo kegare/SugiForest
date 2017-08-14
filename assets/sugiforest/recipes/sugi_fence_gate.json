@@ -1,0 +1,19 @@
+{
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "X#X",
+        "X#X"
+    ],
+    "key": {
+        "#": {
+            "item": "sugiforest:sugi_planks"
+        },
+        "X": {
+            "type": "forge:ore_dict",
+            "ore": "stickWood"
+        }
+    },
+    "result": {
+        "item": "sugiforest:sugi_fence_gate"
+    }
+}

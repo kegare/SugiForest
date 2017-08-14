@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "  #",
+        " ##",
+        "###"
+    ],
+    "key": {
+        "#": {
+            "item": "sugiforest:sugi_planks"
+        }
+    },
+    "result": {
+        "item": "sugiforest:sugi_stairs",
+        "count": 4
+    }
+}

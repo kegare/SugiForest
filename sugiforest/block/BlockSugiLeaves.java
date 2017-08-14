@@ -7,7 +7,6 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockPlanks.EnumType;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,7 +37,7 @@ public class BlockSugiLeaves extends BlockLeaves
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {DECAYABLE, CHECK_DECAY});
+		return new BlockStateContainer(this, DECAYABLE, CHECK_DECAY);
 	}
 
 	@Override

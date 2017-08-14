@@ -37,7 +37,7 @@ public class CreativeTabSugiForest extends CreativeTabs
 			{
 				if (tab == this)
 				{
-					item.getSubItems(item, this, list);
+					item.getSubItems(this, list);
 				}
 			}
 		}
@@ -53,7 +53,7 @@ public class CreativeTabSugiForest extends CreativeTabs
 			{
 				if (tab == this)
 				{
-					item.getSubItems(item, this, list);
+					item.getSubItems(this, list);
 				}
 			}
 		}

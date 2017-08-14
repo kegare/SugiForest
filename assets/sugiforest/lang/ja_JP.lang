@@ -17,6 +17,11 @@ tile.chest.sugi.contained.name=中身入りの杉箪笥
 tile.portal.sugi.name=Sugi Forest ポータル
 
 item.mystSap.name=神秘の樹液
+item.swordSugi.name=杉の木の剣
+item.pickaxeSugi.name=杉の木のツルハシ
+item.axeSugi.name=杉の木の斧
+item.shovelSugi.name=杉の木のシャベル
+item.hoeSugi.name=杉の木のクワ
 
 itemGroup.sugiforest=杉
 
@@ -27,12 +32,5 @@ sugiforest.config.general.fallenSugiLeaves=杉の落ち葉
 sugiforest.config.general.fallenSugiLeaves.tooltip=杉の木が成長したときに、下に杉の落ち葉を生成します。
 sugiforest.config.general.sugiOnHills=丘の杉の木
 sugiforest.config.general.sugiOnHills.tooltip=杉の木の丘バイオームでの自生量を指定します。0を指定すると、丘バイオームには自生しません。
-sugiforest.config.world.biomeID_SugiForest=Sugi Forest バイオームID
-sugiforest.config.world.biomeID_SugiForest.tooltip=Sugi ForestのバイオームIDを指定します。
 sugiforest.config.world.biomeGenWeight_SugiForest=Sugi Forestの生成量
 sugiforest.config.world.biomeGenWeight_SugiForest.tooltip=Sugi Forestバイオームの生成量を指定します。
-sugiforest.config.world.dimensionID_SugiForest=Sugi Forest ディメンションID
-sugiforest.config.world.dimensionID_SugiForest.tooltip=Sugi ForestのディメンションIDを指定します。
-
-bedrocklayer.config.sugiforest=Sugi Forest
-bedrocklayer.config.sugiforest.tooltip=Sugi Forestの岩盤層を平坦にします。

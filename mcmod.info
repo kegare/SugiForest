@@ -1,20 +1,12 @@
-{
-  "modListVersion": 2,
-  "modList": [{
-    "modid": "sugiforest",
-    "name": "SugiForest",
-    "description": "Adds the Sugi tree, related blocks, items, and the Sugi Forest biome.",
-    "version": "1.3.2",
-    "url": "http://minecraft.curseforge.com/projects/sugiforest",
-    "updateJSON": "",
-    "authorList": ["kegare"],
-    "credits": "Authored by kegare",
-    "logoFile": "logo.png",
-    "screenshots": [],
-    "parent": "",
-    "requiredMods": [],
-    "dependencies": [],
-    "dependants": [],
-    "useDependencyInformation": true
-  }]
-}
+
+[{
+  "modid": "sugiforest",
+  "name": "SugiForest",
+  "description": "EXCELLENT SUGI TREES",
+  "version": "1.4.0",
+  "logoFile": "logo.png",
+  "url": "https://minecraft.curseforge.com/projects/sugiforest",
+  "authorList": ["kegare"],
+  "credits": "Authored by kegare",
+  "useDependencyInformation": true
+}]
